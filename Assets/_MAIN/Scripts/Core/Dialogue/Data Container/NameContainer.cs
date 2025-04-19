@@ -4,7 +4,9 @@ using TMPro;
 using UnityEngine;
 
 
-//人物名字框，隶属于对话框
+    /// <summary>
+    /// 名字容器类，用于显示和隐藏说话者名字。
+    /// </summary>人物名字框，隶属于对话框
 namespace DIALOGUE
 {
     [System.Serializable]
@@ -13,7 +15,10 @@ namespace DIALOGUE
         [SerializeField] private GameObject root;           //姓名子框根对象
         [SerializeField] private TextMeshProUGUI nameText;  //姓名文本组件
 
-        //显示姓名框
+        /// <summary>
+        /// 显示名字框，并可选更新名字。
+        /// </summary>
+        /// <param name="nameToShow">要显示的名字</param>
         public void Show(string nameToShow = "")
         {
             root.SetActive(true);
