@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using CHARACTERS;
 
 //对话系统
 namespace DIALOGUE
@@ -11,7 +12,9 @@ namespace DIALOGUE
     /// </summary>
     public class DialogueSystem : MonoBehaviour
     {
-        
+        [SerializeField] private DialogueSystemConfigurationSO _config;
+        public DialogueSystemConfigurationSO config => _config; // 对话系统配置文件
+
         //对话容器和序列化字段
         public DialogueContainer dialogueContainer = new DialogueContainer();
         private ConversationManager conversationManager;// 对话管理器
@@ -60,7 +63,21 @@ namespace DIALOGUE
             onUserPrompt_Next?.Invoke();
         }
 
+        public void ApplySpeakerDataToDialogueContainer(string speakerName)
+        { 
+            Character character = CharacterManager.instance.GetCharacter(speakerName);
+            CharacterConfigData config = character != null ? character.config : CharacterManager.instance.GetCharacterConfig(speakerName);
+            
+            ApplySpeakerDataToDialogueContainer(config); 
+        }
 
+        public void ApplySpeakerDataToDialogueContainer(CharacterConfigData config)
+        {
+            dialogueContainer.SetDialogueColor(config.dialogueColor);
+            dialogueContainer.SetDialogueFont(config.dialogueFont);
+            dialogueContainer.nameContainer.SetNameColor(config.nameColor);
+            dialogueContainer.nameContainer.SetNameFont(config.nameFont);
+        }
         /// <summary>
         /// 显示说话者的名字。
         /// </summary>
@@ -83,19 +100,19 @@ namespace DIALOGUE
         /// </summary>
         /// <param name="speaker">说话者名字</param>
         /// <param name="dialogue">对话内容</param>
-        public void Say(string speaker,string dialogue)
+        public Coroutine Say(string speaker,string dialogue)
         {
             List<string> conversation = new List<string>() { $"{speaker}\"{dialogue}\"" };
-            Say(conversation);
+            return Say(conversation);
         }
 
         /// <summary>
         /// 显示多行对话。
         /// </summary>
         /// <param name="conversation">对话内容列表</param>
-        public void Say(List<string> conversation)
+        public Coroutine Say(List<string> conversation)
         {
-            conversationManager.StartConversation(conversation);
+            return conversationManager.StartConversation(conversation);
         }
     }
 }
