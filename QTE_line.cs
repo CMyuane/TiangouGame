@@ -11,6 +11,8 @@ public class QTE_line : MonoBehaviour
     private float UpY, DownY, targetY;
 
     private string currentZone = "gray";
+    private string lastScoredZone = "";
+    private bool canClick = true;
 
     private int redCount = 0;
     private int blueCount = 0;
@@ -55,25 +57,28 @@ public class QTE_line : MonoBehaviour
         if (isCounting)
         {
             timer -= Time.deltaTime;
-            countdownText.text = $"SECÅF{Mathf.CeilToInt(timer)} ";
+            countdownText.text = $"SECÔºö{Mathf.CeilToInt(timer)} ";
 
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.Space) && canClick)
             {
                 switch (currentZone)
                 {
                     case "red":
                         redCount++;
-                        scoreText.text = "AreaÅFRED (*2)";
+                        scoreText.text = "AreaÔºöRED (*2)";
                         break;
                     case "blue":
                         blueCount++;
-                        scoreText.text = "AreaÅFBLUE (*1.5)";
+                        scoreText.text = "AreaÔºöBLUE (*1.5)";
                         break;
                     case "gray":
                         grayCount++;
-                        scoreText.text = "AreaÅFGRAY (*1)";
+                        scoreText.text = "AreaÔºöGRAY (*1)";
                         break;
                 }
+
+                lastScoredZone = currentZone;
+                canClick = false;
             }
 
             if (timer <= 0f)
@@ -98,13 +103,13 @@ public class QTE_line : MonoBehaviour
             yield return new WaitForSeconds(1f);
         }
 
-        startcount.text = "STARTÅI";
+        startcount.text = "STARTÔºÅ";
         yield return new WaitForSeconds(1f);
 
         isCounting = true;
         isMoving = true;
         timer = countDuration;
-        countdownText.text = $"SECÅF{Mathf.CeilToInt(timer)} ";
+        countdownText.text = $"SECÔºö{Mathf.CeilToInt(timer)} ";
         startcount.text = "";
     }
 
@@ -126,16 +131,24 @@ public class QTE_line : MonoBehaviour
 
         int finalScore = Mathf.RoundToInt(baseScore * multiplier);
 
-        startcount.text = "ENDÅI";
-        scoreText.text = $"MostÅF{zone}\nÅiscore* {multiplier} !Åj\n";
-        Debug.Log($"ç≈ëΩà¬ìûÅF{zone} Å® ç≈èIìæï™ÅF{finalScore}");
+        startcount.text = "ENDÔºÅ";
+        scoreText.text = $"MostÔºö{zone}\nÔºàscore* {multiplier} !Ôºâ\n";
+        Debug.Log($"ÊúÄÂ§öÊåâÂà∞Ôºö{zone} ‚Üí ÊúÄÁµÇÂæóÂàÜÔºö{finalScore}");
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("red")) currentZone = "red";
-        else if (other.CompareTag("blue")) currentZone = "blue";
-        else if (other.CompareTag("gray")) currentZone = "gray";
+        if (other.CompareTag("red") || other.CompareTag("blue") || other.CompareTag("gray"))
+        {
+            string newZone = other.tag;
+
+            if (newZone != currentZone)
+            {
+                canClick = true;
+            }
+
+            currentZone = newZone;
+        }
     }
 
     private void OnTriggerStay(Collider other)
