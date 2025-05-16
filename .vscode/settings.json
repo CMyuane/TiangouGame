@@ -56,5 +56,6 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "Visual novel test.sln"
+    "dotnet.defaultSolution": "Visual novel test.sln",
+    "dotnet.preferCSharpExtension": true
 }
