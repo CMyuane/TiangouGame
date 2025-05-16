@@ -215,8 +215,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _characterpannel: {fileID: 51290566}
-  _characterpannel_live2D: {fileID: 0}
-  _characterpannel_model3D: {fileID: 0}
 --- !u!1 &257219677
 GameObject:
   m_ObjectHideFlags: 0
