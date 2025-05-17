@@ -2,33 +2,36 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using CHARACTERS;
 
-//¶Ô»°ÏµÍ³
+//ï¿½Ô»ï¿½ÏµÍ³
 namespace DIALOGUE
 {
     /// <summary>
-    /// ¶Ô»°ÏµÍ³Àà£¬¸ºÔð¹ÜÀí¶Ô»°µÄÏÔÊ¾ºÍÂß¼­¡£
+    /// ï¿½Ô»ï¿½ÏµÍ³ï¿½à£¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô»ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ß¼ï¿½ï¿½ï¿½
     /// </summary>
     public class DialogueSystem : MonoBehaviour
     {
-        
-        //¶Ô»°ÈÝÆ÷ºÍÐòÁÐ»¯×Ö¶Î
+        [SerializeField] private DialogueSystemConfigurationSO _config;
+        public DialogueSystemConfigurationSO config => _config; // ï¿½Ô»ï¿½ÏµÍ³ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½
+
+        //ï¿½Ô»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð»ï¿½ï¿½Ö¶ï¿½
         public DialogueContainer dialogueContainer = new DialogueContainer();
-        private ConversationManager conversationManager;// ¶Ô»°¹ÜÀíÆ÷
-        private TextArchitect architect;// ÎÄ±¾¹¹½¨Æ÷
+        private ConversationManager conversationManager;// ï¿½Ô»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        private TextArchitect architect;// ï¿½Ä±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
-        public static DialogueSystem instance{get; private set;}              // µ¥ÀýÄ£Ê½ÊµÀý
+        public static DialogueSystem instance{get; private set;}              // ï¿½ï¿½ï¿½ï¿½Ä£Ê½Êµï¿½ï¿½
 
-        // ¶Ô»°ÏµÍ³ÊÂ¼þ£¬ÓÃÓÚÏìÓ¦ÓÃ»§ÊäÈë
+        // ï¿½Ô»ï¿½ÏµÍ³ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¦ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½
         public delegate void DialogueSystemEvent();
         public event DialogueSystemEvent onUserPrompt_Next;
 
-        // ÊÇ·ñÕýÔÚÔËÐÐ¶Ô»°
+        // ï¿½Ç·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¶Ô»ï¿½
         public bool isRunningConversation => conversationManager.isRunning;
 
         private void Awake()
         {
-            // ³õÊ¼»¯µ¥Àý
+            // ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             if (instance == null)
             {
                 instance = this;
@@ -41,30 +44,44 @@ namespace DIALOGUE
         bool _initialized = false;
 
         /// <summary>
-        /// ³õÊ¼»¯¶Ô»°ÏµÍ³¡£
+        /// ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½Ô»ï¿½ÏµÍ³ï¿½ï¿½
         /// </summary>
         private void Initialize()
         {
             if (_initialized)
                 return;
-            // ³õÊ¼»¯ÎÄ±¾¹¹½¨Æ÷ºÍ¶Ô»°¹ÜÀíÆ÷
+            // ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½Ä±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¶Ô»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             architect = new TextArchitect(dialogueContainer.dialogueText);
             conversationManager = new ConversationManager(architect);
         }
 
         /// <summary>
-        /// ÓÃ»§ÌáÊ¾¶Ô»°ÏµÍ³ÍÆ½øµ½ÏÂÒ»²½¡£
+        /// ï¿½Ã»ï¿½ï¿½ï¿½Ê¾ï¿½Ô»ï¿½ÏµÍ³ï¿½Æ½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½
         /// </summary>
         public void OnUserPrompt_Next()
         {
             onUserPrompt_Next?.Invoke();
         }
 
+        public void ApplySpeakerDataToDialogueContainer(string speakerName)
+        { 
+            Character character = CharacterManager.instance.GetCharacter(speakerName);
+            CharacterConfigData config = character != null ? character.config : CharacterManager.instance.GetCharacterConfig(speakerName);
+            
+            ApplySpeakerDataToDialogueContainer(config); 
+        }
 
+        public void ApplySpeakerDataToDialogueContainer(CharacterConfigData config)
+        {
+            dialogueContainer.SetDialogueColor(config.dialogueColor);
+            dialogueContainer.SetDialogueFont(config.dialogueFont);
+            dialogueContainer.nameContainer.SetNameColor(config.nameColor);
+            dialogueContainer.nameContainer.SetNameFont(config.nameFont);
+        }
         /// <summary>
-        /// ÏÔÊ¾Ëµ»°ÕßµÄÃû×Ö¡£
+        /// ï¿½ï¿½Ê¾Ëµï¿½ï¿½ï¿½ßµï¿½ï¿½ï¿½ï¿½Ö¡ï¿½
         /// </summary>
-        /// <param name="speakerName">Ëµ»°ÕßÃû×Ö</param>
+        /// <param name="speakerName">Ëµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</param>
         public void ShowSpeakerName(string speakerName = "")
         {
             if (speakerName.ToLower() != "narrator")
@@ -74,28 +91,28 @@ namespace DIALOGUE
         }
 
         /// <summary>
-        /// Òþ²ØËµ»°ÕßÃû×Ö¡£
+        /// ï¿½ï¿½ï¿½ï¿½Ëµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¡ï¿½
         /// </summary>
         public void HideSpeakerName()=>dialogueContainer.nameContainer.Hide();
 
         /// <summary>
-        /// ÏÔÊ¾Ò»ÐÐ¶Ô»°¡£
+        /// ï¿½ï¿½Ê¾Ò»ï¿½Ð¶Ô»ï¿½ï¿½ï¿½
         /// </summary>
-        /// <param name="speaker">Ëµ»°ÕßÃû×Ö</param>
-        /// <param name="dialogue">¶Ô»°ÄÚÈÝ</param>
-        public void Say(string speaker,string dialogue)
+        /// <param name="speaker">Ëµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</param>
+        /// <param name="dialogue">ï¿½Ô»ï¿½ï¿½ï¿½ï¿½ï¿½</param>
+        public Coroutine Say(string speaker,string dialogue)
         {
             List<string> conversation = new List<string>() { $"{speaker}\"{dialogue}\"" };
-            Say(conversation);
+            return Say(conversation);
         }
 
         /// <summary>
-        /// ÏÔÊ¾¶àÐÐ¶Ô»°¡£
+        /// ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½Ð¶Ô»ï¿½ï¿½ï¿½
         /// </summary>
-        /// <param name="conversation">¶Ô»°ÄÚÈÝÁÐ±í</param>
-        public void Say(List<string> conversation)
+        /// <param name="conversation">ï¿½Ô»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½</param>
+        public Coroutine Say(List<string> conversation)
         {
-            conversationManager.StartConversation(conversation);
+            return conversationManager.StartConversation(conversation);
         }
     }
 }

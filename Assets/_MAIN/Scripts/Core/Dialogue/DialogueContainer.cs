@@ -3,18 +3,20 @@ using TMPro;
 using System.Collections;
 
     /// <summary>
-    /// ¶Ô»°ÈÝÆ÷Àà£¬°üº¬¶Ô»°¿òºÍÏà¹Ø UI ÔªËØ¡£
+    /// ï¿½Ô»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½à£¬ï¿½ï¿½ï¿½ï¿½ï¿½Ô»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ UI Ôªï¿½Ø¡ï¿½
     /// </summary>
 namespace DIALOGUE
 {
-    //ÔÚÀà±¾ÉíÖÐÐòÁÐ»¯ËùÓÐÕâÐ©±äÁ¿£¬Ê¹Æä²ÎÊý¿ÉÒÔÔÚ¼ì²éÆ÷ÖÐÏÔÊ¾²¢²Ù×÷
+    //ï¿½ï¿½ï¿½à±¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð©ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     [System.Serializable]
     public class DialogueContainer
     {
-        //¹«¹²ÓÎÏ·¶ÔÏó ½ûÓÃroot»áÒþ²Ø¶Ô»°¿ò
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï·ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½rootï¿½ï¿½ï¿½ï¿½ï¿½Ø¶Ô»ï¿½ï¿½ï¿½
         public GameObject root;
+        public NameContainer nameContainer;     //ï¿½ï¿½ï¿½ï¿½ï¿½Ä±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾Ëµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        public TextMeshProUGUI dialogueText;    //ï¿½Ô»ï¿½ï¿½Ä±ï¿½ï¿½ï¿½ï¿½Ô»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½Ô»ï¿½ï¿½ï¿½ï¿½ï¿½
 
-        public NameContainer nameContainer;     //Ãû×ÖÎÄ±¾£¨Ãû×ÖÈÝÆ÷£©ÏÔÊ¾Ëµ»°ÕßÃû×Ö
-        public TextMeshProUGUI dialogueText;    //¶Ô»°ÎÄ±¾£¨¶Ô»°ÈÝÆ÷£©ÏÔÊ¾¶Ô»°ÄÚÈÝ
+        public void SetDialogueColor(Color color) => dialogueText.color = color;
+        public void SetDialogueFont(TMP_FontAsset font) => dialogueText.font = font;
     }
 }
