@@ -1,37 +1,40 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor.Rendering;
 using UnityEngine;
 
 
     /// <summary>
-    /// Ãû×ÖÈİÆ÷Àà£¬ÓÃÓÚÏÔÊ¾ºÍÒş²ØËµ»°ÕßÃû×Ö¡£
-    /// </summary>ÈËÎïÃû×Ö¿ò£¬Á¥ÊôÓÚ¶Ô»°¿ò
+    /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½à£¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ëµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¡ï¿½
+    /// </summary>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú¶Ô»ï¿½ï¿½ï¿½
 namespace DIALOGUE
 {
     [System.Serializable]
     public class NameContainer
     {
-        [SerializeField] private GameObject root;           //ĞÕÃû×Ó¿ò¸ù¶ÔÏó
-        [SerializeField] private TextMeshProUGUI nameText;  //ĞÕÃûÎÄ±¾×é¼ş
+        [SerializeField] private GameObject root;           //ï¿½ï¿½ï¿½ï¿½ï¿½Ó¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        [SerializeField] private TextMeshProUGUI nameText;  //ï¿½ï¿½ï¿½ï¿½ï¿½Ä±ï¿½ï¿½ï¿½ï¿½
 
         /// <summary>
-        /// ÏÔÊ¾Ãû×Ö¿ò£¬²¢¿ÉÑ¡¸üĞÂÃû×Ö¡£
+        /// ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½Ö¿ò£¬²ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¡ï¿½
         /// </summary>
-        /// <param name="nameToShow">ÒªÏÔÊ¾µÄÃû×Ö</param>
+        /// <param name="nameToShow">Òªï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</param>
         public void Show(string nameToShow = "")
         {
             root.SetActive(true);
 
-            //½öµ±´«Èë·Ç¿ÕĞÕÃûÊ±¸üĞÂÎÄ±¾ £¬ÔÊĞí²»¸üĞÂĞÕÃûÖ»ÏÔÊ¾¿òÌå£¬¿ÕĞÕÃû´¦ÀíĞèÒªÊµ¼ÊÒµÎñÂß¼­È·ÈÏ
+            //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç¿ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½Ä±ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö»ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½å£¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÒªÊµï¿½ï¿½Òµï¿½ï¿½ï¿½ß¼ï¿½È·ï¿½ï¿½
             if (nameToShow != string.Empty)
                 nameText.text = nameToShow;
         }
 
-        //Òş²ØĞÕÃû¿ò
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         public void Hide()
         {
             root.SetActive(false);
         }
+        public void SetNameColor(Color color) => nameText.color = color;
+        public void SetNameFont(TMP_FontAsset font) => nameText.font = font;
     }
 }

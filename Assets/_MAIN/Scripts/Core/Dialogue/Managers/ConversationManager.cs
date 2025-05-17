@@ -1,3 +1,5 @@
+using CHARACTERS;
+using COMMANDS;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -45,12 +47,14 @@ namespace DIALOGUE
         /// 开始一段对话。
         /// </summary>
         /// <param name="conversation">对话内容列表</param>
-        public void StartConversation(List<string> conversation)
+        public Coroutine StartConversation(List<string> conversation)
         {   
             // 停止当前对话（如果有）
             StopConversation();
             // 启动新的对话协程
             process = dialogueSystem.StartCoroutine(RuningConversation(conversation));
+
+            return process;
         }
 
         /// <summary>
@@ -105,7 +109,7 @@ namespace DIALOGUE
         {
             //说话人姓名展示与否
             if (line.hasSpeaker)
-                dialogueSystem.ShowSpeakerName(line.speakerData.displayName);
+                HandleSpeakerLogic(line.speakerData);
             // else
             //     dialogueSystem.HideSpeakerName();
 
@@ -115,6 +119,30 @@ namespace DIALOGUE
             //等待用户输入
             // yield return WaitForUserInput();
             
+        }
+
+        private void HandleSpeakerLogic(DL_SPEAKER_DATA speakerData)
+        {
+
+            bool characterMustBeCreated = (speakerData.makeCharacterEnter || speakerData.isCastingPosition || speakerData.isCastingExpression);
+
+            Character character = CharacterManager.instance.GetCharacter(speakerData.name, createIfDoesNotExist: characterMustBeCreated);
+            // 如果说话者不存在，则创建角色
+            if (speakerData.makeCharacterEnter && (!character.isVisible && !character.isRevealing))
+                character.Show();
+                
+            dialogueSystem.ShowSpeakerName(speakerData.displayName);
+
+            DialogueSystem.instance.ApplySpeakerDataToDialogueContainer(speakerData.name);
+
+            if(speakerData.isCastingPosition)
+                character.MoveToPosition(speakerData.castPosition);
+
+            if (speakerData.isCastingExpression)
+            {
+                foreach(var ce in speakerData.CastExpressions)
+                    character.OnReceiveCastingExpression(ce.Layer, ce.expression);
+            }
         }
         
         /// <summary>
