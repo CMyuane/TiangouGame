@@ -6,30 +6,30 @@ using UnityEngine;
 
 
     /// <summary>
-    /// цШвжхщфВюЮё╛сцсзотй╬╨мрЧ╡ьк╣╩╟уъцШвж║ё
-    /// </summary>хкнОцШвж©Рё╛а╔йТсз╤т╩╟©Р
+    /// О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫Юё╛О©╫О©╫О©╫О©╫О©╫О©╫й╬О©╫О©╫О©╫О©╫О©╫О©╫к╣О©╫О©╫О©╫О©╫О©╫О©╫О©╫ж║О©╫
+    /// </summary>О©╫О©╫О©╫О©╫О©╫О©╫О©╫ж©О©╫О©╫О©╫О©╫О©╫О©╫з╤т╩О©╫О©╫О©╫
 namespace DIALOGUE
 {
     [System.Serializable]
     public class NameContainer
     {
-        [SerializeField] private GameObject root;           //пуцШвс©Р╦Ы╤тоС
-        [SerializeField] private TextMeshProUGUI nameText;  //пуцШнд╠╬вИ╪Ч
+        [SerializeField] private GameObject root;           //О©╫О©╫О©╫О©╫О©╫с©О©╫О©╫О©╫О©╫О©╫О©╫
+        [SerializeField] private TextMeshProUGUI nameText;  //О©╫О©╫О©╫О©╫О©╫д╠О©╫О©╫О©╫О©╫
 
         /// <summary>
-        /// отй╬цШвж©Рё╛╡╒©ия║╦ЭпбцШвж║ё
+        /// О©╫О©╫й╬О©╫О©╫О©╫ж©Рё╛╡О©╫О©╫О©╫я║О©╫О©╫О©╫О©╫О©╫О©╫О©╫ж║О©╫
         /// </summary>
-        /// <param name="nameToShow">р╙отй╬╣дцШвж</param>
+        /// <param name="nameToShow">р╙О©╫О©╫й╬О©╫О©╫О©╫О©╫О©╫О©╫</param>
         public void Show(string nameToShow = "")
         {
             root.SetActive(true);
 
-            //╫Ж╣╠╢╚хК╥г©упуцШй╠╦Эпбнд╠╬ ё╛тйпМ╡╩╦ЭпбпуцШж╩отй╬©РлЕё╛©упуцШ╢╕юМпХр╙й╣╪йр╣нЯбъ╪╜х╥хо
+            //О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫г©О©╫О©╫О©╫О©╫О©╫й╠О©╫О©╫О©╫О©╫О©╫д╠О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ж╩О©╫О©╫й╬О©╫О©╫О©╫Её╛О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫р╙й╣О©╫О©╫р╣О©╫О©╫О©╫ъ╪О©╫х╥О©╫О©╫
             if (nameToShow != string.Empty)
                 nameText.text = nameToShow;
         }
 
-        //рЧ╡ьпуцШ©Р
+        //О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫
         public void Hide()
         {
             root.SetActive(false);
