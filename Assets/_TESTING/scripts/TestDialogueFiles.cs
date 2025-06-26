@@ -20,19 +20,19 @@ public class DialogueFiles : MonoBehaviour
         List<string> lines = FileManager.ReadTextAsset(fileToRead);
 
         //测试解析对话行 command
-            // foreach (string line in lines)
-            // {
-            //     if (string.IsNullOrWhiteSpace(line))
-            //         continue;
+        // foreach (string line in lines)
+        // {
+        //     if (string.IsNullOrWhiteSpace(line))
+        //         continue;
 
-            //     DIALOGUE_LINE dl = DialogueParser.Parse(line);
+        //     DIALOGUE_LINE dl = DialogueParser.Parse(line);
 
-            //     for(int i = 0; i < dl.commandsData.commands.Count; i++)
-            //     {
-            //         DL_COMAND_DATA.Command command = dl.commandsData.commands[i];
-            //         Debug.Log($"Command [{i}] '{command.name}' has arguments [{string.Join(", ", command.arguments)}]");
-            //     }
-            // }
+        //     for(int i = 0; i < dl.commandsData.commands.Count; i++)
+        //     {
+        //         DL_COMAND_DATA.Command command = dl.commandsData.commands[i];
+        //         Debug.Log($"Command [{i}] '{command.name}' has arguments [{string.Join(", ", command.arguments)}]");
+        //     }
+        // }
 
         //测试解析对话行 speaker
         // for(int i = 0; i < lines.Count; i++)
@@ -67,7 +67,6 @@ public class DialogueFiles : MonoBehaviour
         //         Debug.Log($"Segment [{i++}] = '{segment.dialogue}' [signal={segment.startSignal.ToString()}{(segment.signalDelay > 0? $"{segment.signalDelay}":$"")}]");
         //     }
         // }
-
         DialogueSystem.instance.Say(lines);
     }
 }

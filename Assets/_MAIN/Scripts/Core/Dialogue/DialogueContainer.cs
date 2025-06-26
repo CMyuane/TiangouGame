@@ -9,12 +9,14 @@ namespace DIALOGUE
 {
     //���౾�������л�������Щ������ʹ����������ڼ��������ʾ������
     [System.Serializable]
+
     public class DialogueContainer
     {
         //������Ϸ���� ����root�����ضԻ���
         public GameObject root;
         public NameContainer nameContainer;     //�����ı���������������ʾ˵��������
         public TextMeshProUGUI dialogueText;    //�Ի��ı����Ի���������ʾ�Ի�����
+        public DialogueOptionPanel optionPanel;
 
         public void SetDialogueColor(Color color) => dialogueText.color = color;
         public void SetDialogueFont(TMP_FontAsset font) => dialogueText.font = font;

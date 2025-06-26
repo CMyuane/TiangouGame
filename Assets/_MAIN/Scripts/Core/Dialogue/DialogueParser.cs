@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using UnityEngine;
-
+using DIALOGUE;
 namespace DIALOGUE
 {
     /// <summary>
@@ -29,7 +29,6 @@ namespace DIALOGUE
 
             return new DIALOGUE_LINE(speaker, dialogue, commands);
         }
-
         /// <summary>
         /// 从原始文本中提取说话者、对话内容和命令。
         /// </summary>

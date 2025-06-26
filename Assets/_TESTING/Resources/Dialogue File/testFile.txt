@@ -3,16 +3,23 @@ enter 黛莉 as ??? at 0.2 [0:D_0,1:D_01尴尬] "你好呀"
 黛莉 "今天天气真好"
 白河杏 "你好，{wa 0.5} 你在干嘛。"
 enter 白河杏 as 神秘人 "你好，{wa 0.5} 你在干嘛。"
-
-
-
-
 enter 幽 as ??? at 0.15 [0:站姿,1:D_01尴尬] "你好呀{wa 0.5} 女主"
-
 幽 "今天天气真好"
-
 enter 女主 "早啊，{wa 0.5} 你在干嘛。"
-
 幽 "在和你打招呼。"
-
-女主 "······"
+白河杏 "早啊！"
+[option]
+- 去學校 -> school_route
+- 回家 -> home_route
+[/option]
+#school_route
+白河杏 "那我們去學校吧！"
+幽 "走吧～"
+[goto common_story]
+#home_route
+白河杏 "今天有點累，回家吧。"
+幽 "好，我陪你回家。"
+[goto common_story]
+#common_story
+幽 "今天也很充實呢～"
+白河杏 "對啊，感謝你陪我！"

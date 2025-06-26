@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using DIALOGUE;
 using UnityEngine;
 
 public class CommandManager : MonoBehaviour
@@ -26,8 +27,9 @@ public class CommandManager : MonoBehaviour
 
             foreach (Type extension in extensionTypes)
             {
+                object ext = Activator.CreateInstance(extension);
                 MethodInfo extendMethod = extension.GetMethod("Extend");
-                extendMethod.Invoke(null, new object[] { database });
+                extendMethod.Invoke(ext, new object[] { database });
             }
         }
         else
@@ -54,6 +56,25 @@ public class CommandManager : MonoBehaviour
         //     // Execute the command with no arguments
         //     command.DynamicInvoke();
         // }
+    }
+    public Coroutine ExecuteAll(DL_COMAND_DATA commandsData)
+    {
+        return StartCoroutine(RunAllCommands(commandsData.commands));
+    }
+
+    private IEnumerator RunAllCommands(List<DL_COMAND_DATA.Command> commands)
+    {
+        foreach (var command in commands)
+        {
+            if (command.waitForCompletion)
+            {
+                yield return Execute(command.name, command.arguments);
+            }
+            else
+            {
+                Execute(command.name, command.arguments);
+            }
+        }
     }
 
     private Coroutine StartProccess(string commandName,Delegate command,string[] args)

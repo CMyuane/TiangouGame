@@ -4,13 +4,13 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-//Õâ¸ö½Å±¾¶¨ÒåÁËÒ»¸ö³éÏóµÄ½ÇÉ«Àà£¬±íÊ¾ÓÎÏ·ÖĞµÄ½ÇÉ«¡£Ëü°üº¬ÁË½ÇÉ«µÄ»ù±¾ÊôĞÔºÍ·½·¨£¬ÓÃÓÚ´¦Àí½ÇÉ«µÄ¶Ô»°ºÍÎÄ±¾ÑùÊ½µÈ¹¦ÄÜ¡£
+//Õâ¸ö½Å±¾¶¨ÒåÁËÒ»¸ö³éÏóµÄ½ÇÉ«Àà£¬±úæ¾ÓÎÏ·ÖĞµÄ½ÇÉ«¡£ËEE¬ÁË½ÇÉ«µÄ»ù±¾ÊôĞÔºÍ·½·¨£¬ÓÃÓÚ´¦ÀúÙÇÉ«µÄ¶Ô»°ºÍÎÄ±¾ÑùÊ½µÈ¹¦ÄÜ¡£
 namespace CHARACTERS
 {
     public abstract class Character
     {
         // ½ÇÉ«µÄ»ù±¾ÅäÖÃÊı¾İ
-        public const bool ENABLE_ON_START = false; //´´½¨Ê±²»¿É¼û
+        public const bool ENABLE_ON_START = false; //´´½¨Ê±²»¿É¼E
         private const float UNHIGHLIGHTED_DARKEN_STRENGTH = 0.5f;
         public const bool DEFAULT_ORIENTATION_IS_FACING_LEFT = true;
         public const string ANIMATION_REFRESH_TRIGGER = "Refresh";
@@ -42,7 +42,7 @@ namespace CHARACTERS
         public bool isMoving => co_moving != null;
         public bool isChangingColor => co_changingColor != null;
         public bool isHighlighting => (highlighted && co_highlighting != null); 
-        public bool isUnHighlighting => (!highlighted && co_highlighting != null); // Õâ¸öÊôĞÔ±íÊ¾½ÇÉ«ÊÇ·ñÕıÔÚÈ¡Ïû¸ßÁÁÏÔÊ¾
+        public bool isUnHighlighting => (!highlighted && co_highlighting != null); // Õâ¸öÊôĞÔ±úæ¾½ÇÉ«ÊÇ·ñÕıÔÚÈ¡Ïû¸ßÁÁÏÔÊ¾
         public virtual bool isVisible  {get;set;}
         public bool isFacingLeft => facingLeft;
         public bool isFacingRight => !facingLeft;
@@ -182,7 +182,7 @@ namespace CHARACTERS
                 yield return null;
             }
 
-            // È·±£×îÖÕÎ»ÖÃ¾«È·
+            // È·±£×ûòÕÎ»ÖÃ¾«È·
             root.anchorMin = minAnchorTarget;
             root.anchorMax = maxAnchorTarget;
 
@@ -232,7 +232,7 @@ namespace CHARACTERS
         public virtual void SetColor(Color color)
         {
             this.color = color;
-            // ÕâÀï¿ÉÒÔÌí¼Ó¶Ô½ÇÉ«ÑÕÉ«µÄÉèÖÃÂß¼­
+            // ÕâÀEÉÒÔÌúØÓ¶Ô½ÇÉ«ÑÕÉ«µÄÉèÖÃÂß¼­
             // ÀıÈç£¬Ê¹ÓÃ²ÄÖÊ»òÆäËû·½Ê½À´¸Ä±ä½ÇÉ«µÄÑÕÉ«
         }
 

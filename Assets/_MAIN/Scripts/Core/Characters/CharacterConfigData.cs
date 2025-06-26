@@ -11,9 +11,9 @@ namespace CHARACTERS
     {
         //角色配置数据
         public string name;
-        //角色别名
+        //角色别脕E
         public string alias;
-        //角色头像
+        //角色头蟻E
         public Character.CharacterType characterType;
 
         

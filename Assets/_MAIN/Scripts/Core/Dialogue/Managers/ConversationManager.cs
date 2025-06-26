@@ -170,16 +170,14 @@ namespace DIALOGUE
             yield return null;
         }
 
-        IEnumerator BuildLineSegments(DL_DIALOGUE_DATA line)
+        public IEnumerator BuildLineSegments(DL_DIALOGUE_DATA line)
         {
-            // 逐段构建对话内容
             for (int i = 0; i < line.segments.Count; i++)
             {
                 DL_DIALOGUE_DATA.DIALOGUE_SEGMENT segment = line.segments[i];
-                // 构建并显示对话内容
                 yield return WaitForDialogueSegmentSignalToBeTriggered(segment);
-                // 等待用户输入
-                yield return BuildDialogue(segment.dialogue,segment.appendText);
+                yield return BuildDialogue(segment.dialogue, segment.appendText);
+                yield return WaitForUserInput();  // <== 這個非常重要，加入等待使用者輸入！
             }
         }
 
@@ -241,6 +239,20 @@ namespace DIALOGUE
                 yield return null;
 
             userPrompt = false;
+        }
+        public IEnumerator Say(string speaker, DL_DIALOGUE_DATA dialogueData)
+        {
+            // 處理角色顯示 (你可在這裡放 HandleSpeakerLogic)
+            if (!string.IsNullOrEmpty(speaker))
+            {
+                DialogueSystem.instance.ShowSpeakerName(speaker);
+                DialogueSystem.instance.ApplySpeakerDataToDialogueContainer(speaker);
+            }
+            else
+            {
+                DialogueSystem.instance.HideSpeakerName();
+            }
+            yield return BuildLineSegments(dialogueData);
         }
     }
 }
