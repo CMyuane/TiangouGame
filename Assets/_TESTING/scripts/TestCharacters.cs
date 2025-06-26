@@ -26,12 +26,12 @@ public class TestCharacters : MonoBehaviour
 
     IEnumerator Test()
     {
-        Character_Sprite bhx = CreateCharacter("°×ºÓĞÓ") as Character_Sprite;
-        //Character_Sprite bhxblue = CreateCharacter("À¶°×ºÓĞÓ as °×ºÓĞÓ") as Character_Sprite;
-        //Debug.Log($"guard1 is of type: {°×ºÓĞÓ.GetType().Name}");
-        Character_Sprite dl = CreateCharacter("÷ìÀò") as Character_Sprite;
-        //Character_Sprite dlred = CreateCharacter("ºì÷ìÀò as ÷ìÀò") as Character_Sprite;
-        //Character_Sprite Guard = CreateCharacter("Guard as ÊØÎÀ") as Character_Sprite;
+        Character_Sprite bhx = CreateCharacter("ç™½æ²³æ") as Character_Sprite;
+        //Character_Sprite bhxblue = CreateCharacter("è“ç™½æ²³æ as ç™½æ²³æ") as Character_Sprite;
+        //Debug.Log($"guard1 is of type: {ç™½æ²³æ.GetType().Name}");
+        Character_Sprite dl = CreateCharacter("é»›è‰") as Character_Sprite;
+        //Character_Sprite dlred = CreateCharacter("çº¢é»›è‰ as é»›è‰") as Character_Sprite;
+        //Character_Sprite Guard = CreateCharacter("Guard as å®ˆå«") as Character_Sprite;
         //Character_Sprite Realin = CreateCharacter("Realin") as Character_Sprite;
         
 
@@ -43,25 +43,25 @@ public class TestCharacters : MonoBehaviour
 
 
 
-        //²âÊÔÁ¢»æ¶¶¶¯¡¢Ìø¶¯µÈ¶¯»­
+        //æµ‹è¯•ç«‹ç»˜æŠ–åŠ¨ã€è·³åŠ¨ç­‰åŠ¨ç”»
         //bhx.SetPosition(new Vector2 (0,0));
         //dl.SetPosition(new Vector2 (1,0));
 
         //yield return new WaitForSeconds(1);
 
-        ////Sprite bodySprite = ÷ìÀò.GetSprite("1");
-        ////Sprite faceSprite = ÷ìÀò.GetSprite("D_03ÉËĞÄ");
+        ////Sprite bodySprite = é»›è‰.GetSprite("1");
+        ////Sprite faceSprite = é»›è‰.GetSprite("D_03ä¼¤å¿ƒ");
         //Sprite bodySprite = dl.GetSprite("1");
-        //dl.TransitionSprite(dl.GetSprite("D_02¾ªÑÈ"),layer:1);
+        //dl.TransitionSprite(dl.GetSprite("D_02æƒŠè®¶"),layer:1);
         //dl.Animate("Hop");
-        //yield return dl.Say("ÌìÄÅ{a} ÍâÃæºÃÀä¡£");
+        //yield return dl.Say("å¤©å‘{a} å¤–é¢å¥½å†·ã€‚");
 
         //bhx.FaceRight();
         //bhx.TransitionSprite(bhx.GetSprite("bhx_jingya"));
         //bhx.Animate("Shiver",true);
-        //yield return bhx.Say("ÎÒµÄÌì£¬{a} ÎªÊ²Ã´Í»È»ÕâÃ´Àä£¿");
+        //yield return bhx.Say("æˆ‘çš„å¤©ï¼Œ{a} ä¸ºä»€ä¹ˆçªç„¶è¿™ä¹ˆå†·ï¼Ÿ");
         //bhx.Animate("Shiver", false);
-        //yield return bhx.Say("ÎÒÃÇ»ØÎİÀïÈ¥£¡");
+        //yield return bhx.Say("æˆ‘ä»¬å›å±‹é‡Œå»ï¼");
 
 
 
@@ -69,7 +69,7 @@ public class TestCharacters : MonoBehaviour
         //yield return null;
 
 
-        //²âÊÔÓÅÏÈ¼¶
+        //æµ‹è¯•ä¼˜å…ˆçº§
         //bhxblue.SetColor(Color.blue);
         //dlred.SetColor(Color.red);
 
@@ -87,7 +87,7 @@ public class TestCharacters : MonoBehaviour
 
         //yield return new WaitForSeconds(1f);
 
-        //CharacterManager.instance.SortCharacters(new string[] { "À¶°×ºÓĞÓ", "÷ìÀò" });
+        //CharacterManager.instance.SortCharacters(new string[] { "è“ç™½æ²³æ", "é»›è‰" });
 
         //yield return new WaitForSeconds(1f);
 
@@ -95,7 +95,7 @@ public class TestCharacters : MonoBehaviour
 
         //yield return new WaitForSeconds(1f);
 
-        //CharacterManager.instance.SortCharacters(new string[] { "ºì÷ìÀò", "°×ºÓĞÓ", "À¶°×ºÓĞÓ", "÷ìÀò" });
+        //CharacterManager.instance.SortCharacters(new string[] { "çº¢é»›è‰", "ç™½æ²³æ", "è“ç™½æ²³æ", "é»›è‰" });
         ////bhx.SetPriority(1); 
 
         //yield return null;
@@ -104,7 +104,7 @@ public class TestCharacters : MonoBehaviour
 
 
 
-        //²âÊÔ·­×ª¡¢¸ßÁÁºÍ°µµ­
+        //æµ‹è¯•ç¿»è½¬ã€é«˜äº®å’Œæš—æ·¡
         //yield return new WaitForSeconds(1f);
 
         //dl.SetPosition(new Vector2(0.2f,0));
@@ -125,15 +125,15 @@ public class TestCharacters : MonoBehaviour
         //yield return new WaitForSeconds(1f);
 
         //dl.Highlight();
-        //yield return dl.Say("ÌìÄÅ£¬°×ºÓ£¬ÄãºÃÏñ¸öÊ«ÈË¡£");
+        //yield return dl.Say("å¤©å‘ï¼Œç™½æ²³ï¼Œä½ å¥½åƒä¸ªè¯—äººã€‚");
 
         //dl.UnHighlight();
         //bhx.Highlight();
-        //yield return bhx.Say("»¹Ã»ÈËÕâÃ´Ëµ¹ıÎÒ¡¤¡¤¡¤¡¤¡¤¡¤");
+        //yield return bhx.Say("è¿˜æ²¡äººè¿™ä¹ˆè¯´è¿‡æˆ‘Â·Â·Â·Â·Â·Â·");
 
         //bhx.UnHighlight();
         //dl.Highlight();
-        //yield return dl.Say("ÕæµÄ£¬ÄãºÜÓĞÊ«ÈËµÄÇ±Á¦£¡");
+        //yield return dl.Say("çœŸçš„ï¼Œä½ å¾ˆæœ‰è¯—äººçš„æ½œåŠ›ï¼");
 
 
 
@@ -154,7 +154,7 @@ public class TestCharacters : MonoBehaviour
         //yield return Realin.TransitionColor(Color.white);
 
 
-        //ÕâÊÇ²âÑÕÉ«±ä»»
+        //è¿™æ˜¯æµ‹é¢œè‰²å˜æ¢
         //yield return Realin.TransitionColor(Color.red,speed:0.3f);
         //yield return Realin.TransitionColor(Color.blue);
         //yield return Realin.TransitionColor(Color.yellow);
@@ -163,13 +163,13 @@ public class TestCharacters : MonoBehaviour
         //yield return null;
 
 
-        //ÕâÊÇÒ»¸ö²âÊÔÓÃµÄ×¢ÊÍ
+        //è¿™æ˜¯ä¸€ä¸ªæµ‹è¯•ç”¨çš„æ³¨é‡Š
         //yield return Realin.TransitionSprite(Realin.GetSprite("B_Default"),1);
         //Realin.TransitionSprite(Realin.GetSprite("B2"));
 
 
-        //°×ºÓĞÓ.Hide();
-        //÷ìÀò.Hide();
+        //ç™½æ²³æ.Hide();
+        //é»›è‰.Hide();
         //Realin.Hide();
         //Guard.Show();
 
@@ -183,77 +183,77 @@ public class TestCharacters : MonoBehaviour
 
         //Realin.MoveToPosition(Vector2.zero, 0.5f);
 
-        //÷ìÀò.Show();
-        //yield return ÷ìÀò.MoveToPosition(new Vector2(1, 0), 0.5f);
+        //é»›è‰.Show();
+        //yield return é»›è‰.MoveToPosition(new Vector2(1, 0), 0.5f);
 
 
         //Realin.TransitionSprite(Realin.GetSprite("B_Scold"), layer: 1);
 
-        //body = ÷ìÀò.GetSprite("1");
-        //face = ÷ìÀò.GetSprite("D_03ÉËĞÄ");
-        ////÷ìÀò.TransitionSprite(body); ÒªÃ´Ö¸¶¨bodyÍ¼²ã£¬ÒªÃ´²»Ğ´Õâ¸öÓï¾ä²ÅÄÜÕı³£ÏÔÊ¾£¿£¿
-        //÷ìÀò.TransitionSprite(face, 1);
+        //body = é»›è‰.GetSprite("1");
+        //face = é»›è‰.GetSprite("D_03ä¼¤å¿ƒ");
+        ////é»›è‰.TransitionSprite(body); è¦ä¹ˆæŒ‡å®šbodyå›¾å±‚ï¼Œè¦ä¹ˆä¸å†™è¿™ä¸ªè¯­å¥æ‰èƒ½æ­£å¸¸æ˜¾ç¤ºï¼Ÿï¼Ÿ
+        //é»›è‰.TransitionSprite(face, 1);
 
-        //°×ºÓĞÓ.Show();
-        //yield return °×ºÓĞÓ.MoveToPosition(Vector2.one, 1f, true);
+        //ç™½æ²³æ.Show();
+        //yield return ç™½æ²³æ.MoveToPosition(Vector2.one, 1f, true);
 
 
-        //Debug.Log($"¿É¼ûĞÔ = {Realin.isVisible}");
+        //Debug.Log($"å¯è§æ€§ = {Realin.isVisible}");
 
 
         //yield return null;
 
 
-        //ÕâÊÇ²âÊÔÒÆ¶¯Î»ÖÃºÍËÙ¶È
-        //°×ºÓĞÓ.SetPosition(Vector2.zero);
-        //÷ìÀò.SetPosition(new Vector2(0.5f,0.5f));
-        //ÊØÎÀ.SetPosition(Vector2.one);
+        //è¿™æ˜¯æµ‹è¯•ç§»åŠ¨ä½ç½®å’Œé€Ÿåº¦
+        //ç™½æ²³æ.SetPosition(Vector2.zero);
+        //é»›è‰.SetPosition(new Vector2(0.5f,0.5f));
+        //å®ˆå«.SetPosition(Vector2.one);
         //Realin.SetPosition(new Vector2(2f,1f));
 
 
-        //÷ìÀò.Show();
-        //ÊØÎÀ.Show();
+        //é»›è‰.Show();
+        //å®ˆå«.Show();
         //Realin.Show();
 
 
-        //ÕâÊÇ²âÊÔÇĞ»»Í¼²ã
-        //Sprite bodySprite = ÷ìÀò.GetSprite("1");
-        //Sprite faceSprite = ÷ìÀò.GetSprite("D_03ÉËĞÄ");
+        //è¿™æ˜¯æµ‹è¯•åˆ‡æ¢å›¾å±‚
+        //Sprite bodySprite = é»›è‰.GetSprite("1");
+        //Sprite faceSprite = é»›è‰.GetSprite("D_03ä¼¤å¿ƒ");
 
-        //÷ìÀò.SetSprite(bodySprite, 1);
-        //÷ìÀò.SetSprite(faceSprite, 1);
+        //é»›è‰.SetSprite(bodySprite, 1);
+        //é»›è‰.SetSprite(faceSprite, 1);
 
         //yield return new WaitForSeconds(2f);
 
-        //bodySprite = ÷ìÀò.GetSprite("1");
-        //faceSprite = ÷ìÀò.GetSprite("D_06Ï²ÔÃ");
+        //bodySprite = é»›è‰.GetSprite("1");
+        //faceSprite = é»›è‰.GetSprite("D_06å–œæ‚¦");
 
-        //÷ìÀò.SetSprite(bodySprite, 1);
-        //÷ìÀò.SetSprite(faceSprite, 1);
+        //é»›è‰.SetSprite(bodySprite, 1);
+        //é»›è‰.SetSprite(faceSprite, 1);
 
-        //yield return °×ºÓĞÓ.Show();
+        //yield return ç™½æ²³æ.Show();
 
-        //yield return °×ºÓĞÓ.MoveToPosition(Vector2.one, 2f, true);
-        //yield return °×ºÓĞÓ.MoveToPosition(Vector2.zero, 2f, false);
+        //yield return ç™½æ²³æ.MoveToPosition(Vector2.one, 2f, true);
+        //yield return ç™½æ²³æ.MoveToPosition(Vector2.zero, 2f, false);
 
 
 
-        //ÕâÊÇ²âÊÔÑÕÉ«
-        //°×ºÓĞÓ.SetNameColor(Color.red);
-        //÷ìÀò.SetNameFont(tempFont);
-        //ÊØÎÀ.SetDialogueColor(Color.red);
+        //è¿™æ˜¯æµ‹è¯•é¢œè‰²
+        //ç™½æ²³æ.SetNameColor(Color.red);
+        //é»›è‰.SetNameFont(tempFont);
+        //å®ˆå«.SetDialogueColor(Color.red);
         //Realin.SetDialogueFont(tempFont);
 
 
-        //yield return °×ºÓĞÓ.Say("Hello, I'm Guard1.");
-        //yield return ÷ìÀò.Say("Hello, I'm Guard2.");
-        //yield return ÊØÎÀ.Say("Hello, I'm Guard3.");
+        //yield return ç™½æ²³æ.Say("Hello, I'm Guard1.");
+        //yield return é»›è‰.Say("Hello, I'm Guard2.");
+        //yield return å®ˆå«.Say("Hello, I'm Guard3.");
         //yield return Realin.Say("Hello, I'm Guard1 again.");
 
         //yield return null;
         //yield return new WaitForSeconds(1f);
 
-        //Character bhx = CharacterManager.instance.CreateCharacter("°×ºÓĞÓ");
+        //Character bhx = CharacterManager.instance.CreateCharacter("ç™½æ²³æ");
 
         //yield return new WaitForSeconds(1f);
 
@@ -263,40 +263,40 @@ public class TestCharacters : MonoBehaviour
 
         //yield return bhx.Show();
 
-        //yield return bhx.Say("ÎÒ¾õµÃ×Ô¼º»áÓÀÔ¶ÉúÃÍÏÂÈ¥£¬{wa 1}Ê²Ã´Ò²´¸²»ÁËÎÒ¡£");
+        //yield return bhx.Say("æˆ‘è§‰å¾—è‡ªå·±ä¼šæ°¸è¿œç”ŸçŒ›ä¸‹å»ï¼Œ{wa 1}ä»€ä¹ˆä¹Ÿé”¤ä¸äº†æˆ‘ã€‚");
 
-        //Character ¶ËÄ¾ÄäÑÅ = CharacterManager.instance.CreateCharacter("¶ËÄ¾ÄäÑÅ");
-        //Character Éò¼Ãº­ = CharacterManager.instance.CreateCharacter("Éò¼Ãº­");
-        //Character ×óÄîæÃ = CharacterManager.instance.CreateCharacter("×óÄîæÃ");
+        //Character ç«¯æœ¨åŒ¿é›… = CharacterManager.instance.CreateCharacter("ç«¯æœ¨åŒ¿é›…");
+        //Character æ²ˆæµæ¶µ = CharacterManager.instance.CreateCharacter("æ²ˆæµæ¶µ");
+        //Character å·¦å¿µå©· = CharacterManager.instance.CreateCharacter("å·¦å¿µå©·");
 
         //List<string> lines = new List<string>()
         //{
-        //    "ÄÇÒ»ÌìÎÒ¶şÊ®Ò»Ëê¡£",
-        //    "ÔÚÎÒÒ»ÉúµÄ»Æ½ğÊ±´ú¡£",
-        //    "ÎÒÓĞºÃ¶àÉİÍû¡£",
-        //    "ÎÒÏë°®£¬{wa 1} Ïë³Ô£¬{wa 1} »¹ÏëÔÚÒ»Ë²¼ä±ä³ÉÌìÉÏ°ëÃ÷°ë°µµÄÔÆ¡£",
+        //    "é‚£ä¸€å¤©æˆ‘äºŒåä¸€å²ã€‚",
+        //    "åœ¨æˆ‘ä¸€ç”Ÿçš„é»„é‡‘æ—¶ä»£ã€‚",
+        //    "æˆ‘æœ‰å¥½å¤šå¥¢æœ›ã€‚",
+        //    "æˆ‘æƒ³çˆ±ï¼Œ{wa 1} æƒ³åƒï¼Œ{wa 1} è¿˜æƒ³åœ¨ä¸€ç¬é—´å˜æˆå¤©ä¸ŠåŠæ˜åŠæš—çš„äº‘ã€‚",
         //};
-        //yield return ¶ËÄ¾ÄäÑÅ.Say(lines);
+        //yield return ç«¯æœ¨åŒ¿é›….Say(lines);
 
-        //¶ËÄ¾ÄäÑÅ.SetNameColor(Color.red);
-        //¶ËÄ¾ÄäÑÅ.SetDialogueColor(Color.red);
-        //¶ËÄ¾ÄäÑÅ.SetNameFont(tempFont);
-        //¶ËÄ¾ÄäÑÅ.SetDialogueFont(tempFont);
+        //ç«¯æœ¨åŒ¿é›….SetNameColor(Color.red);
+        //ç«¯æœ¨åŒ¿é›….SetDialogueColor(Color.red);
+        //ç«¯æœ¨åŒ¿é›….SetNameFont(tempFont);
+        //ç«¯æœ¨åŒ¿é›….SetDialogueFont(tempFont);
 
-        //yield return ¶ËÄ¾ÄäÑÅ.Say(lines);
+        //yield return ç«¯æœ¨åŒ¿é›….Say(lines);
 
-        //¶ËÄ¾ÄäÑÅ.ResetConfigurationData();
+        //ç«¯æœ¨åŒ¿é›….ResetConfigurationData();
 
-        //yield return ¶ËÄ¾ÄäÑÅ.Say(lines);
+        //yield return ç«¯æœ¨åŒ¿é›….Say(lines);
 
         //lines = new List<string>()
         //{
-        //    "ºóÀ´ÎÒ²ÅÖªµÀ£¬{wa 1}Éú»î¾ÍÊÇ¸ö»ºÂıÊÜ´¸µÄ¹ı³Ì...",
-        //    "¿ÉÊÇÎÒ¹ı¶şÊ®Ò»ËêÉúÈÕÊ±Ã»ÓĞÔ¤¼ûµ½ÕâÒ»µã¡£"
+        //    "åæ¥æˆ‘æ‰çŸ¥é“ï¼Œ{wa 1}ç”Ÿæ´»å°±æ˜¯ä¸ªç¼“æ…¢å—é”¤çš„è¿‡ç¨‹...",
+        //    "å¯æ˜¯æˆ‘è¿‡äºŒåä¸€å²ç”Ÿæ—¥æ—¶æ²¡æœ‰é¢„è§åˆ°è¿™ä¸€ç‚¹ã€‚"
         //};
-        //yield return Éò¼Ãº­.Say(lines);
+        //yield return æ²ˆæµæ¶µ.Say(lines);
 
-        //yield return ×óÄîæÃ.Say("ÎÒ¾õµÃ×Ô¼º»áÓÀÔ¶ÉúÃÍÏÂÈ¥£¬{wa 1}Ê²Ã´Ò²´¸²»ÁËÎÒ¡£");
+        //yield return å·¦å¿µå©·.Say("æˆ‘è§‰å¾—è‡ªå·±ä¼šæ°¸è¿œç”ŸçŒ›ä¸‹å»ï¼Œ{wa 1}ä»€ä¹ˆä¹Ÿé”¤ä¸äº†æˆ‘ã€‚");
     }
 
     // Update is called once per frame

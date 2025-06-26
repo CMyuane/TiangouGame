@@ -41,9 +41,9 @@ namespace CHARACTERS
         public bool isHiding => co_hiding != null;
         public bool isMoving => co_moving != null;
         public bool isChangingColor => co_changingColor != null;
-        public bool isHighlighting => (highlighted && co_highlighting != null); 
+        public bool isHighlighting => (highlighted && co_highlighting != null);
         public bool isUnHighlighting => (!highlighted && co_highlighting != null); // 这个属性表示角色是否正在取消高亮显示
-        public virtual bool isVisible  {get;set;}
+        public virtual bool isVisible { get; set; }
         public bool isFacingLeft => facingLeft;
         public bool isFacingRight => !facingLeft;
         public bool isFlipping => co_flipping != null;
@@ -54,7 +54,7 @@ namespace CHARACTERS
             displayName = name;
             this.config = config;
 
-            if(prefab != null)
+            if (prefab != null)
             {
                 RectTransform parentPanel = null;
                 switch (config.characterType)
@@ -62,6 +62,12 @@ namespace CHARACTERS
                     case CharacterType.Sprite:
                     case CharacterType.SpriteSheet:
                         parentPanel = characterManager.characterPanel;
+                        break;
+                    case CharacterType.Live2D:
+                        parentPanel = characterManager.characterPanelLive2D;
+                        break;
+                    case CharacterType.Model3D:
+                        parentPanel = characterManager.characterPanelModel3D;
                         break;
                 }
 
@@ -91,33 +97,33 @@ namespace CHARACTERS
         public void ResetConfigurationData() => config = CharacterManager.instance.GetCharacterConfig(name);
         public void UpdateTextCustomizationsOnScreen() => dialogueSystem.ApplySpeakerDataToDialogueContainer(config);
 
-        public virtual Coroutine Show()
+        public virtual Coroutine Show(float speedMultiplier = 1f)
         {
             if (isRevealing)
                 return co_revealing;
 
-            if(isHiding)
+            if (isHiding)
                 characterManager.StopCoroutine(co_hiding);
 
-            co_revealing = characterManager.StartCoroutine(ShowingOrHiding(true));
+            co_revealing = characterManager.StartCoroutine(ShowingOrHiding(true, speedMultiplier));
 
             return co_revealing;
         }
 
-        public virtual Coroutine Hide()
+        public virtual Coroutine Hide(float speedMultiplier = 1f)
         {
-            if(isHiding)
+            if (isHiding)
                 return co_hiding;
 
             if (isRevealing)
                 characterManager.StopCoroutine(co_revealing);
 
-            co_hiding = characterManager.StartCoroutine(ShowingOrHiding(false));
+            co_hiding = characterManager.StartCoroutine(ShowingOrHiding(false, speedMultiplier));
 
             return co_hiding;
         }
 
-        public virtual IEnumerator ShowingOrHiding(bool show)
+        public virtual IEnumerator ShowingOrHiding(bool show, float speedMultiplier = 1f)
         {
             Debug.Log("Show/Hide cannot be called from a base character type.");
             yield return null;
@@ -128,13 +134,13 @@ namespace CHARACTERS
             if (root == null)
                 return;
 
-            (Vector2 minAnchorTarget, Vector2 maxAnvhorTarget) = ConvertUITargetPositionToRelativeCharacterAnchorTargets(position);
+            (Vector2 minAnchorTarget, Vector2 maxAnchorTarget) = ConvertUITargetPositionToRelativeCharacterAnchorTargets(position);
 
             root.anchorMin = minAnchorTarget;
-            root.anchorMax = maxAnvhorTarget;
+            root.anchorMax = maxAnchorTarget;
         }
 
-        public virtual Coroutine MoveToPosition(Vector2 position,float speed = 0.5f,bool smooth = false)
+        public virtual Coroutine MoveToPosition(Vector2 position, float speed = 0.5f, bool smooth = false)
         {
             if (root == null)
                 return null;
@@ -147,55 +153,105 @@ namespace CHARACTERS
             return co_moving;
         }
 
-        private IEnumerator MovingToPosition(Vector2 position, float duration, bool smooth)
+
+
+
+        //根据时间移动立绘
+        //private IEnumerator MovingToPositionWithTime(Vector2 position, float duration, bool smooth)
+        //{
+        //    (Vector2 minAnchorTarget, Vector2 maxAnchorTarget) = ConvertUITargetPositionToRelativeCharacterAnchorTargets(position);
+        //    Vector2 padding = root.anchorMax - root.anchorMin;
+
+        //    Vector2 startMin = root.anchorMin;
+        //    Vector2 startMax = root.anchorMax;
+        //    float elapsedTime = 0f;
+
+
+
+        //    while (elapsedTime < duration)
+        //    {
+        //        elapsedTime += Time.deltaTime;
+        //        float t = Mathf.Clamp01(elapsedTime / duration);
+
+        //        if (smooth)
+        //        {
+        //            root.anchorMin = Vector2.Lerp(startMin, minAnchorTarget, t);
+        //        }
+        //        else
+        //        {
+        //            // 非平滑模式下，使用匀速移动
+        //            root.anchorMin = Vector2.MoveTowards(
+        //                startMin,
+        //                minAnchorTarget,
+        //                Vector2.Distance(startMin, minAnchorTarget) * t
+        //            );
+        //        }
+
+        //        root.anchorMax = root.anchorMin + padding;
+
+        //        yield return null;
+        //    }
+
+        //    // 确保最终位置精确
+        //    root.anchorMin = minAnchorTarget;
+        //    root.anchorMax = maxAnchorTarget;
+
+        //    Debug.Log("Done moving");
+        //    co_moving = null;
+        //}
+
+        //修改后的平滑移动
+        private IEnumerator MovingToPosition(Vector2 position, float speed, bool smooth)
         {
             (Vector2 minAnchorTarget, Vector2 maxAnchorTarget) = ConvertUITargetPositionToRelativeCharacterAnchorTargets(position);
             Vector2 padding = root.anchorMax - root.anchorMin;
 
+            // 记录初始锚点作为插值起点
             Vector2 startMin = root.anchorMin;
             Vector2 startMax = root.anchorMax;
-            float elapsedTime = 0f;
 
+            float progress = 0f;  // 新增：插值进度
 
-
-            while (elapsedTime < duration)
+            while (root.anchorMin != minAnchorTarget || root.anchorMax != maxAnchorTarget)
             {
-                elapsedTime += Time.deltaTime;
-                float t = Mathf.Clamp01(elapsedTime / duration);
-
                 if (smooth)
                 {
-                    root.anchorMin = Vector2.Lerp(startMin, minAnchorTarget, t);
+                    // 线性增加进度值 (保证在[0,1]范围内)
+                    progress = Mathf.Clamp01(progress + speed * Time.deltaTime);
+
+                    // 从初始位置到目标位置线性插值
+                    root.anchorMin = Vector2.Lerp(startMin, minAnchorTarget, progress);
+                    root.anchorMax = root.anchorMin + padding;
+
+                    // 进度完成时强制设置目标位置
+                    if (progress >= 0.99f)
+                    {
+                        root.anchorMin = minAnchorTarget;
+                        root.anchorMax = maxAnchorTarget;
+                    }
                 }
                 else
                 {
-                    // 非平滑模式下，使用匀速移动
-                    root.anchorMin = Vector2.MoveTowards(
-                        startMin,
-                        minAnchorTarget,
-                        Vector2.Distance(startMin, minAnchorTarget) * t
-                    );
+                    // 保持原有的MoveTowards逻辑
+                    root.anchorMin = Vector2.MoveTowards(root.anchorMin, minAnchorTarget, speed * Time.deltaTime * 0.35f);
+                    root.anchorMax = root.anchorMin + padding;
                 }
-
-                root.anchorMax = root.anchorMin + padding;
 
                 yield return null;
             }
-
-            // 确保最终位置精确
-            root.anchorMin = minAnchorTarget;
-            root.anchorMax = maxAnchorTarget;
 
             Debug.Log("Done moving");
             co_moving = null;
         }
 
-        //private IEnumerator MovingToPosition(Vector2 position,float speed,bool smooth)
+
+        // 这是原来的移动方法，使用了平滑插值或匀速移动
+        //private IEnumerator MovingToPosition(Vector2 position, float speed, bool smooth)
         //{
         //    (Vector2 minAnchorTarget, Vector2 maxAnvhorTarget) = ConvertUITargetPositionToRelativeCharacterAnchorTargets(position);
         //    Vector2 padding = root.anchorMax - root.anchorMin;
 
-        //    while(root.anchorMin != minAnchorTarget || root.anchorMax != maxAnvhorTarget)
+        //    while (root.anchorMin != minAnchorTarget || root.anchorMax != maxAnvhorTarget)
         //    {
         //        root.anchorMin = smooth ?
         //            Vector2.Lerp(root.anchorMin, minAnchorTarget, speed * Time.deltaTime)
@@ -203,7 +259,7 @@ namespace CHARACTERS
 
         //        root.anchorMax = root.anchorMin + padding;
 
-        //        if(smooth && Vector2.Distance(root.anchorMin,minAnchorTarget) <= 0.001f)
+        //        if (smooth && Vector2.Distance(root.anchorMin, minAnchorTarget) <= 0.001f)
         //        {
         //            root.anchorMin = minAnchorTarget;
         //            root.anchorMax = maxAnvhorTarget;
@@ -212,21 +268,21 @@ namespace CHARACTERS
         //        yield return null;
         //    }
 
-        //Debug.Log("Done moving");
+        //    Debug.Log("Done moving");
         //    co_moving = null;
         //}
 
-        protected(Vector2,Vector2) ConvertUITargetPositionToRelativeCharacterAnchorTargets(Vector2 position)
+        protected (Vector2, Vector2) ConvertUITargetPositionToRelativeCharacterAnchorTargets(Vector2 position)
         {
             Vector2 padding = root.anchorMax - root.anchorMin;
 
             float maxX = 1f - padding.x;
             float maxY = 1f - padding.y;
 
-            Vector2 minAnchorTarget= new Vector2(maxX*position.x, maxY * position.y);
+            Vector2 minAnchorTarget = new Vector2(maxX * position.x, maxY * position.y);
             Vector2 maxAnchorTarget = minAnchorTarget + padding;
 
-            return(minAnchorTarget,maxAnchorTarget);
+            return (minAnchorTarget, maxAnchorTarget);
         }
 
         public virtual void SetColor(Color color)
@@ -240,21 +296,21 @@ namespace CHARACTERS
         {
             this.color = color;
 
-            if(isChangingColor)
+            if (isChangingColor)
                 characterManager.StopCoroutine(co_changingColor);
 
-            co_changingColor = characterManager.StartCoroutine(ChangingColor(displayColor, speed));
+            co_changingColor = characterManager.StartCoroutine(ChangingColor(speed));
 
             return co_changingColor;
         }
 
-        public virtual IEnumerator ChangingColor(Color color,float speed)
+        public virtual IEnumerator ChangingColor(float speed)
         {
             Debug.Log("该角色类型不支持颜色渐变。");
             yield return null;
         }
 
-        public Coroutine Highlight(float speed = 1f)
+        public Coroutine Highlight(float speed = 1f, bool immediate = false)
         {
             if (isHighlighting)
                 return co_highlighting;
@@ -263,12 +319,12 @@ namespace CHARACTERS
                 characterManager.StopCoroutine(co_highlighting);
 
             highlighted = true;
-            co_highlighting = characterManager.StartCoroutine(Highlighting(highlighted,speed));
+            co_highlighting = characterManager.StartCoroutine(Highlighting(speed, immediate));
 
             return co_highlighting;
         }
 
-        public Coroutine UnHighlight(float speed = 1f)
+        public Coroutine UnHighlight(float speed = 1f, bool immediate = false)
         {
             if (isUnHighlighting)
                 return co_highlighting;
@@ -277,14 +333,15 @@ namespace CHARACTERS
                 characterManager.StopCoroutine(co_highlighting);
 
             highlighted = false;
-            co_highlighting = characterManager.StartCoroutine(Highlighting(highlighted, speed));
+            co_highlighting = characterManager.StartCoroutine(Highlighting(speed, immediate));
 
             return co_highlighting;
         }
 
-        public virtual IEnumerator Highlighting(bool highlighting,float speedMultiplier)
+        public virtual IEnumerator Highlighting(float speedMultiplier, bool immediate = false)
         {
             Debug.Log("该角色类型不支持高亮显示。");
+
             yield return null;
         }
 
@@ -296,7 +353,7 @@ namespace CHARACTERS
                 return FaceLeft(speed, immediate);
         }
 
-        public Coroutine FaceLeft(float speed = 1,bool immediate = false)
+        public Coroutine FaceLeft(float speed = 1, bool immediate = false)
         {
             if (isFlipping)
                 return co_flipping;
@@ -317,17 +374,17 @@ namespace CHARACTERS
             return co_flipping;
         }
 
-        public virtual IEnumerator FaceDirection(bool faceLeft,float speedMultiplier,bool immediate)
+        public virtual IEnumerator FaceDirection(bool faceLeft, float speedMultiplier, bool immediate)
         {
             Debug.Log("该角色类型不支持翻转。");
             yield return null;
         }
 
-        public void SetPriority(int priority,bool autoSortCharactersOnUI = true)
+        public void SetPriority(int priority, bool autoSortCharactersOnUI = true)
         {
             this.priority = priority;
 
-            if(autoSortCharactersOnUI)
+            if (autoSortCharactersOnUI)
                 characterManager.SortCharacters();
         }
 
@@ -336,7 +393,7 @@ namespace CHARACTERS
             animator.SetTrigger(animation);
         }
 
-        public void Animate(string animation,bool state)
+        public void Animate(string animation, bool state)
         {
             animator.SetBool(animation, state);
             animator.SetTrigger(ANIMATION_REFRESH_TRIGGER);
@@ -357,6 +414,8 @@ namespace CHARACTERS
             Text,
             Sprite,
             SpriteSheet,
+            Live2D,
+            Model3D
         }
 
     }

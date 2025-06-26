@@ -7,7 +7,7 @@ namespace TESTING
 {
     public class TestParsing : MonoBehaviour
     {
-        //Ê×Ö¡¸üĞÂÇ°µ÷ÓÃstart Start is called before the first frame update  
+        //é¦–å¸§æ›´æ–°å‰è°ƒç”¨start Start is called before the first frame update  
         void Start()
         {
             //string line = "Speaker \"Dialogue \\\"Goes In\\\" Here!\" Command(arguments here)";
@@ -15,16 +15,16 @@ namespace TESTING
             //DialogueParser.Parse(line);
         }
 
-        //Ã¿Ö¡µ÷ÓÃÒ»´Î¸üĞÂ Update is called once per frame
+        //æ¯å¸§è°ƒç”¨ä¸€æ¬¡æ›´æ–° Update is called once per frame
         void SendFileToParse()
         {
-            //´ÓÎÄ¼ş¹ÜÀíÆ÷»ñÈ¡²âÊÔÎÄ¼şÄÚÈİ
+            //ä»æ–‡ä»¶ç®¡ç†å™¨è·å–æµ‹è¯•æ–‡ä»¶å†…å®¹
             List<string> lines = FileManager.ReadTextAsset("testFile");
             foreach(string line in lines)
             {
                 if (line == string.Empty)
                     continue;
-                //¶Ô»°½âÎöÆ÷´¦ÀíÃ¿ĞĞÄÚÈİ
+                //å¯¹è¯è§£æå™¨å¤„ç†æ¯è¡Œå†…å®¹
                 DIALOGUE_LINE dl = DialogueParser.Parse(line);
             }
         }

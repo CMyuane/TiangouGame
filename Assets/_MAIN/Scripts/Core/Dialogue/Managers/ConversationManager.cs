@@ -48,7 +48,7 @@ namespace DIALOGUE
         /// </summary>
         /// <param name="conversation">对话内容列表</param>
         public Coroutine StartConversation(List<string> conversation)
-        {   
+        {
             // 停止当前对话（如果有）
             StopConversation();
             // 启动新的对话协程
@@ -76,8 +76,8 @@ namespace DIALOGUE
         /// <returns>协程枚举器</returns>
         IEnumerator RuningConversation(List<string> conversation)
         {
-            for(int i = 0; i < conversation.Count; i++)
-            {   
+            for (int i = 0; i < conversation.Count; i++)
+            {
                 // 跳过空行
                 if (string.IsNullOrWhiteSpace(conversation[i]))
                     continue;
@@ -93,9 +93,13 @@ namespace DIALOGUE
                 if (line.hasCommands)
                     yield return Line_RunCommands(line);
 
-                if(line.hasDialogue)
+                if (line.hasDialogue)
                 //等待用户输入
-                yield return WaitForUserInput();
+                {
+                    yield return WaitForUserInput();
+
+                    CommandManager.instance.StopAllProcesses(); // 停止所有命令处理
+                }
 
             }
         }
@@ -118,7 +122,7 @@ namespace DIALOGUE
 
             //等待用户输入
             // yield return WaitForUserInput();
-            
+
         }
 
         private void HandleSpeakerLogic(DL_SPEAKER_DATA speakerData)
@@ -130,42 +134,49 @@ namespace DIALOGUE
             // 如果说话者不存在，则创建角色
             if (speakerData.makeCharacterEnter && (!character.isVisible && !character.isRevealing))
                 character.Show();
-                
+
             dialogueSystem.ShowSpeakerName(speakerData.displayName);
 
             DialogueSystem.instance.ApplySpeakerDataToDialogueContainer(speakerData.name);
 
-            if(speakerData.isCastingPosition)
+            if (speakerData.isCastingPosition)
                 character.MoveToPosition(speakerData.castPosition);
 
             if (speakerData.isCastingExpression)
             {
-                foreach(var ce in speakerData.CastExpressions)
+                foreach (var ce in speakerData.CastExpressions)
                     character.OnReceiveCastingExpression(ce.Layer, ce.expression);
             }
         }
-        
+
         /// <summary>
         /// 处理一行命令的逻辑。
         /// </summary>
         /// <param name="line">对话行对象</param>
         /// <returns>协程枚举器</returns>
         IEnumerator Line_RunCommands(DIALOGUE_LINE line)
-        {   
+        {
             // 打印命令内容（可扩展为实际命令处理逻辑）
             // Debug.Log(line.commandsData);
             List<DL_COMAND_DATA.Command> commands = line.commandsData.commands;
 
-            foreach(DL_COMAND_DATA.Command command in commands)
+            foreach (DL_COMAND_DATA.Command command in commands)
             {
-                if(command.waitForCompletion)
+                if (command.waitForCompletion || command.name == "wait")
                 {
-                    if(command.waitForCompletion)
-                        yield return CommandManager.instance.Execute(command.name,command.arguments);
-                    else
-                        CommandManager.instance.Execute(command.name,command.arguments);
+                    CoroutineWrapper cw = CommandManager.instance.Execute(command.name, command.arguments);
+                    while (!cw.IsDone)
+                    {
+                        if (userPrompt)
+                        {
+                            CommandManager.instance.StopCurrentProcess();
+                            userPrompt = false;
+                        }
+                        yield return null;
+                    }
                 }
-                CommandManager.instance.Execute(command.name,command.arguments);
+                else
+                    CommandManager.instance.Execute(command.name, command.arguments);
             }
             yield return null;
         }
@@ -179,14 +190,14 @@ namespace DIALOGUE
                 // 构建并显示对话内容
                 yield return WaitForDialogueSegmentSignalToBeTriggered(segment);
                 // 等待用户输入
-                yield return BuildDialogue(segment.dialogue,segment.appendText);
+                yield return BuildDialogue(segment.dialogue, segment.appendText);
             }
         }
 
         IEnumerator WaitForDialogueSegmentSignalToBeTriggered(DL_DIALOGUE_DATA.DIALOGUE_SEGMENT segment)
         {
-            switch(segment.startSignal)
-            {    
+            switch (segment.startSignal)
+            {
                 case DL_DIALOGUE_DATA.DIALOGUE_SEGMENT.StartSignal.C:
                 case DL_DIALOGUE_DATA.DIALOGUE_SEGMENT.StartSignal.A:
                     yield return WaitForUserInput();
@@ -196,7 +207,7 @@ namespace DIALOGUE
                     yield return new WaitForSeconds(segment.signalDelay);
                     break;
                 default:
-                    break;    
+                    break;
             }
         }
 
@@ -205,15 +216,15 @@ namespace DIALOGUE
         /// </summary>
         /// <param name="dialogue">对话内容字符串</param>
         /// <returns>协程枚举器</returns>
-        IEnumerator BuildDialogue(string dialogue,bool append = false)
-        {   
-            if(!append)
+        IEnumerator BuildDialogue(string dialogue, bool append = false)
+        {
+            if (!append)
                 architect.Build(dialogue);// 清空文本构建器
             else
                 architect.Append(dialogue);// 追加文本构建器    
-             // 使用文本构建器构建对话内容
-            // architect.Build(dialogue);
-            // 等待对话内容构建完成
+                                           // 使用文本构建器构建对话内容
+                                           // architect.Build(dialogue);
+                                           // 等待对话内容构建完成
             while (architect.isBuilding)
             {
                 // 如果用户提示加速或完成对话

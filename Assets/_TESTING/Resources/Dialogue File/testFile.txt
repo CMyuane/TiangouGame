@@ -1,3 +1,91 @@
+CreateCharacter(白河杏 1 -启用 false -i false), CreateCharacter(黛莉 1 -启用 true -i true), CreateCharacter("守卫1 as 守卫" -e false)
+
+黛莉.SetPosition(1), 白河杏.SetPosition(1)
+
+wait(3)
+
+白河杏.show(), 白河杏.setColor(red)
+
+
+wait(3)
+
+movecharacter(黛莉 -x 0 -y 5 -spd 1 -sm)
+
+黛莉.SetSprite(D_0 1 -l 0 -spd 0.75), 黛莉.SetSprite(D_02惊讶 -l 1 -spd 0.75)
+
+wait(2)
+
+
+CreateCharacter(Emily)
+
+Emily "HI"
+
+Emily.SetSprite(Happy)
+
+
+
+wait(10)
+
+
+
+
+
+
+
+[wait]UnHighlight(白河杏 黛莉), wait(1), [wait]Highlight(白河杏 黛莉), wait(1)
+
+守卫1.Show(-i true), wait(0.5)
+
+[wait]Highlight(白河杏 -o true), wait(1), [wait]UnHighlight(白河杏 -o true), wait(1)
+
+wait(10)
+
+[wait]白河杏.UnHighlight(), [wait]黛莉.UnHighlight()
+[wait]白河杏.Highlight(), [wait]黛莉.Highlight()
+
+白河杏.Unhighlight(-i true), 黛莉.Unhighlight(-i true)
+wait(1)
+白河杏.Highlight(-i true), 黛莉.Unhighlight(-i true)
+
+wait(1)
+
+
+
+
+
+
+
+
+
+wait(1),Sort(白河杏 黛莉 守卫1), 白河杏.SetColor(red), wait(1)
+
+[wait]MoveCharacter(白河杏 1 -2.5 -spd 0.5)
+
+[wait]白河杏.Hide(), [wait]白河杏.Show()
+
+[wait]白河杏.move(0 1 -spd 0.5)
+
+Hide(白河杏 守卫1 黛莉 -spd 0.1)
+白河杏"我要出现了。"
+
+Show(白河杏 守卫1 黛莉 -spd 0.1)
+白河杏"666。"
+
+MoveCharacter(守卫1 0 -spd 0.5), MoveCharacter(白河杏 0.1 -spd 0.5), Hide(黛莉)
+
+守卫1 "你说得对。"
+阿
+白河杏 "你好，{wa 0.5} 你在干嘛。"
+
+wait(9000)
+
+MoveCharacter(黛莉 -横轴 0 -速度 0.75 -平滑 false)
+
+Show(白河杏 黛莉 守卫 -立即 false)
+
+Narrator "Showing characters."
+
+
 enter 白河杏 [bhx_jingya] "搞什么！"
 enter 黛莉 as ??? at 0.2 [0:D_0,1:D_01尴尬] "你好呀"
 黛莉 "今天天气真好"
@@ -16,3 +104,5 @@ enter 女主 "早啊，{wa 0.5} 你在干嘛。"
 幽 "在和你打招呼。"
 
 女主 "······"
+
+白河杏.SetPriority(5), wait(1), 黛莉.SetPriority(6)
