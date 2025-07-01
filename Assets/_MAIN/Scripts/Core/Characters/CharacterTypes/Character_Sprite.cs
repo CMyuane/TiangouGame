@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-//’‚ «“ª∏ˆΩ«…´æ´¡È¿‡£¨ºÃ≥–◊‘Ω«…´¿‡°£À¸±Ì æ”Œœ∑÷–µƒæ´¡ÈΩ«…´£¨≤¢‘⁄¥¥Ω® ± ‰≥ˆµ˜ ‘–≈œ¢°£
+//’‚ «“ª∏ˆΩ«…´æ´¡È¿‡£¨ºÃ≥–◊‘Ω«…´¿‡°£ÀÅE˙Êæ”Œœ∑÷–µƒæ´¡ÈΩ«…´£¨≤¢‘⁄¥¥Ω® ± ‰≥ˆµ˜ ‘–≈œ¢°£
 namespace CHARACTERS
 {
     public class Character_Sprite : Character
@@ -84,7 +84,7 @@ namespace CHARACTERS
                 }
 
                 if (spriteArray.Length == 0)
-                    Debug.LogWarning($"Ω«…´ '{name}' √ª”–ƒ¨»œµƒæ´¡È±Ì£¨Œﬁ∑®ªÒ»°æ´¡È '{SPRITESHEET_DEFAULT_SHEETNAME}'");
+                    Debug.LogWarning($"Ω«…´ '{name}' √ª”–ƒ¨»œµƒæ´¡È±˙ø¨Œﬁ∑®ªÒ»°æ´¡ÅE'{SPRITESHEET_DEFAULT_SHEETNAME}'");
 
                 return Array.Find(spriteArray, sprite => sprite.name == spriteName);
 
@@ -181,7 +181,7 @@ namespace CHARACTERS
 
             if(sprite == null)
             {
-                Debug.LogWarning($"∂‘œÛ '{expression}' Œﬁ∑®¥”Ω«…´ '{name}'÷–’“µΩ");
+                Debug.LogWarning($"∂‘œÅE'{expression}' Œﬁ∑®¥”Ω«…´ '{name}'÷–’“µΩ");
                 return;
             }
 

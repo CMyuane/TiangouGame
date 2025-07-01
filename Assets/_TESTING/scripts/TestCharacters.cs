@@ -6,6 +6,7 @@ using UnityEngine;
 using DIALOGUE;
 using TMPro;
 using System.ComponentModel;
+using System.Data.SqlTypes;
 
 public class TestCharacters : MonoBehaviour
 {
@@ -33,10 +34,13 @@ public class TestCharacters : MonoBehaviour
         //Character_Sprite dlred = CreateCharacter("红黛莉 as 黛莉") as Character_Sprite;
         //Character_Sprite Guard = CreateCharacter("Guard as 守卫") as Character_Sprite;
         //Character_Sprite Realin = CreateCharacter("Realin") as Character_Sprite;
-        
-
-
-        return null;
+        Character_Sprite sc = CreateCharacter("女主") as Character_Sprite;
+        Character_Sprite fox = CreateCharacter("魔性女子") as Character_Sprite;
+        //sc.SetNameColor(Color.red);
+        //fox.SetDialogueColor(Color.red);
+        yield return sc.Say("lines");
+        yield return fox.Say("lines");
+        yield return null;
 
 
 

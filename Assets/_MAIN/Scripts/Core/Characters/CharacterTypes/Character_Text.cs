@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-//уБйгр╩╦Ж╫ги╚нд╠╬юЮё╛╪лЁпвт╫ги╚юЮ║ёкЭ╠Мй╬сно╥жп╣днд╠╬╫ги╚ё╛╡╒тз╢╢╫╗й╠йДЁЖ╣Вйтпео╒║ё
+//уБйгр╩╦Ж╫ги╚нд╠╬юЮё╛╪лЁпвт╫ги╚юЮ║ёк│EЗФ╬сно╥жп╣днд╠╬╫ги╚ё╛╡╒тз╢╢╫╗й╠йДЁЖ╣Вйтпео╒║ё
 namespace CHARACTERS
 {
     public class Character_Text : Character

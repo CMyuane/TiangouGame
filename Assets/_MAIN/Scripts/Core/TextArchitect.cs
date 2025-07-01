@@ -10,20 +10,20 @@ public class TextArchitect
     private TextMeshPro tmpro_world;
 
     //Í³Ò»·ÃÎÊ½Ó¿Ú£¬ÓÅÏÈ·µ»Øui×é¼ş
-    public TMP_Text tmpro => tmpro_ui != null ? tmpro_ui : tmpro_world;  //¼ì²étmprouiÊÇ·ñ²»Îª¿Õ£¬²»Îª¿ÕÊ¹ÓÃui£¬Îª¿ÕÊ¹ÓÃworld
+    public TMP_Text tmpro => tmpro_ui != null ? tmpro_ui : tmpro_world;  //¼EétmprouiÊÇ·ñ²»Îª¿Õ£¬²»Îª¿ÕÊ¹ÓÃui£¬Îª¿ÕÊ¹ÓÃworld
 
     //µ±Ç°ÏÔÊ¾µÄÎÄ±¾ÄÚÈİ
     public string currentText => tmpro.text;
-    //Ä¿±êÎÄ±¾£¨ĞÂÄÚÈİ£©
+    //Ä¿±EÄ±¾£¨ĞÂÄÚÈİ£©
     public string targetText { get; private set; } = "";
     //Ç°ÖÃÎÄ±¾£¨ÒÑ¾­´æÔÚµÄÄÚÈİ£©
     public string preText { get; private set; } = "";                   //ĞÂÎÄ±¾¿É¸½¼Óµ½ÏÖÓĞÎÄ±¾£¨ÒÑÓĞµÄÈÎºÎÄÚÈİ£©Ö®ÉÏ
-    private int preTextLength = 0;                                      //Ç°ÖÃÎÄ±¾³¤¶È£¨ÓÃÓÚµ­Èë)
-    //ÍêÕûÄ¿±êÎÄ±¾£¨Ç°ÖÃ+Ä¿±ê£©
+    private int preTextLength = 0;                                      //Ç°ÖÃÎÄ±¾³¤¶È£¨ÓÃÓÚµ­ÈE
+    //ÍEûÄ¿±EÄ±¾£¨Ç°ÖÃ+Ä¿±ê£©
     public string fullTargetText => preText + targetText;
 
 
-    //¹¹½¨·½Ê½Ã¶¾Ù£¬Ä¬ÈÏÎª´ò×Ö»ú
+    //¹¹½¨·½Ê½Ã¶¾Ù£¬Ä¬ÈÏÎª´ò×Ö»E
     public enum BuildMethod { instant, typewriter, fade }
     public BuildMethod buildMethod = BuildMethod.typewriter;            
 
@@ -48,7 +48,7 @@ public class TextArchitect
 
     public bool hurryUp = false;
 
-    //¹¹Ôìº¯Êı
+    //¹¹ÔE¯Êı
     public TextArchitect(TextMeshProUGUI tmpro_ui)
     {
         this.tmpro_ui = tmpro_ui;
@@ -56,14 +56,14 @@ public class TextArchitect
 
     public TextArchitect(TextMeshPro tmpro_world)
     {
-        this.tmpro_world = tmpro_world;                         //¿ÉÒÔ·ÖÅäui»ò3d¿Õ¼ä¸øtextarchitect
+        this.tmpro_world = tmpro_world;                         //¿ÉÒÔ·ÖÅäui»Ed¿Õ¼ä¸øtextarchitect
     }
 
     //¹¹½¨ÎÄ±¾
     public Coroutine Build(string text)
     {
         preText = "";                       //Èç¹ûÕıÔÚ¹¹½¨£¬±£Ö¤Ç°ÖÃÎÄ±¾Îª¿Õ
-        targetText = text;          //Ä¿±êÎÄ±¾µÈÓÚ´«ÈëµÄÈÎºÎÎÄ±¾
+        targetText = text;          //Ä¿±EÄ±¾µÈÓÚ´«ÈEÄÈÎºÎÎÄ±¾
 
         Stop();
 
@@ -82,11 +82,11 @@ public class TextArchitect
         buildProcess = tmpro.StartCoroutine(Building());
         return buildProcess;
     }
-    //¼àÊÓÆ÷·½·¨£¬Èç¹û¹¹½¨ÀàÕıÔÚÉú³ÉÔòÍ£Ö¹Ëû
-    private Coroutine buildProcess = null;      //´¦ÀíÎÄ±¾Éú³É
+    //¼àÊÓÆ÷·½·¨£¬Èç¹û¹¹½¨ÀàÕıÔÚÉú³ÉÔòÍ£Ö¹ËE
+    private Coroutine buildProcess = null;      //´¦ÀúêÄ±¾Éú³É
     public bool isBuilding => buildProcess != null;     //Èç¹ûÕıÔÚ¹¹½¨·µ»ØT
 
-    //Í£Ö¹ÕıÔÚÔËĞĞµÄĞ­Í¬³ÌĞò
+    //Í£Ö¹ÕıÔÚÔËĞĞµÄĞ­Í¬³ÌĞE
     public void Stop()
     {
         if (!isBuilding)
@@ -96,7 +96,7 @@ public class TextArchitect
         buildProcess = null;
     }
 
-    //¹¹½¨·½·¨Ã¶¾ÙÆ÷
+    //¹¹½¨·½·¨Ã¶¾ÙÆE
     IEnumerator Building()
     {
         Prepare();

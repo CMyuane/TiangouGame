@@ -25,9 +25,9 @@ namespace DIALOGUE
         // �Ի�ϵͳ�¼���������Ӧ�û�����
         public delegate void DialogueSystemEvent();
         public event DialogueSystemEvent onUserPrompt_Next;
-        private bool isRunningConversation = false;
+        //private bool isRunningConversation = false;
         private List<string> fullLines;
-        private List<string> subLinesToContinue = null;
+        //private List<string> subLinesToContinue = null;
         private Coroutine conversationProcess;
 
         // �Ƿ��������жԻ�
@@ -207,11 +207,11 @@ namespace DIALOGUE
 
             if (parsed.hasSpeaker)
             {
-                DialogueSystem.instance.ShowSpeakerName(parsed.speakerData.displayName);
-                DialogueSystem.instance.ApplySpeakerDataToDialogueContainer(parsed.speakerData.name);
-
-                // 這裡負責角色登場、移動、表情等：
                 Character character = CharacterManager.instance.GetCharacter(parsed.speakerData.name, createIfDoesNotExist: true);
+                character.UpdateTextCustomizationsOnScreen();
+                DialogueSystem.instance.ApplySpeakerDataToDialogueContainer(parsed.speakerData.name);
+                DialogueSystem.instance.ShowSpeakerName(parsed.speakerData.displayName);
+
                 if (parsed.speakerData.makeCharacterEnter && (!character.isVisible && !character.isRevealing))
                     character.Show();
 
