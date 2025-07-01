@@ -15,7 +15,6 @@ namespace CHARACTERS
         private const char SPRITESHEET_TEX_SPRITE_DELIMITTER = '-';
 
         private CanvasGroup rootCG => root.GetComponent<CanvasGroup>();
-
         public List<CharacterSpriteLayer> layers = new List<CharacterSpriteLayer>();
 
         private string artAssetsDirectory = "";

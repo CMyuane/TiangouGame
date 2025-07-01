@@ -1,16 +1,16 @@
-using DIALOGUE;
+ï»¿using DIALOGUE;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-//Õâ¸ö½Å±¾¶¨ÒåÁËÒ»¸ö³éÏóµÄ½ÇÉ«Àà£¬±úæ¾ÓÎÏ·ÖĞµÄ½ÇÉ«¡£ËEE¬ÁË½ÇÉ«µÄ»ù±¾ÊôĞÔºÍ·½·¨£¬ÓÃÓÚ´¦ÀúÙÇÉ«µÄ¶Ô»°ºÍÎÄ±¾ÑùÊ½µÈ¹¦ÄÜ¡£
+//ï¾•ç¯‹î“¤ï¾…ï½±ï½¾ï½¶ï½¨ï¾’è ±ï¾‹ï¾’ï½»ï½¸î“šé°•îŠ¨ï¾„ï½½ï¾‡ï¾‰ï½«ï¾€çˆ›ï½¬ï½±æ¡„ï½¾ï¾“ï¾ï¾ï½·ï¾–ï¾ï½µï¾„ï½½ï¾‡ï¾‰ï½«ï½¡ï½£ï¾‹ãƒ»ãƒ»ï½¬ï¾ï¾‹ï½½ï¾‡ï¾‰ï½«ï½µï¾„ï½»îœŒï½¾ï¾Šî¿ï¾”ï½ºï¾ï½·ï½½ï½·ï½¨ï½£ï½¬ï¾“ï¾ƒï¾“ï¾šï½´ï½¦ï¾€æ™³ï¾‡ï¾‰ï½«ï½µï¾„ï½¶ï¾”ï½»ï½°ï½ºï¾ï¾ï¾„ï½±ï½¾ï¾‘îœ¥ï½½ï½µï¾ˆï½¹ï½¦ï¾„ï¾œï½¡ï½£
 namespace CHARACTERS
 {
     public abstract class Character
     {
-        // ½ÇÉ«µÄ»ù±¾ÅäÖÃÊı¾İ
-        public const bool ENABLE_ON_START = false; //´´½¨Ê±²»¿É¼E
+        // ï½½ï¾‡ï¾‰ï½«ï½µï¾„ï½»îœŒï½¾ï¾…è‘·ï¾ƒï¾Šï£±ï½¾ï¾
+        public const bool ENABLE_ON_START = false; //ï½´ï½´ï½½ï½¨ï¾Šï½±ï½²ï½»ï½¿ï¾‰ï½¼ãƒ»
         private const float UNHIGHLIGHTED_DARKEN_STRENGTH = 0.5f;
         public const bool DEFAULT_ORIENTATION_IS_FACING_LEFT = true;
         public const string ANIMATION_REFRESH_TRIGGER = "Refresh";
@@ -28,7 +28,7 @@ namespace CHARACTERS
         protected bool facingLeft = DEFAULT_ORIENTATION_IS_FACING_LEFT;
         public int priority { get; protected set; }
 
-        // ½ÇÉ«µÄ»ù±¾ÊôĞÔ
+        // ï½½ï¾‡ï¾‰ï½«ï½µï¾„ï½»îœŒï½¾ï¾Šî¿ï¾”
         protected CharacterManager characterManager => CharacterManager.instance;
         public DialogueSystem dialogueSystem => DialogueSystem.instance;
 
@@ -42,7 +42,7 @@ namespace CHARACTERS
         public bool isMoving => co_moving != null;
         public bool isChangingColor => co_changingColor != null;
         public bool isHighlighting => (highlighted && co_highlighting != null); 
-        public bool isUnHighlighting => (!highlighted && co_highlighting != null); // Õâ¸öÊôĞÔ±úæ¾½ÇÉ«ÊÇ·ñÕıÔÚÈ¡Ïû¸ßÁÁÏÔÊ¾
+        public bool isUnHighlighting => (!highlighted && co_highlighting != null); // ï¾•ç¯‹î“±î¿ï¾”ï½±æ¡„ï½¾ï½½ï¾‡ï¾‰ï½«ï¾Šï¾‡ï½·î…ï£±ï¾”ï¾šï¾ˆï½¡ï¾é„•ï¾Ÿï¾ï¾ï¾ï¾”ï¾Šï½¾
         public virtual bool isVisible  {get;set;}
         public bool isFacingLeft => facingLeft;
         public bool isFacingRight => !facingLeft;
@@ -169,7 +169,7 @@ namespace CHARACTERS
                 }
                 else
                 {
-                    // ·ÇÆ½»¬Ä£Ê½ÏÂ£¬Ê¹ÓÃÔÈËÙÒÆ¶¯
+                    // ï½·ï¾‡ï¾†ï½½ï½»ï½¬ï¾„ï½£ï¾Šï½½ï¾ï¾‚ï½£ï½¬ï¾Šï½¹ï¾“ï¾ƒï¾”ï¾ˆï¾‹ï¾™ï¾’ï¾†ï½¶ï½¯
                     root.anchorMin = Vector2.MoveTowards(
                         startMin,
                         minAnchorTarget,
@@ -182,7 +182,7 @@ namespace CHARACTERS
                 yield return null;
             }
 
-            // È·±£×ûòÕÎ»ÖÃ¾«È·
+            // ï¾ˆï½·ï½±ï½£ï¾—é‘ï¾•ï¾ï½»ï¾–ï¾ƒï½¾ï½«ï¾ˆï½·
             root.anchorMin = minAnchorTarget;
             root.anchorMax = maxAnchorTarget;
 
@@ -232,8 +232,8 @@ namespace CHARACTERS
         public virtual void SetColor(Color color)
         {
             this.color = color;
-            // ÕâÀEÉÒÔÌúØÓ¶Ô½ÇÉ«ÑÕÉ«µÄÉèÖÃÂß¼­
-            // ÀıÈç£¬Ê¹ÓÃ²ÄÖÊ»òÆäËû·½Ê½À´¸Ä±ä½ÇÉ«µÄÑÕÉ«
+            // ï¾•ç°‘ãƒ»ï¾‰ï¾’ï¾”ï¾Œï¨’ï¾“ï½¶ï¾”ï½½ï¾‡ï¾‰ï½«ï¾‘ï¾•ï¾‰ï½«ï½µï¾„ï¾‰é¹ï¾ƒï¾‚ï¾Ÿï½¼ï½­
+            // ï¾€ï£±ï¾ˆé€ï½¬ï¾Šï½¹ï¾“ï¾ƒï½²ï¾„ï¾–ï¾Šï½»î‡½è¢ï¨¦ï½½ï¾Šï½½ï¾€ï½´ï½¸ï¾„ï½±è´ï¾‡ï¾‰ï½«ï½µï¾„ï¾‘ï¾•ï¾‰ï½«
         }
 
         public Coroutine TransitionColor(Color color, float speed = 1f)
@@ -250,7 +250,7 @@ namespace CHARACTERS
 
         public virtual IEnumerator ChangingColor(Color color,float speed)
         {
-            Debug.Log("¸Ã½ÇÉ«ÀàĞÍ²»Ö§³ÖÑÕÉ«½¥±ä¡£");
+            Debug.Log("ï½¸ï¾ƒï½½ï¾‡ï¾‰ï½«ï¾€çï¾ï½²ï½»ï¾–ï½§ï½³ï¾–ï¾‘ï¾•ï¾‰ï½«ï½½ï½¥ï½±èŒ–ï½£");
             yield return null;
         }
 
@@ -284,7 +284,7 @@ namespace CHARACTERS
 
         public virtual IEnumerator Highlighting(bool highlighting,float speedMultiplier)
         {
-            Debug.Log("¸Ã½ÇÉ«ÀàĞÍ²»Ö§³Ö¸ßÁÁÏÔÊ¾¡£");
+            Debug.Log("ï½¸ï¾ƒï½½ï¾‡ï¾‰ï½«ï¾€çï¾ï½²ï½»ï¾–ï½§ï½³ï¾–ï½¸ï¾Ÿï¾ï¾ï¾ï¾”ï¾Šï½¾ï½¡ï½£");
             yield return null;
         }
 
@@ -319,7 +319,7 @@ namespace CHARACTERS
 
         public virtual IEnumerator FaceDirection(bool faceLeft,float speedMultiplier,bool immediate)
         {
-            Debug.Log("¸Ã½ÇÉ«ÀàĞÍ²»Ö§³Ö·­×ª¡£");
+            Debug.Log("ï½¸ï¾ƒï½½ï¾‡ï¾‰ï½«ï¾€çï¾ï½²ï½»ï¾–ï½§ï½³ï¾–ï½·ï½­ï¾—ï½ªï½¡ï½£");
             yield return null;
         }
 
