@@ -22,14 +22,14 @@ public class VoiceTriggerManager : MonoBehaviour
         string currentText = DialogueSystem.instance.dialogueContainer.dialogueText.text.Trim();
         Debug.Log($"[VoiceTrigger] 玩家點擊繼續，畫面文字為：{currentText}");
 
-        if (!hasTriggeredRecord && currentText.Contains("搞什么！"))
+        if (!hasTriggeredRecord && currentText.Contains("我想幫你完成話劇。"))
         {
             hasTriggeredRecord = true;
             Debug.Log("觸發錄音 UI");
             VoiceManager.instance?.ShowRecordButton();
         }
 
-        if (!hasTriggeredPlay && currentText.Contains("今天也很充實呢～"))
+        if (!hasTriggeredPlay && currentText.Contains("想幫我完成話劇。"))
         {
             hasTriggeredPlay = true;
             Debug.Log("觸發播放 UI");

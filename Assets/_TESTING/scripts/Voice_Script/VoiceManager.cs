@@ -5,8 +5,12 @@ using UnityEngine;
 public class VoiceManager : MonoBehaviour
 {
     public static VoiceManager instance { get; private set; }
+
     [SerializeField] private GameObject recordButton;
     [SerializeField] private GameObject playButton;
+    [SerializeField] private AudioSource bgmSource; // ← 拖入 BGM 音源
+
+    private AudioSource voiceSource; // ← 用於播放錄音
     private AudioClip recordedClip;
     private string filePath;
     public bool isRecording = false;
@@ -17,23 +21,34 @@ public class VoiceManager : MonoBehaviour
         if (instance == null)
             instance = this;
         else
+        {
             Destroy(gameObject);
+            return;
+        }
 
-        DontDestroyOnLoad(gameObject); // 跨場景保存
+        DontDestroyOnLoad(gameObject);
+
         recordButton.SetActive(false);
         playButton.SetActive(false);
+
+        // 建立錄音資料夾
         filePath = Path.Combine(Application.persistentDataPath, "recordings");
         Directory.CreateDirectory(filePath);
+
+        // 初始化語音專用 AudioSource
+        voiceSource = gameObject.AddComponent<AudioSource>();
+        voiceSource.loop = false;
     }
+
     public void ShowRecordButton()
     {
-        isBlockingDialogue = true; // 顯示時就阻擋
+        isBlockingDialogue = true;
         recordButton.SetActive(true);
     }
 
     public void ShowPlayButton()
     {
-        isBlockingDialogue = true; // 顯示時就阻擋
+        isBlockingDialogue = true;
         playButton.SetActive(true);
     }
 
@@ -56,7 +71,7 @@ public class VoiceManager : MonoBehaviour
         else
         {
             StopRecording();
-            HideRecordButton(); // 關閉 UI 同時解除阻擋
+            HideRecordButton();
         }
     }
 
@@ -70,6 +85,7 @@ public class VoiceManager : MonoBehaviour
     private void StopRecording()
     {
         if (!isRecording) return;
+
         int length = Microphone.GetPosition(null);
         Microphone.End(null);
 
@@ -77,6 +93,7 @@ public class VoiceManager : MonoBehaviour
         {
             float[] samples = new float[length * recordedClip.channels];
             recordedClip.GetData(samples, 0);
+
             AudioClip trimmedClip = AudioClip.Create("Recorded", length, recordedClip.channels, recordedClip.frequency, false);
             trimmedClip.SetData(samples, 0);
 
@@ -91,21 +108,37 @@ public class VoiceManager : MonoBehaviour
     public void PlayRecordedAudio()
     {
         string fullPath = Path.Combine(filePath, "voice.wav");
+
         if (File.Exists(fullPath))
         {
             AudioClip clip = WavUtility.LoadWav(fullPath);
-            AudioSource source = GetComponent<AudioSource>();
-            if (source == null)
-                source = gameObject.AddComponent<AudioSource>();
 
-            source.clip = clip;
-            source.Play();
-            playButton.gameObject.SetActive(false);
+            if (bgmSource != null && bgmSource.isPlaying)
+                bgmSource.Pause();
+
+            voiceSource.clip = clip;
+            voiceSource.loop = false;
+            voiceSource.Play();
+
+            playButton.SetActive(false);
+
             Debug.Log("Playing recorded audio.");
+
+            StartCoroutine(ResumeBGM_AfterVoice(clip.length));
         }
         else
         {
             Debug.LogWarning("No recorded file found!");
         }
+    }
+
+    private IEnumerator ResumeBGM_AfterVoice(float delay)
+    {
+        yield return new WaitForSeconds(delay + 0.1f);
+
+        if (bgmSource != null)
+            bgmSource.UnPause();
+
+        isBlockingDialogue = false; // 加上這行讓對話可以繼續
     }
 }
