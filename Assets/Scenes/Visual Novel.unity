@@ -215,6 +215,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _characterpannel: {fileID: 51290566}
+  _characterpannel_live2D: {fileID: 0}
+  _characterpannel_model3D: {fileID: 0}
 --- !u!1 &257219677
 GameObject:
   m_ObjectHideFlags: 0
@@ -606,7 +608,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 344262164}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d60230dc5ebb4254cbccbcc3e6d52208, type: 3}
+  m_Script: {fileID: 11500000, guid: 2a32b348b15c60b48899cd64c61b37ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   fileToRead: {fileID: 4900000, guid: 90609e8a87e402d49bc77c303081a670, type: 3}
@@ -619,7 +621,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 344262164}
   m_Enabled: 0
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7236893510dae9349945c56b95527ca2, type: 3}
+  m_Script: {fileID: 11500000, guid: e5f027e4b20775945975e16110b4ee89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &384891660
@@ -2438,7 +2440,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1410845410}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d60230dc5ebb4254cbccbcc3e6d52208, type: 3}
+  m_Script: {fileID: 11500000, guid: 2a32b348b15c60b48899cd64c61b37ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   fileToRead: {fileID: 4900000, guid: 9e00757cd2f533240a396ddffb98315a, type: 3}

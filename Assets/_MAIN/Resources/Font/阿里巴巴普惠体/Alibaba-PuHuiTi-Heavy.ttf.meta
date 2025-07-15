@@ -1,3 +1,21 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:33d189eda9c81c57b5ddcefab475a7ac99734d24a7d5e8b59aba4f4a709b3093
-size 480
+fileFormatVersion: 2
+guid: c41a586bfcd166144a57a2328a688249
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - Alibaba PuHuiTi
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

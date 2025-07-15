@@ -5,12 +5,12 @@ using DIALOGUE;
 
 namespace TESTING
 {
-    public class Tessting_Architect : MonoBehaviour
+    public class Testing_Architect : MonoBehaviour
     {
         DialogueSystem ds;
         TextArchitect architect;
 
-        public TextArchitect.BuildMethod bm = TextArchitect.BuildMethod.instant;
+        public TABuilder.BuilderTypes bm = TABuilder.BuilderTypes.Fade;
 
         string[] lines = new string[5]
         {
@@ -24,19 +24,22 @@ namespace TESTING
         void Start()
         {
             ds = DialogueSystem.instance;
-            architect = new TextArchitect(ds.dialogueContainer.dialogueText);
-            architect.buildMethod = TextArchitect.BuildMethod.fade;
+            architect = new TextArchitect(ds.dialogueContainer.dialogueText, bm);
             architect.speed = 0.5f;
         }
 
         // Update is called once per frame
         void Update()
         {
-            if(bm != architect.buildMethod)
+            if (bm != architect.builderType)
             {
-                architect.buildMethod = bm;
+                architect.SetBuilderType(bm);
                 architect.Stop();
             }
+
+            if (Input.GetKeyDown(KeyCode.S))
+                architect.Stop();
+
             string longLine = "The fairy mistress of dreams is coming towards you, flying through the twilight sky.The fairy mistress of dreams is coming towards you, flying through the twilight sky.The wind carries away in glee the tinkling of your anklet bells.The sun smiles and watches your toilet. The sky watches over you when you sleep in your mother's arms, and the morning comes tiptoe to your bed and kisses your eyes.";
             if (Input.GetKeyDown(KeyCode.Space))
             {
