@@ -1,21 +1,16 @@
-using CHARACTERS;
+﻿using CHARACTERS;
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEngine;
-using DIALOGUE;
 using TMPro;
-using System.ComponentModel;
+using UnityEngine;
 
 public class TestCharacters : MonoBehaviour
 {
     public TMP_FontAsset tempFont;
 
     private Character CreateCharacter(string name) => CharacterManager.instance.CreateCharacter(name);
-    
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         //Character Generic = CharacterManager.instance.CreateCharacter("Generic");
         //Character nagasaki = CharacterManager.instance.CreateCharacter("nagasaki");
@@ -24,24 +19,85 @@ public class TestCharacters : MonoBehaviour
         StartCoroutine(Test());
     }
 
-    IEnumerator Test()
+    private IEnumerator Test()
     {
-        Character_Sprite bhx = CreateCharacter("白河杏") as Character_Sprite;
+        Character_Sprite 白河杏 = CreateCharacter("白河杏") as Character_Sprite;
         //Character_Sprite bhxblue = CreateCharacter("蓝白河杏 as 白河杏") as Character_Sprite;
         //Debug.Log($"guard1 is of type: {白河杏.GetType().Name}");
         Character_Sprite dl = CreateCharacter("黛莉") as Character_Sprite;
         //Character_Sprite dlred = CreateCharacter("红黛莉 as 黛莉") as Character_Sprite;
         //Character_Sprite Guard = CreateCharacter("Guard as 守卫") as Character_Sprite;
         //Character_Sprite Realin = CreateCharacter("Realin") as Character_Sprite;
-        
+        //Character_Live2D child = CreateCharacter("child") as Character_Live2D;
+        //Character_Live2D snow = CreateCharacter("snow") as Character_Live2D;
+        //Character_Live2D First = CreateCharacter("First") as Character_Live2D;
+        //Character_Live2D Child = CreateCharacter("Child") as Character_Live2D;
+        //Character_Live2D Moon = CreateCharacter("Moon") as Character_Live2D;
 
+        ////dl.SetPosition(Vector2.zero);
+        //snow.SetPosition(new Vector2(0.1f, 0));
+        //First.SetPosition(new Vector2(0.3f, 0));
+        //Child.SetPosition(new Vector2(0.6f, 0));
+        //Moon.SetPosition(new Vector2(0.9f, 0));
 
-        return null;
+        //yield return new WaitForSeconds(1);
 
+        //CharacterManager.instance.SortCharacters(new string[] { "First", "snow", "Child", "Moon" });
 
+        //yield return new WaitForSeconds(1);
 
+        //snow.SetPriority(5);
 
+        //return null;
 
+        //测试l2d角色高亮、翻转、隐藏、颜色
+        //dl.Hide();
+        //First.Hide();
+
+        //dl.isVisible = false;
+        //First.isVisible = false;
+
+        //yield return new WaitForSeconds(1);
+
+        //dl.Highlight();
+        //First.Highlight();
+
+        //yield return new WaitForSeconds(0.5f);
+
+        //dl.Flip();
+        //First.Flip();
+
+        ////dl.UnHighlight();
+        ////First.UnHighlight();
+        //yield return new WaitForSeconds(0.5f);
+
+        //dl.Flip();
+        //First.Flip();
+        //dl.Highlight();
+        //First.Highlight();
+        //dl.TransitionColor(Color.blue);
+        //First.TransitionColor(Color.blue);
+
+        //yield return new WaitForSeconds(0.5f);
+
+        //dl.TransitionColor(Color.white);
+        //First.TransitionColor(Color.white);
+
+        //测试L2d动作表情切换
+        ////child.SetPosition(new Vector2(0.5f,0));
+        //dl.SetPosition(new Vector2(1, 0));
+        //First.SetPosition(new Vector2(0.5f, 0));
+
+        //yield return new WaitForSeconds(1);
+
+        //First.SetExpression("Squint");
+
+        //yield return new WaitForSeconds(3);
+
+        //First.SetExpression("Laugh");
+
+        //yield return null;
+        //黛莉.isVisible = false;
 
         //测试立绘抖动、跳动等动画
         //bhx.SetPosition(new Vector2 (0,0));
@@ -63,11 +119,7 @@ public class TestCharacters : MonoBehaviour
         //bhx.Animate("Shiver", false);
         //yield return bhx.Say("我们回屋里去！");
 
-
-
-
         //yield return null;
-
 
         //测试优先级
         //bhxblue.SetColor(Color.blue);
@@ -96,13 +148,9 @@ public class TestCharacters : MonoBehaviour
         //yield return new WaitForSeconds(1f);
 
         //CharacterManager.instance.SortCharacters(new string[] { "红黛莉", "白河杏", "蓝白河杏", "黛莉" });
-        ////bhx.SetPriority(1); 
+        ////bhx.SetPriority(1);
 
         //yield return null;
-
-
-
-
 
         //测试翻转、高亮和暗淡
         //yield return new WaitForSeconds(1f);
@@ -135,8 +183,6 @@ public class TestCharacters : MonoBehaviour
         //dl.Highlight();
         //yield return dl.Say("真的，你很有诗人的潜力！");
 
-
-
         //yield return new WaitForSeconds(1);
 
         //yield return Realin.UnHighlight();
@@ -153,7 +199,6 @@ public class TestCharacters : MonoBehaviour
 
         //yield return Realin.TransitionColor(Color.white);
 
-
         //这是测颜色变换
         //yield return Realin.TransitionColor(Color.red,speed:0.3f);
         //yield return Realin.TransitionColor(Color.blue);
@@ -162,11 +207,9 @@ public class TestCharacters : MonoBehaviour
 
         //yield return null;
 
-
         //这是一个测试用的注释
         //yield return Realin.TransitionSprite(Realin.GetSprite("B_Default"),1);
         //Realin.TransitionSprite(Realin.GetSprite("B2"));
-
 
         //白河杏.Hide();
         //黛莉.Hide();
@@ -186,7 +229,6 @@ public class TestCharacters : MonoBehaviour
         //黛莉.Show();
         //yield return 黛莉.MoveToPosition(new Vector2(1, 0), 0.5f);
 
-
         //Realin.TransitionSprite(Realin.GetSprite("B_Scold"), layer: 1);
 
         //body = 黛莉.GetSprite("1");
@@ -197,12 +239,9 @@ public class TestCharacters : MonoBehaviour
         //白河杏.Show();
         //yield return 白河杏.MoveToPosition(Vector2.one, 1f, true);
 
-
         //Debug.Log($"可见性 = {Realin.isVisible}");
 
-
         //yield return null;
-
 
         //这是测试移动位置和速度
         //白河杏.SetPosition(Vector2.zero);
@@ -210,11 +249,9 @@ public class TestCharacters : MonoBehaviour
         //守卫.SetPosition(Vector2.one);
         //Realin.SetPosition(new Vector2(2f,1f));
 
-
         //黛莉.Show();
         //守卫.Show();
         //Realin.Show();
-
 
         //这是测试切换图层
         //Sprite bodySprite = 黛莉.GetSprite("1");
@@ -236,21 +273,18 @@ public class TestCharacters : MonoBehaviour
         //yield return 白河杏.MoveToPosition(Vector2.one, 2f, true);
         //yield return 白河杏.MoveToPosition(Vector2.zero, 2f, false);
 
-
-
         //这是测试颜色
-        //白河杏.SetNameColor(Color.red);
+        白河杏.SetNameColor(Color.red);
         //黛莉.SetNameFont(tempFont);
         //守卫.SetDialogueColor(Color.red);
         //Realin.SetDialogueFont(tempFont);
 
-
-        //yield return 白河杏.Say("Hello, I'm Guard1.");
+        yield return 白河杏.Say("Hello, I'm Guard1.");
         //yield return 黛莉.Say("Hello, I'm Guard2.");
         //yield return 守卫.Say("Hello, I'm Guard3.");
         //yield return Realin.Say("Hello, I'm Guard1 again.");
 
-        //yield return null;
+        yield return null;
         //yield return new WaitForSeconds(1f);
 
         //Character bhx = CharacterManager.instance.CreateCharacter("白河杏");
@@ -300,8 +334,7 @@ public class TestCharacters : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        
     }
 }

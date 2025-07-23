@@ -20,6 +20,7 @@ namespace TESTING
             "The wind carries away in glee the tinkling of your anklet bells.",
             "The fairy mistress of dreams is coming towards you, flying through the twilight sky."
         };
+
         // Start is called before the first frame update
         void Start()
         {
@@ -39,7 +40,6 @@ namespace TESTING
 
             if (Input.GetKeyDown(KeyCode.S))
                 architect.Stop();
-
             string longLine = "The fairy mistress of dreams is coming towards you, flying through the twilight sky.The fairy mistress of dreams is coming towards you, flying through the twilight sky.The wind carries away in glee the tinkling of your anklet bells.The sun smiles and watches your toilet. The sky watches over you when you sleep in your mother's arms, and the morning comes tiptoe to your bed and kisses your eyes.";
             if (Input.GetKeyDown(KeyCode.Space))
             {

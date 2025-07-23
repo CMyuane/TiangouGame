@@ -1,53 +1,54 @@
+ï»¿using CHARACTERS;
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using System.Reflection;
 using System.Linq;
-using System;
+using System.Reflection;
+using UnityEngine;
 using UnityEngine.Events;
-using CHARACTERS;
 
 namespace COMMANDS
 {
     public class CommandManager : MonoBehaviour
     {
-        // ×ÓÃüÁî±êÊ¶·û£¨Ê¹ÓÃµãºÅ·Ö¸ô£©
+        // å­å‘½ä»¤æ ‡è¯†ç¬¦ï¼ˆä½¿ç”¨ç‚¹å·åˆ†éš”ï¼‰
         private const char SUB_COMMAND_IDENTIFIER = '.';
 
-        // ×ÓÊı¾İ¿â³£Á¿¶¨Òå
-        public const string DATABASE_CHARACTERS_BASE = "characters";          // »ù´¡½ÇÉ«ÃüÁîÊı¾İ¿â
-        public const string DATABASE_CHARACTERS_SPRITE = "characters_sprite"; // ¾«Áé½ÇÉ«ÃüÁîÊı¾İ¿â
-        public const string DATABASE_CHARACTERS_LIVE2D = "characters_live2D"; // Live2D½ÇÉ«ÃüÁîÊı¾İ¿â
-        public const string DATABASE_CHARACTERS_Model3D = "characters_model3D"; // 3DÄ£ĞÍ½ÇÉ«ÃüÁîÊı¾İ¿â
+        // å­æ•°æ®åº“å¸¸é‡å®šä¹‰
+        public const string DATABASE_CHARACTERS_BASE = "characters";          // åŸºç¡€è§’è‰²å‘½ä»¤æ•°æ®åº“
 
-        // µ¥ÀıÊµÀı
+        public const string DATABASE_CHARACTERS_SPRITE = "characters_sprite"; // ç²¾çµè§’è‰²å‘½ä»¤æ•°æ®åº“
+        public const string DATABASE_CHARACTERS_LIVE2D = "characters_live2D"; // Live2Dè§’è‰²å‘½ä»¤æ•°æ®åº“
+        public const string DATABASE_CHARACTERS_Model3D = "characters_model3D"; // 3Dæ¨¡å‹è§’è‰²å‘½ä»¤æ•°æ®åº“
+
+        // å•ä¾‹å®ä¾‹
         public static CommandManager instance { get; private set; }
 
-        // Ö÷ÃüÁîÊı¾İ¿â
+        // ä¸»å‘½ä»¤æ•°æ®åº“
         private CommandDatabase database;
 
-        // ×ÓÃüÁîÊı¾İ¿â×Öµä
+        // å­å‘½ä»¤æ•°æ®åº“å­—å…¸
         private Dictionary<string, CommandDatabase> subDatabases = new Dictionary<string, CommandDatabase>();
 
-        // µ±Ç°»î¶¯µÄÃüÁî½ø³ÌÁĞ±í
+        // å½“å‰æ´»åŠ¨çš„å‘½ä»¤è¿›ç¨‹åˆ—è¡¨
         public List<CommandProcess> activeProcesses = new List<CommandProcess>();
 
-        // »ñÈ¡¶¥²¿ÃüÁî½ø³Ì£¨×îºóÆô¶¯µÄ½ø³Ì£©
+        // è·å–é¡¶éƒ¨å‘½ä»¤è¿›ç¨‹ï¼ˆæœ€åå¯åŠ¨çš„è¿›ç¨‹ï¼‰
         private CommandProcess topProcess => activeProcesses.Last();
 
-        // ³õÊ¼»¯µ¥ÀıºÍÃüÁîÊı¾İ¿â
+        // åˆå§‹åŒ–å•ä¾‹å’Œå‘½ä»¤æ•°æ®åº“
         private void Awake()
         {
             if (instance == null)
             {
                 instance = this;
-                database = new CommandDatabase();  // ´´½¨Ö÷ÃüÁîÊı¾İ¿â
+                database = new CommandDatabase();  // åˆ›å»ºä¸»å‘½ä»¤æ•°æ®åº“
 
-                // Ê¹ÓÃ·´Éä¼ÓÔØËùÓĞÊı¾İ¿âÀ©Õ¹
+                // ä½¿ç”¨åå°„åŠ è½½æ‰€æœ‰æ•°æ®åº“æ‰©å±•
                 Assembly assembly = Assembly.GetExecutingAssembly();
                 Type[] extensionTypes = assembly.GetTypes().Where(t => t.IsSubclassOf(typeof(CMD_DatabaseExtension))).ToArray();
 
-                // µ÷ÓÃÃ¿¸öÀ©Õ¹ÀàµÄExtend·½·¨
+                // è°ƒç”¨æ¯ä¸ªæ‰©å±•ç±»çš„Extendæ–¹æ³•
                 foreach (Type extension in extensionTypes)
                 {
                     MethodInfo extendMethod = extension.GetMethod("Extend");
@@ -55,35 +56,35 @@ namespace COMMANDS
                 }
             }
             else
-                DestroyImmediate(gameObject);  // È·±£µ¥ÀıÎ¨Ò»ĞÔ
+                DestroyImmediate(gameObject);  // ç¡®ä¿å•ä¾‹å”¯ä¸€æ€§
         }
 
-        // Ö´ĞĞÃüÁîµÄÖ÷ÒªÈë¿Úµã
+        // æ‰§è¡Œå‘½ä»¤çš„ä¸»è¦å…¥å£ç‚¹
         public CoroutineWrapper Execute(string commandName, params string[] args)
         {
-            // ¼ì²éÊÇ·ñÎª×ÓÃüÁî£¨°üº¬µãºÅ£©
+            // æ£€æŸ¥æ˜¯å¦ä¸ºå­å‘½ä»¤ï¼ˆåŒ…å«ç‚¹å·ï¼‰
             if (commandName.Contains(SUB_COMMAND_IDENTIFIER))
                 return ExecuteSubCommand(commandName, args);
 
-            // ´ÓÖ÷Êı¾İ¿â»ñÈ¡ÃüÁîÎ¯ÍĞ
+            // ä»ä¸»æ•°æ®åº“è·å–å‘½ä»¤å§”æ‰˜
             Delegate command = database.GetCommand(commandName);
 
             if (command == null)
-                return null;  // ÃüÁî²»´æÔÚ
+                return null;  // å‘½ä»¤ä¸å­˜åœ¨
 
-            // Æô¶¯ÃüÁî½ø³Ì
+            // å¯åŠ¨å‘½ä»¤è¿›ç¨‹
             return StartProcess(commandName, command, args);
         }
 
-        // Ö´ĞĞ×ÓÃüÁî
+        // æ‰§è¡Œå­å‘½ä»¤
         private CoroutineWrapper ExecuteSubCommand(string commandName, string[] args)
         {
-            // ·Ö¸îÊı¾İ¿âÃûºÍÃüÁîÃû
+            // åˆ†å‰²æ•°æ®åº“åå’Œå‘½ä»¤å
             string[] parts = commandName.Split(SUB_COMMAND_IDENTIFIER);
             string databaseName = string.Join(SUB_COMMAND_IDENTIFIER, parts.Take(parts.Length - 1));
             string subCommandName = parts.Last();
 
-            // ¼ì²é×ÓÊı¾İ¿âÊÇ·ñ´æÔÚ
+            // æ£€æŸ¥å­æ•°æ®åº“æ˜¯å¦å­˜åœ¨
             if (subDatabases.ContainsKey(databaseName))
             {
                 Delegate command = subDatabases[databaseName].GetCommand(subCommandName);
@@ -93,34 +94,34 @@ namespace COMMANDS
                 }
                 else
                 {
-                    Debug.LogError($"ÔÚ×ÓÃüÁîÊı¾İ¿â '{databaseName}' ÖĞÎ´ÕÒµ½ÃüÁî '{subCommandName}'");
+                    Debug.LogError($"åœ¨å­å‘½ä»¤æ•°æ®åº“ '{databaseName}' ä¸­æœªæ‰¾åˆ°å‘½ä»¤ '{subCommandName}'");
                     return null;
                 }
             }
 
-            // ³¢ÊÔ×÷Îª½ÇÉ«ÃüÁîÖ´ĞĞ
+            // å°è¯•ä½œä¸ºè§’è‰²å‘½ä»¤æ‰§è¡Œ
             string characterName = databaseName;
             if (CharacterManager.instance.HasCharacter(characterName))
             {
-                // ½«½ÇÉ«Ãû×÷ÎªµÚÒ»¸ö²ÎÊı
+                // å°†è§’è‰²åä½œä¸ºç¬¬ä¸€ä¸ªå‚æ•°
                 List<string> newArgs = new List<string>(args);
                 newArgs.Insert(0, characterName);
                 args = newArgs.ToArray();
 
-                // Ö´ĞĞ½ÇÉ«ÃüÁî
+                // æ‰§è¡Œè§’è‰²å‘½ä»¤
                 return ExecuteCharacterCommand(subCommandName, args);
             }
 
-            Debug.LogError($"×ÓÃüÁîÊı¾İ¿â '{databaseName}' ²»´æÔÚ£¬ÎŞ·¨Ö´ĞĞÃüÁî '{subCommandName}'");
+            Debug.LogError($"å­å‘½ä»¤æ•°æ®åº“ '{databaseName}' ä¸å­˜åœ¨ï¼Œæ— æ³•æ‰§è¡Œå‘½ä»¤ '{subCommandName}'");
             return null;
         }
 
-        // Ö´ĞĞ½ÇÉ«ÃüÁî
+        // æ‰§è¡Œè§’è‰²å‘½ä»¤
         private CoroutineWrapper ExecuteCharacterCommand(string commandName, params string[] args)
         {
             Delegate command = null;
 
-            // Ê×ÏÈ³¢ÊÔ»ù´¡½ÇÉ«ÃüÁî
+            // é¦–å…ˆå°è¯•åŸºç¡€è§’è‰²å‘½ä»¤
             CommandDatabase db = subDatabases[DATABASE_CHARACTERS_BASE];
             if (db.HasCommand(commandName))
             {
@@ -128,7 +129,7 @@ namespace COMMANDS
                 return StartProcess(commandName, command, args);
             }
 
-            // ¸ù¾İ½ÇÉ«ÀàĞÍÑ¡Ôñ¶ÔÓ¦µÄ×ÓÊı¾İ¿â
+            // æ ¹æ®è§’è‰²ç±»å‹é€‰æ‹©å¯¹åº”çš„å­æ•°æ®åº“
             CharacterConfigData characterConfigData = CharacterManager.instance.GetCharacterConfig(args[0]);
             switch (characterConfigData.characterType)
             {
@@ -136,107 +137,108 @@ namespace COMMANDS
                 case Character.CharacterType.SpriteSheet:
                     db = subDatabases[DATABASE_CHARACTERS_SPRITE];
                     break;
+
                 case Character.CharacterType.Live2D:
                     db = subDatabases[DATABASE_CHARACTERS_LIVE2D];
                     break;
-                    // 3DÄ£ĞÍ½ÇÉ«ÔİÎ´ÊµÏÖ
+                    // 3Dæ¨¡å‹è§’è‰²æš‚æœªå®ç°
                     //case Character.CharacterType.Model3D:
                     //    db = subDatabases[DATABASE_CHARACTERS_Model3D];
                     //    break;
             }
 
-            // »ñÈ¡ÌØ¶¨½ÇÉ«ÀàĞÍµÄÃüÁî
+            // è·å–ç‰¹å®šè§’è‰²ç±»å‹çš„å‘½ä»¤
             command = db.GetCommand(commandName);
 
             if (command != null)
                 return StartProcess(commandName, command, args);
 
-            Debug.LogError($"ÔÚ½ÇÉ«ÀàĞÍ '{args[0]}' ÉÏÎŞ·¨Ö´ĞĞ '{commandName}' ÃüÁî£¬¸ÃÃüÁî¿ÉÄÜ²»´æÔÚ");
+            Debug.LogError($"åœ¨è§’è‰²ç±»å‹ '{args[0]}' ä¸Šæ— æ³•æ‰§è¡Œ '{commandName}' å‘½ä»¤ï¼Œè¯¥å‘½ä»¤å¯èƒ½ä¸å­˜åœ¨");
             return null;
         }
 
-        // Æô¶¯ĞÂÃüÁî½ø³Ì
+        // å¯åŠ¨æ–°å‘½ä»¤è¿›ç¨‹
         private CoroutineWrapper StartProcess(string commandName, Delegate command, string[] args)
         {
-            // ´´½¨Î¨Ò»µÄ½ø³ÌID
+            // åˆ›å»ºå”¯ä¸€çš„è¿›ç¨‹ID
             System.Guid processID = System.Guid.NewGuid();
 
-            // ´´½¨ÃüÁî½ø³Ì¶ÔÏó
+            // åˆ›å»ºå‘½ä»¤è¿›ç¨‹å¯¹è±¡
             CommandProcess cmd = new CommandProcess(processID, commandName, command, null, args, null);
             activeProcesses.Add(cmd);
 
-            // Æô¶¯Ğ­³ÌÖ´ĞĞÃüÁî
+            // å¯åŠ¨åç¨‹æ‰§è¡Œå‘½ä»¤
             Coroutine co = StartCoroutine(RunningProcess(cmd));
 
-            // °ü×°Ğ­³Ì²¢´æ´¢ÒıÓÃ
+            // åŒ…è£…åç¨‹å¹¶å­˜å‚¨å¼•ç”¨
             cmd.runningProcess = new CoroutineWrapper(this, co);
 
             return cmd.runningProcess;
         }
 
-        // Í£Ö¹µ±Ç°¶¥²¿½ø³Ì
+        // åœæ­¢å½“å‰é¡¶éƒ¨è¿›ç¨‹
         public void StopCurrentProcess()
         {
             if (topProcess != null)
                 KillProcess(topProcess);
         }
 
-        // Í£Ö¹ËùÓĞ»î¶¯½ø³Ì
+        // åœæ­¢æ‰€æœ‰æ´»åŠ¨è¿›ç¨‹
         public void StopAllProcesses()
         {
             foreach (var c in activeProcesses)
             {
                 if (c.runningProcess != null && !c.runningProcess.IsDone)
-                    c.runningProcess.Stop();  // Í£Ö¹Ğ­³Ì
+                    c.runningProcess.Stop();  // åœæ­¢åç¨‹
 
-                c.onTerminateAction?.Invoke();  // Ö´ĞĞÖÕÖ¹»Øµ÷
+                c.onTerminateAction?.Invoke();  // æ‰§è¡Œç»ˆæ­¢å›è°ƒ
             }
 
-            activeProcesses.Clear();  // Çå¿Õ½ø³ÌÁĞ±í
+            activeProcesses.Clear();  // æ¸…ç©ºè¿›ç¨‹åˆ—è¡¨
         }
 
-        // ÔËĞĞÃüÁî½ø³ÌµÄĞ­³Ì
+        // è¿è¡Œå‘½ä»¤è¿›ç¨‹çš„åç¨‹
         private IEnumerator RunningProcess(CommandProcess process)
         {
-            // µÈ´ıÃüÁîÖ´ĞĞÍê³É
+            // ç­‰å¾…å‘½ä»¤æ‰§è¡Œå®Œæˆ
             yield return WaitingForProcessToComplete(process.command, process.args);
 
-            // ÃüÁîÍê³ÉºóÒÆ³ı½ø³Ì
+            // å‘½ä»¤å®Œæˆåç§»é™¤è¿›ç¨‹
             KillProcess(process);
         }
 
-        // ÖÕÖ¹Ö¸¶¨½ø³Ì
+        // ç»ˆæ­¢æŒ‡å®šè¿›ç¨‹
         public void KillProcess(CommandProcess cmd)
         {
-            activeProcesses.Remove(cmd);  // ´Ó»î¶¯ÁĞ±íÒÆ³ı
+            activeProcesses.Remove(cmd);  // ä»æ´»åŠ¨åˆ—è¡¨ç§»é™¤
 
-            // Í£Ö¹¹ØÁªµÄĞ­³Ì
+            // åœæ­¢å…³è”çš„åç¨‹
             if (cmd.runningProcess != null && !cmd.runningProcess.IsDone)
                 cmd.runningProcess.Stop();
 
-            // Ö´ĞĞÖÕÖ¹»Øµ÷
+            // æ‰§è¡Œç»ˆæ­¢å›è°ƒ
             cmd.onTerminateAction?.Invoke();
         }
 
-        // µÈ´ıÃüÁîÍê³ÉµÄĞ­³Ì
+        // ç­‰å¾…å‘½ä»¤å®Œæˆçš„åç¨‹
         private IEnumerator WaitingForProcessToComplete(Delegate command, string[] args)
         {
-            // ¸ù¾İÎ¯ÍĞÀàĞÍ¶¯Ì¬µ÷ÓÃÃüÁî
+            // æ ¹æ®å§”æ‰˜ç±»å‹åŠ¨æ€è°ƒç”¨å‘½ä»¤
             if (command is Action)
                 command.DynamicInvoke();
             else if (command is Action<string>)
-                command.DynamicInvoke(args[0]);
+                command.DynamicInvoke(args.Length == 0 ? string.Empty : args[0]);
             else if (command is Action<string[]>)
                 command.DynamicInvoke((object)args);
             else if (command is Func<IEnumerator>)
                 yield return ((Func<IEnumerator>)command)();
             else if (command is Func<string, IEnumerator>)
-                yield return ((Func<string, IEnumerator>)command)(args[0]);
+                yield return ((Func<string, IEnumerator>)command)(args.Length == 0 ? string.Empty : args[0]);
             else if (command is Func<string[], IEnumerator>)
                 yield return ((Func<string[], IEnumerator>)command)(args);
         }
 
-        // Îªµ±Ç°¶¥²¿½ø³ÌÌí¼ÓÖÕÖ¹»Øµ÷
+        // ä¸ºå½“å‰é¡¶éƒ¨è¿›ç¨‹æ·»åŠ ç»ˆæ­¢å›è°ƒ
         public void AddTerminationActionToCurrentProcess(UnityAction action)
         {
             CommandProcess process = topProcess;
@@ -244,27 +246,27 @@ namespace COMMANDS
             if (process == null)
                 return;
 
-            // ´´½¨»ò»ñÈ¡ÖÕÖ¹ÊÂ¼ş
+            // åˆ›å»ºæˆ–è·å–ç»ˆæ­¢äº‹ä»¶
             if (process.onTerminateAction == null)
                 process.onTerminateAction = new UnityEvent();
 
-            // Ìí¼Ó»Øµ÷
+            // æ·»åŠ å›è°ƒ
             process.onTerminateAction.AddListener(action);
         }
 
-        // ´´½¨×ÓÃüÁîÊı¾İ¿â
+        // åˆ›å»ºå­å‘½ä»¤æ•°æ®åº“
         public CommandDatabase CreateSubDatabase(string name)
         {
             name = name.ToLower();
 
-            // ¼ì²éÊı¾İ¿âÊÇ·ñÒÑ´æÔÚ
+            // æ£€æŸ¥æ•°æ®åº“æ˜¯å¦å·²å­˜åœ¨
             if (subDatabases.TryGetValue(name, out CommandDatabase db))
             {
-                Debug.LogWarning($"×ÓÃüÁîÊı¾İ¿â '{name}' ÒÑ´æÔÚ£¬·µ»ØÏÖÓĞÊı¾İ¿â");
+                Debug.LogWarning($"å­å‘½ä»¤æ•°æ®åº“ '{name}' å·²å­˜åœ¨ï¼Œè¿”å›ç°æœ‰æ•°æ®åº“");
                 return db;
             }
 
-            // ´´½¨ĞÂÊı¾İ¿â
+            // åˆ›å»ºæ–°æ•°æ®åº“
             CommandDatabase newDatabase = new CommandDatabase();
             subDatabases.Add(name, newDatabase);
 

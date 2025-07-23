@@ -1,37 +1,36 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace DIALOGUE
+ï»¿namespace DIALOGUE
 {
     public class DIALOGUE_LINE
     {
-        //Ëµ»°ÕßĞÕÃû¡¢¶Ô»°ÄÚÈİ¡¢ÄÚÇ¶ÃüÁî
+        //è¯´è¯è€…å§“åã€å¯¹è¯å†…å®¹ã€å†…åµŒå‘½ä»¤
         /// <summary>
-        // ±íÊ¾Ò»ĞĞ¶Ô»°µÄÀà£¬°üº¬Ëµ»°Õß¡¢¶Ô»°ÄÚÈİºÍÃüÁî¡£
+        // è¡¨ç¤ºä¸€è¡Œå¯¹è¯çš„ç±»ï¼ŒåŒ…å«è¯´è¯è€…ã€å¯¹è¯å†…å®¹å’Œå‘½ä»¤ã€‚
         /// </summary>
-        public DL_SPEAKER_DATA  speakerData;
-        public DL_DIALOGUE_DATA dialogueData;
-        public DL_COMAND_DATA commandsData;
+        public DL_SPEAKER_DATA speakerData;
 
-        // ÊÇ·ñÓĞËµ»°ÕßĞÕÃû
+        public DL_DIALOGUE_DATA dialogueData;
+        public DL_COMMAND_DATA commandsData;
+
+        // æ˜¯å¦æœ‰è¯´è¯è€…å§“å
         public bool hasSpeaker => speakerData != null;//speaker != string.Empty;
-        // ÊÇ·ñÓĞ¶Ô»°ÄÚÈİ
-        public bool hasDialogue =>dialogueData != null;//dialogue != string.Empty;
-        // ÊÇ·ñÓĞÃüÁî
+
+        // æ˜¯å¦æœ‰å¯¹è¯å†…å®¹
+        public bool hasDialogue => dialogueData != null;//dialogue != string.Empty;
+
+        // æ˜¯å¦æœ‰å‘½ä»¤
         public bool hasCommands => commandsData != null;
 
         /// <summary>
-        /// ¹¹Ôìº¯Êı£¬³õÊ¼»¯¶Ô»°ĞĞ¡£
+        /// æ„é€ å‡½æ•°ï¼Œåˆå§‹åŒ–å¯¹è¯è¡Œã€‚
         /// </summary>
-        /// <param name="speaker">Ëµ»°ÕßĞÕÃû</param>
-        /// <param name="dialogue">¶Ô»°ÄÚÈİ</param>
-        /// <param name="commands">ÄÚÇ¶ÃüÁî</param>
+        /// <param name="speaker">è¯´è¯è€…å§“å</param>
+        /// <param name="dialogue">å¯¹è¯å†…å®¹</param>
+        /// <param name="commands">å†…åµŒå‘½ä»¤</param>
         public DIALOGUE_LINE(string speaker, string dialogue, string commands)
         {
             this.speakerData = (string.IsNullOrWhiteSpace(speaker) ? null : new DL_SPEAKER_DATA(speaker));
             this.dialogueData = (string.IsNullOrWhiteSpace(dialogue) ? null : new DL_DIALOGUE_DATA(dialogue));
-            this.commandsData = (string.IsNullOrWhiteSpace(commands) ? null : new DL_COMAND_DATA(commands));
+            this.commandsData = (string.IsNullOrWhiteSpace(commands) ? null : new DL_COMMAND_DATA(commands));
         }
     }
 }

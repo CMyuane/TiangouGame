@@ -1,6 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace CHARACTERS
 {
@@ -13,17 +11,15 @@ namespace CHARACTERS
         {
             characterName = characterName.ToLower();
 
-            for(int i = 0; i < character.Length; i++)
+            for (int i = 0; i < character.Length; i++)
             {
                 CharacterConfigData data = character[i];
 
-                if(string.Equals(characterName, data.name.ToLower()) || string.Equals(characterName, data.alias.ToLower()))
+                if (string.Equals(characterName, data.name.ToLower()) || string.Equals(characterName, data.alias.ToLower()))
                     return data.Copy();
-
             }
 
             return CharacterConfigData.Default;
-
         }
     }
 }

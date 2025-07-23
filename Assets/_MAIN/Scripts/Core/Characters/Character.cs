@@ -1,16 +1,17 @@
-using DIALOGUE;
+Ôªøusing DIALOGUE;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-//’‚∏ˆΩ≈±æ∂®“Â¡À“ª∏ˆ≥ÈœÛµƒΩ«…´¿‡£¨±Ì æ”Œœ∑÷–µƒΩ«…´°£À¸∞¸∫¨¡ÀΩ«…´µƒª˘±æ Ù–‘∫Õ∑Ω∑®£¨”√”⁄¥¶¿ÌΩ«…´µƒ∂‘ª∞∫ÕŒƒ±æ—˘ Ωµ»π¶ƒ‹°£
+//Ëøô‰∏™ËÑöÊú¨ÂÆö‰πâ‰∫Ü‰∏Ä‰∏™ÊäΩË±°ÁöÑËßíËâ≤Á±ªÔºåË°®Á§∫Ê∏∏Êàè‰∏≠ÁöÑËßíËâ≤„ÄÇÂÆÉÂåÖÂê´‰∫ÜËßíËâ≤ÁöÑÂü∫Êú¨Â±ûÊÄßÂíåÊñπÊ≥ïÔºåÁî®‰∫éÂ§ÑÁêÜËßíËâ≤ÁöÑÂØπËØùÂíåÊñáÊú¨Ê†∑ÂºèÁ≠âÂäüËÉΩ„ÄÇ
 namespace CHARACTERS
 {
     public abstract class Character
     {
-        // Ω«…´µƒª˘±æ≈‰÷√ ˝æ›
-        public const bool ENABLE_ON_START = false; //¥¥Ω® ±≤ªø…º˚
+        // ËßíËâ≤ÁöÑÂü∫Êú¨ÈÖçÁΩÆÊï∞ÊçÆ
+        public const bool ENABLE_ON_START = false; //ÂàõÂª∫Êó∂‰∏çÂèØËßÅ
+
         private const float UNHIGHLIGHTED_DARKEN_STRENGTH = 0.5f;
         public const bool DEFAULT_ORIENTATION_IS_FACING_LEFT = true;
         public const string ANIMATION_REFRESH_TRIGGER = "Refresh";
@@ -28,8 +29,9 @@ namespace CHARACTERS
         protected bool facingLeft = DEFAULT_ORIENTATION_IS_FACING_LEFT;
         public int priority { get; protected set; }
 
-        // Ω«…´µƒª˘±æ Ù–‘
+        // ËßíËâ≤ÁöÑÂü∫Êú¨Â±ûÊÄß
         protected CharacterManager characterManager => CharacterManager.instance;
+
         public DialogueSystem dialogueSystem => DialogueSystem.instance;
 
         protected Coroutine co_revealing, co_hiding;
@@ -42,7 +44,7 @@ namespace CHARACTERS
         public bool isMoving => co_moving != null;
         public bool isChangingColor => co_changingColor != null;
         public bool isHighlighting => (highlighted && co_highlighting != null);
-        public bool isUnHighlighting => (!highlighted && co_highlighting != null); // ’‚∏ˆ Ù–‘±Ì æΩ«…´ «∑Ò’˝‘⁄»°œ˚∏ﬂ¡¡œ‘ æ
+        public bool isUnHighlighting => (!highlighted && co_highlighting != null); // Ëøô‰∏™Â±ûÊÄßË°®Á§∫ËßíËâ≤ÊòØÂê¶Ê≠£Âú®ÂèñÊ∂àÈ´ò‰∫ÆÊòæÁ§∫
         public virtual bool isVisible { get; set; }
         public bool isFacingLeft => facingLeft;
         public bool isFacingRight => !facingLeft;
@@ -56,20 +58,7 @@ namespace CHARACTERS
 
             if (prefab != null)
             {
-                RectTransform parentPanel = null;
-                switch (config.characterType)
-                {
-                    case CharacterType.Sprite:
-                    case CharacterType.SpriteSheet:
-                        parentPanel = characterManager.characterPanel;
-                        break;
-                    case CharacterType.Live2D:
-                        parentPanel = characterManager.characterPanelLive2D;
-                        break;
-                    case CharacterType.Model3D:
-                        parentPanel = characterManager.characterPanelModel3D;
-                        break;
-                }
+                Transform parentPanel = (config.characterType == CharacterType.Live2D ? characterManager.characterPanelLive2D : characterManager.characterPanel);
 
                 GameObject ob = Object.Instantiate(prefab, parentPanel);
                 ob.name = characterManager.FormatCharacterPath(characterManager.characterPrefabNameFormat, name);
@@ -77,24 +66,27 @@ namespace CHARACTERS
                 root = ob.GetComponent<RectTransform>();
                 animator = root.GetComponentInChildren<Animator>();
             }
-
         }
 
-        public Coroutine Say(string dialogue) => Say(new List<string>() { dialogue });
+        public Coroutine Say(string dialogue) => Say(new List<string> { dialogue });
+
         public Coroutine Say(List<string> dialogue)
         {
             dialogueSystem.ShowSpeakerName(displayName);
             UpdateTextCustomizationsOnScreen();
             return dialogueSystem.Say(dialogue);
-
         }
 
         public void SetNameFont(TMP_FontAsset font) => config.nameFont = font;
+
         public void SetDialogueFont(TMP_FontAsset font) => config.dialogueFont = font;
+
         public void SetNameColor(Color color) => config.nameColor = color;
+
         public void SetDialogueColor(Color color) => config.dialogueColor = color;
 
         public void ResetConfigurationData() => config = CharacterManager.instance.GetCharacterConfig(name);
+
         public void UpdateTextCustomizationsOnScreen() => dialogueSystem.ApplySpeakerDataToDialogueContainer(config);
 
         public virtual Coroutine Show(float speedMultiplier = 1f)
@@ -140,7 +132,7 @@ namespace CHARACTERS
             root.anchorMax = maxAnchorTarget;
         }
 
-        public virtual Coroutine MoveToPosition(Vector2 position, float speed = 0.5f, bool smooth = false)
+        public virtual Coroutine MoveToPosition(Vector2 position, float speed = 2f, bool smooth = false)
         {
             if (root == null)
                 return null;
@@ -153,10 +145,7 @@ namespace CHARACTERS
             return co_moving;
         }
 
-
-
-
-        //∏˘æ› ±º‰“∆∂Ø¡¢ªÊ
+        //Ê†πÊçÆÊó∂Èó¥ÁßªÂä®Á´ãÁªò
         //private IEnumerator MovingToPositionWithTime(Vector2 position, float duration, bool smooth)
         //{
         //    (Vector2 minAnchorTarget, Vector2 maxAnchorTarget) = ConvertUITargetPositionToRelativeCharacterAnchorTargets(position);
@@ -165,8 +154,6 @@ namespace CHARACTERS
         //    Vector2 startMin = root.anchorMin;
         //    Vector2 startMax = root.anchorMax;
         //    float elapsedTime = 0f;
-
-
 
         //    while (elapsedTime < duration)
         //    {
@@ -179,7 +166,7 @@ namespace CHARACTERS
         //        }
         //        else
         //        {
-        //            // ∑«∆Ωª¨ƒ£ Ωœ¬£¨ π”√‘»ÀŸ“∆∂Ø
+        //            // ÈùûÂπ≥ÊªëÊ®°Âºè‰∏ãÔºå‰ΩøÁî®ÂåÄÈÄüÁßªÂä®
         //            root.anchorMin = Vector2.MoveTowards(
         //                startMin,
         //                minAnchorTarget,
@@ -192,7 +179,7 @@ namespace CHARACTERS
         //        yield return null;
         //    }
 
-        //    // »∑±£◊Ó÷’Œª÷√æ´»∑
+        //    // Á°Æ‰øùÊúÄÁªà‰ΩçÁΩÆÁ≤æÁ°Æ
         //    root.anchorMin = minAnchorTarget;
         //    root.anchorMax = maxAnchorTarget;
 
@@ -200,41 +187,69 @@ namespace CHARACTERS
         //    co_moving = null;
         //}
 
-        //–ﬁ∏ƒ∫Ûµƒ∆Ωª¨“∆∂Ø
+        //‰øÆÊîπÂêéÁöÑÂπ≥ÊªëÁßªÂä®
+        //private IEnumerator MovingToPosition(Vector2 position, float speed, bool smooth)
+        //{
+        //    (Vector2 minAnchorTarget, Vector2 maxAnchorTarget) = ConvertUITargetPositionToRelativeCharacterAnchorTargets(position);
+        //    Vector2 padding = root.anchorMax - root.anchorMin;
+
+        //    // ËÆ∞ÂΩïÂàùÂßãÈîöÁÇπ‰Ωú‰∏∫ÊèíÂÄºËµ∑ÁÇπ
+        //    Vector2 startMin = root.anchorMin;
+        //    Vector2 startMax = root.anchorMax;
+
+        //    float progress = 0f;  // Êñ∞Â¢ûÔºöÊèíÂÄºËøõÂ∫¶
+
+        //    while (root.anchorMin != minAnchorTarget || root.anchorMax != maxAnchorTarget)
+        //    {
+        //        if (smooth)
+        //        {
+        //            // Á∫øÊÄßÂ¢ûÂä†ËøõÂ∫¶ÂÄº (‰øùËØÅÂú®[0,1]ËåÉÂõ¥ÂÜÖ)
+        //            progress = Mathf.Clamp01(progress + speed * Time.deltaTime);
+
+        //            // ‰ªéÂàùÂßã‰ΩçÁΩÆÂà∞ÁõÆÊ†á‰ΩçÁΩÆÁ∫øÊÄßÊèíÂÄº
+        //            root.anchorMin = Vector2.Lerp(startMin, minAnchorTarget, progress);
+        //            root.anchorMax = root.anchorMin + padding;
+
+        //            // ËøõÂ∫¶ÂÆåÊàêÊó∂Âº∫Âà∂ËÆæÁΩÆÁõÆÊ†á‰ΩçÁΩÆ
+        //            if (progress >= 0.99f)
+        //            {
+        //                root.anchorMin = minAnchorTarget;
+        //                root.anchorMax = maxAnchorTarget;
+        //            }
+        //        }
+        //        else
+        //        {
+        //            // ‰øùÊåÅÂéüÊúâÁöÑMoveTowardsÈÄªËæë
+        //            root.anchorMin = Vector2.MoveTowards(root.anchorMin, minAnchorTarget, speed * Time.deltaTime * 0.35f);
+        //            root.anchorMax = root.anchorMin + padding;
+        //        }
+
+        //        yield return null;
+        //    }
+
+        //    Debug.Log("Done moving");
+        //    co_moving = null;
+        //}
+
+        // ËøôÊòØÂéüÊù•ÁöÑÁßªÂä®ÊñπÊ≥ïÔºå‰ΩøÁî®‰∫ÜÂπ≥ÊªëÊèíÂÄºÊàñÂåÄÈÄüÁßªÂä®
         private IEnumerator MovingToPosition(Vector2 position, float speed, bool smooth)
         {
             (Vector2 minAnchorTarget, Vector2 maxAnchorTarget) = ConvertUITargetPositionToRelativeCharacterAnchorTargets(position);
             Vector2 padding = root.anchorMax - root.anchorMin;
 
-            // º«¬º≥ı º√™µ„◊˜Œ™≤Â÷µ∆µ„
-            Vector2 startMin = root.anchorMin;
-            Vector2 startMax = root.anchorMax;
-
-            float progress = 0f;  // –¬‘ˆ£∫≤Â÷µΩ¯∂»
-
             while (root.anchorMin != minAnchorTarget || root.anchorMax != maxAnchorTarget)
             {
-                if (smooth)
-                {
-                    // œﬂ–‘‘ˆº”Ω¯∂»÷µ (±£÷§‘⁄[0,1]∑∂Œßƒ⁄)
-                    progress = Mathf.Clamp01(progress + speed * Time.deltaTime);
+                root.anchorMin = smooth ?
+                    Vector2.Lerp(root.anchorMin, minAnchorTarget, speed * Time.deltaTime)
+                    : Vector2.MoveTowards(root.anchorMin, minAnchorTarget, speed * Time.deltaTime * 0.35f);
 
-                    // ¥”≥ı ºŒª÷√µΩƒø±ÍŒª÷√œﬂ–‘≤Â÷µ
-                    root.anchorMin = Vector2.Lerp(startMin, minAnchorTarget, progress);
-                    root.anchorMax = root.anchorMin + padding;
+                root.anchorMax = root.anchorMin + padding;
 
-                    // Ω¯∂»ÕÍ≥… ±«ø÷∆…Ë÷√ƒø±ÍŒª÷√
-                    if (progress >= 0.99f)
-                    {
-                        root.anchorMin = minAnchorTarget;
-                        root.anchorMax = maxAnchorTarget;
-                    }
-                }
-                else
+                if (smooth && Vector2.Distance(root.anchorMin, minAnchorTarget) <= 0.001f)
                 {
-                    // ±£≥÷‘≠”–µƒMoveTowards¬ﬂº≠
-                    root.anchorMin = Vector2.MoveTowards(root.anchorMin, minAnchorTarget, speed * Time.deltaTime * 0.35f);
-                    root.anchorMax = root.anchorMin + padding;
+                    root.anchorMin = minAnchorTarget;
+                    root.anchorMax = maxAnchorTarget;
+                    break;
                 }
 
                 yield return null;
@@ -243,34 +258,6 @@ namespace CHARACTERS
             Debug.Log("Done moving");
             co_moving = null;
         }
-
-
-        // ’‚ «‘≠¿¥µƒ“∆∂Ø∑Ω∑®£¨ π”√¡À∆Ωª¨≤Â÷µªÚ‘»ÀŸ“∆∂Ø
-        //private IEnumerator MovingToPosition(Vector2 position, float speed, bool smooth)
-        //{
-        //    (Vector2 minAnchorTarget, Vector2 maxAnvhorTarget) = ConvertUITargetPositionToRelativeCharacterAnchorTargets(position);
-        //    Vector2 padding = root.anchorMax - root.anchorMin;
-
-        //    while (root.anchorMin != minAnchorTarget || root.anchorMax != maxAnvhorTarget)
-        //    {
-        //        root.anchorMin = smooth ?
-        //            Vector2.Lerp(root.anchorMin, minAnchorTarget, speed * Time.deltaTime)
-        //            : Vector2.MoveTowards(root.anchorMin, minAnchorTarget, speed * Time.deltaTime * 0.35f);
-
-        //        root.anchorMax = root.anchorMin + padding;
-
-        //        if (smooth && Vector2.Distance(root.anchorMin, minAnchorTarget) <= 0.001f)
-        //        {
-        //            root.anchorMin = minAnchorTarget;
-        //            root.anchorMax = maxAnvhorTarget;
-        //            break;
-        //        }
-        //        yield return null;
-        //    }
-
-        //    Debug.Log("Done moving");
-        //    co_moving = null;
-        //}
 
         protected (Vector2, Vector2) ConvertUITargetPositionToRelativeCharacterAnchorTargets(Vector2 position)
         {
@@ -288,8 +275,8 @@ namespace CHARACTERS
         public virtual void SetColor(Color color)
         {
             this.color = color;
-            // ’‚¿Ôø…“‘ÃÌº”∂‘Ω«…´—’…´µƒ…Ë÷√¬ﬂº≠
-            // ¿˝»Á£¨ π”√≤ƒ÷ ªÚ∆‰À˚∑Ω Ω¿¥∏ƒ±‰Ω«…´µƒ—’…´
+            // ËøôÈáåÂèØ‰ª•Ê∑ªÂä†ÂØπËßíËâ≤È¢úËâ≤ÁöÑËÆæÁΩÆÈÄªËæë
+            // ‰æãÂ¶ÇÔºå‰ΩøÁî®ÊùêË¥®ÊàñÂÖ∂‰ªñÊñπÂºèÊù•ÊîπÂèòËßíËâ≤ÁöÑÈ¢úËâ≤
         }
 
         public Coroutine TransitionColor(Color color, float speed = 1f)
@@ -306,7 +293,7 @@ namespace CHARACTERS
 
         public virtual IEnumerator ChangingColor(float speed)
         {
-            Debug.Log("∏√Ω«…´¿‡–Õ≤ª÷ß≥÷—’…´Ω•±‰°£");
+            Debug.Log("ËØ•ËßíËâ≤Á±ªÂûã‰∏çÊîØÊåÅÈ¢úËâ≤Ê∏êÂèò„ÄÇ");
             yield return null;
         }
 
@@ -340,7 +327,7 @@ namespace CHARACTERS
 
         public virtual IEnumerator Highlighting(float speedMultiplier, bool immediate = false)
         {
-            Debug.Log("∏√Ω«…´¿‡–Õ≤ª÷ß≥÷∏ﬂ¡¡œ‘ æ°£");
+            Debug.Log("ËØ•ËßíËâ≤Á±ªÂûã‰∏çÊîØÊåÅÈ´ò‰∫ÆÊòæÁ§∫„ÄÇ");
 
             yield return null;
         }
@@ -356,17 +343,18 @@ namespace CHARACTERS
         public Coroutine FaceLeft(float speed = 1, bool immediate = false)
         {
             if (isFlipping)
-                return co_flipping;
+                characterManager.StopCoroutine(co_flipping);
 
             facingLeft = true;
             co_flipping = characterManager.StartCoroutine(FaceDirection(facingLeft, speed, immediate));
 
             return co_flipping;
         }
+
         public Coroutine FaceRight(float speed = 1, bool immediate = false)
         {
             if (isFlipping)
-                return co_flipping;
+                characterManager.StopCoroutine(co_flipping);
 
             facingLeft = false;
             co_flipping = characterManager.StartCoroutine(FaceDirection(facingLeft, speed, immediate));
@@ -376,7 +364,7 @@ namespace CHARACTERS
 
         public virtual IEnumerator FaceDirection(bool faceLeft, float speedMultiplier, bool immediate)
         {
-            Debug.Log("∏√Ω«…´¿‡–Õ≤ª÷ß≥÷∑≠◊™°£");
+            Debug.Log("ËØ•ËßíËâ≤Á±ªÂûã‰∏çÊîØÊåÅÁøªËΩ¨„ÄÇ");
             yield return null;
         }
 
@@ -417,6 +405,5 @@ namespace CHARACTERS
             Live2D,
             Model3D
         }
-
     }
 }

@@ -1,13 +1,13 @@
-using DIALOGUE;
-using System.Collections;
+﻿using DIALOGUE;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DialogueFiles : MonoBehaviour
+public class TestDialogueFiles : MonoBehaviour
 {
     [SerializeField] private TextAsset fileToRead = null;
-    // Start is called before the first frame update  
-    void Start()
+
+    // Start is called before the first frame update
+    private void Start()
     {
         //string line = "Speaker \"Dialogue \\\"Goes In\\\" Here!\" Command(arguments here)";
         StartConversation();
@@ -15,24 +15,24 @@ public class DialogueFiles : MonoBehaviour
     }
 
     // Update is called once per frame
-    void StartConversation()
+    private void StartConversation()
     {
         List<string> lines = FileManager.ReadTextAsset(fileToRead);
 
         //测试解析对话行 command
-            // foreach (string line in lines)
-            // {
-            //     if (string.IsNullOrWhiteSpace(line))
-            //         continue;
+        // foreach (string line in lines)
+        // {
+        //     if (string.IsNullOrWhiteSpace(line))
+        //         continue;
 
-            //     DIALOGUE_LINE dl = DialogueParser.Parse(line);
+        //     DIALOGUE_LINE dl = DialogueParser.Parse(line);
 
-            //     for(int i = 0; i < dl.commandsData.commands.Count; i++)
-            //     {
-            //         DL_COMAND_DATA.Command command = dl.commandsData.commands[i];
-            //         Debug.Log($"Command [{i}] '{command.name}' has arguments [{string.Join(", ", command.arguments)}]");
-            //     }
-            // }
+        //     for(int i = 0; i < dl.commandsData.commands.Count; i++)
+        //     {
+        //         DL_COMAND_DATA.Command command = dl.commandsData.commands[i];
+        //         Debug.Log($"Command [{i}] '{command.name}' has arguments [{string.Join(", ", command.arguments)}]");
+        //     }
+        // }
 
         //测试解析对话行 speaker
         // for(int i = 0; i < lines.Count; i++)
@@ -71,4 +71,3 @@ public class DialogueFiles : MonoBehaviour
         DialogueSystem.instance.Say(lines);
     }
 }
-

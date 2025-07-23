@@ -1,214 +1,217 @@
-using System.Collections;
+ï»¿using DIALOGUE;
 using System.Collections.Generic;
-using UnityEngine;
-using DIALOGUE;
 using System.Linq;
+using UnityEngine;
 
-// ½ÇÉ«¹ÜÀíÆ÷£º¸ºÔğÓÎÏ·ÖĞËùÓĞ½ÇÉ«µÄ´´½¨¡¢¹ÜÀíºÍÅäÖÃ
+// è§’è‰²ç®¡ç†å™¨ï¼šè´Ÿè´£æ¸¸æˆä¸­æ‰€æœ‰è§’è‰²çš„åˆ›å»ºã€ç®¡ç†å’Œé…ç½®
 namespace CHARACTERS
 {
     public class CharacterManager : MonoBehaviour
     {
-        public static CharacterManager instance { get; private set; } // µ¥ÀıÊµÀı
-        public Character[] allCharacters => characters.Values.ToArray(); // »ñÈ¡ËùÓĞ½ÇÉ«Êı×é
-        private Dictionary<string, Character> characters = new Dictionary<string, Character>(); // ½ÇÉ«×Öµä£¨Ğ¡Ğ´Ãû->½ÇÉ«¶ÔÏó£©
+        public static CharacterManager instance { get; private set; } // å•ä¾‹å®ä¾‹
+        public Character[] allCharacters => characters.Values.ToArray(); // è·å–æ‰€æœ‰è§’è‰²æ•°ç»„
+        private Dictionary<string, Character> characters = new Dictionary<string, Character>(); // è§’è‰²å­—å…¸ï¼ˆå°å†™å->è§’è‰²å¯¹è±¡ï¼‰
 
-        private CharacterConfigSO config => DialogueSystem.instance.config.characterConfigurationAsset; // ½ÇÉ«ÅäÖÃ×ÊÔ´
+        private CharacterConfigSO config => DialogueSystem.instance.config.characterConfigurationAsset; // è§’è‰²é…ç½®èµ„æº
 
-        // ½ÇÉ«ĞÅÏ¢½âÎö³£Á¿
-        private const string CHARACTER_CASTING_ID = " as "; // ½ÇÉ«±ğÃû±êÊ¶·û
-        private const string CHARACTER_NAME_ID = "<charname>"; // ½ÇÉ«ÃûÕ¼Î»·û
+        // è§’è‰²ä¿¡æ¯è§£æå¸¸é‡
+        private const string CHARACTER_CASTING_ID = " as "; // è§’è‰²åˆ«åæ ‡è¯†ç¬¦
 
-        // ×ÊÔ´Â·¾¶¸ñÊ½
-        public string characterRootPathFormat => $"Characters/{CHARACTER_NAME_ID}"; // ½ÇÉ«¸ùÂ·¾¶¸ñÊ½
-        public string characterPrefabNameFormat => $"Character-[{CHARACTER_NAME_ID}]"; // ½ÇÉ«Ô¤ÖÆÌåÃû³Æ¸ñÊ½
-        public string characterPrefabPathFormat => $"{characterRootPathFormat}/{characterPrefabNameFormat}"; // ÍêÕûÔ¤ÖÆÌåÂ·¾¶¸ñÊ½
+        private const string CHARACTER_NAME_ID = "<charname>"; // è§’è‰²åå ä½ç¬¦
 
-        // ½ÇÉ«Ãæ°åÒıÓÃ
-        [SerializeField] private RectTransform _characterpannel = null; // Í¨ÓÃ½ÇÉ«Ãæ°å
-        [SerializeField] private RectTransform _characterpannel_live2D = null; // Live2D½ÇÉ«Ãæ°å
-        [SerializeField] private RectTransform _characterpannel_model3D = null; // 3DÄ£ĞÍ½ÇÉ«Ãæ°å
-        public RectTransform characterPanel => _characterpannel; // Í¨ÓÃ½ÇÉ«Ãæ°å·ÃÎÊÆ÷
-        public RectTransform characterPanelLive2D => _characterpannel_live2D; // Live2DÃæ°å·ÃÎÊÆ÷
-        public RectTransform characterPanelModel3D => _characterpannel_model3D; // 3DÄ£ĞÍÃæ°å·ÃÎÊÆ÷
+        // èµ„æºè·¯å¾„æ ¼å¼
+        public string characterRootPathFormat => $"Characters/{CHARACTER_NAME_ID}"; // è§’è‰²æ ¹è·¯å¾„æ ¼å¼
+
+        public string characterPrefabNameFormat => $"Character-[{CHARACTER_NAME_ID}]"; // è§’è‰²é¢„åˆ¶ä½“åç§°æ ¼å¼
+        public string characterPrefabPathFormat => $"{characterRootPathFormat}/{characterPrefabNameFormat}"; // å®Œæ•´é¢„åˆ¶ä½“è·¯å¾„æ ¼å¼
+
+        // è§’è‰²é¢æ¿å¼•ç”¨
+        [SerializeField] private RectTransform _characterpannel = null; // é€šç”¨è§’è‰²é¢æ¿
+
+        [SerializeField] private RectTransform _characterpannel_live2D = null; // Live2Dè§’è‰²é¢æ¿
+        [SerializeField] private Transform _characterpannel_model3D = null; // 3Dæ¨¡å‹è§’è‰²é¢æ¿
+        public RectTransform characterPanel => _characterpannel; // é€šç”¨è§’è‰²é¢æ¿è®¿é—®å™¨
+        public RectTransform characterPanelLive2D => _characterpannel_live2D; // Live2Dé¢æ¿è®¿é—®å™¨
+        public Transform characterPanelModel3D => _characterpannel_model3D; // 3Dæ¨¡å‹é¢æ¿è®¿é—®å™¨
 
         private void Awake()
         {
-            instance = this; // ³õÊ¼»¯µ¥Àı
+            instance = this; // åˆå§‹åŒ–å•ä¾‹
         }
 
-        // »ñÈ¡½ÇÉ«ÅäÖÃÊı¾İ
+        // è·å–è§’è‰²é…ç½®æ•°æ®
         public CharacterConfigData GetCharacterConfig(string characterName)
         {
             return config.GetConfig(characterName);
         }
 
-        // »ñÈ¡½ÇÉ«£¨Èç¹û²»´æÔÚ¿É´´½¨£©
+        // è·å–è§’è‰²ï¼ˆå¦‚æœä¸å­˜åœ¨å¯åˆ›å»ºï¼‰
         public Character GetCharacter(string characterName, bool createIfDoesNotExist = false)
         {
-            string key = characterName.ToLower();
-            if (characters.ContainsKey(key))
-                return characters[key]; // ·µ»ØÏÖÓĞ½ÇÉ«
+            if (characters.ContainsKey(characterName.ToLower()))
+                return characters[characterName.ToLower()];
             else if (createIfDoesNotExist)
-                return CreateCharacter(characterName); // ´´½¨ĞÂ½ÇÉ«
+                return CreateCharacter(characterName); // åˆ›å»ºæ–°è§’è‰²
 
-            return null; // ½ÇÉ«²»´æÔÚÇÒ²»´´½¨
+            return null; // è§’è‰²ä¸å­˜åœ¨ä¸”ä¸åˆ›å»º
         }
 
-        // ¼ì²é½ÇÉ«ÊÇ·ñ´æÔÚ
+        // æ£€æŸ¥è§’è‰²æ˜¯å¦å­˜åœ¨
         public bool HasCharacter(string characterName) => characters.ContainsKey(characterName.ToLower());
 
-        // ´´½¨ĞÂ½ÇÉ«
+        // åˆ›å»ºæ–°è§’è‰²
         public Character CreateCharacter(string characterName, bool revealAfterCreation = false)
         {
-            string key = characterName.ToLower();
-            if (characters.ContainsKey(key))
+            if (characters.ContainsKey(characterName.ToLower()))
             {
-                Debug.LogWarning($"½ÇÉ« '{characterName}' ÒÑ´æÔÚ£¬²»ÔÙ´´½¨");
-                return characters[key];
+                Debug.LogWarning($"è§’è‰² '{characterName}' å·²å­˜åœ¨ï¼Œä¸å†åˆ›å»º");
+                return null;
             }
 
-            // ½âÎö½ÇÉ«ĞÅÏ¢
+            // è§£æè§’è‰²ä¿¡æ¯
             CHARACTER_INFO info = GetCharacterInfo(characterName);
 
-            // ¸ù¾İĞÅÏ¢´´½¨½ÇÉ«
+            // æ ¹æ®ä¿¡æ¯åˆ›å»ºè§’è‰²
             Character character = CreateCharacterFromInfo(info);
 
-            // Ìí¼Óµ½×Öµä
-            characters.Add(key, character);
+            characters.Add(info.name.ToLower(), character);
 
-            // Èç¹ûĞèÒª£¬´´½¨ºóÁ¢¼´ÏÔÊ¾
+            // å¦‚æœéœ€è¦ï¼Œåˆ›å»ºåç«‹å³æ˜¾ç¤º
             if (revealAfterCreation)
                 character.Show();
 
             return character;
         }
 
-        // ½âÎö½ÇÉ«ĞÅÏ¢
+        // è§£æè§’è‰²ä¿¡æ¯
         private CHARACTER_INFO GetCharacterInfo(string characterName)
         {
             CHARACTER_INFO result = new CHARACTER_INFO();
 
-            // ·Ö¸î½ÇÉ«ÃûºÍ±ğÃû£¨¸ñÊ½£º"½ÇÉ«Ãû as ±ğÃû"£©
+            // åˆ†å‰²è§’è‰²åå’Œåˆ«åï¼ˆæ ¼å¼ï¼š"è§’è‰²å as åˆ«å"ï¼‰
             string[] nameData = characterName.Split(CHARACTER_CASTING_ID, System.StringSplitOptions.RemoveEmptyEntries);
-            result.name = nameData[0]; // Êµ¼ÊÊ¹ÓÃµÄÃû³Æ
-            result.castingName = nameData.Length > 1 ? nameData[1] : result.name; // ÅäÖÃÊ¹ÓÃµÄ±ğÃû
+            result.name = nameData[0]; // å®é™…ä½¿ç”¨çš„åç§°
+            result.castingName = nameData.Length > 1 ? nameData[1] : result.name; // é…ç½®ä½¿ç”¨çš„åˆ«å
 
-            // »ñÈ¡½ÇÉ«ÅäÖÃ
+            // è·å–è§’è‰²é…ç½®
             result.config = config.GetConfig(result.castingName);
 
-            // »ñÈ¡½ÇÉ«Ô¤ÖÆÌå
+            // è·å–è§’è‰²é¢„åˆ¶ä½“
             result.prefab = GetPrefabForCharacter(result.castingName);
 
-            // ¸ñÊ½»¯½ÇÉ«¸ùÂ·¾¶
+            // æ ¼å¼åŒ–è§’è‰²æ ¹è·¯å¾„
             result.rootCharacterFolder = FormatCharacterPath(characterRootPathFormat, result.castingName);
 
             return result;
         }
 
-        // »ñÈ¡½ÇÉ«Ô¤ÖÆÌå
+        // è·å–è§’è‰²é¢„åˆ¶ä½“
         private GameObject GetPrefabForCharacter(string characterName)
         {
             string prefabPath = FormatCharacterPath(characterPrefabPathFormat, characterName);
             return Resources.Load<GameObject>(prefabPath);
         }
 
-        // ¸ñÊ½»¯½ÇÉ«Â·¾¶£¨Ìæ»»Õ¼Î»·û£©
+        // æ ¼å¼åŒ–è§’è‰²è·¯å¾„ï¼ˆæ›¿æ¢å ä½ç¬¦ï¼‰
         public string FormatCharacterPath(string path, string characterName) =>
             path.Replace(CHARACTER_NAME_ID, characterName);
 
-        // ¸ù¾İ½ÇÉ«ĞÅÏ¢´´½¨¾ßÌåÀàĞÍµÄ½ÇÉ«
+        // æ ¹æ®è§’è‰²ä¿¡æ¯åˆ›å»ºå…·ä½“ç±»å‹çš„è§’è‰²
         private Character CreateCharacterFromInfo(CHARACTER_INFO info)
         {
             CharacterConfigData config = info.config;
 
-            // ¸ù¾İ½ÇÉ«ÀàĞÍ´´½¨²»Í¬µÄ½ÇÉ«ÊµÀı
+            // æ ¹æ®è§’è‰²ç±»å‹åˆ›å»ºä¸åŒçš„è§’è‰²å®ä¾‹
             switch (config.characterType)
             {
                 case Character.CharacterType.Text:
-                    return new Character_Text(info.name, config); // ´¿ÎÄ±¾½ÇÉ«
+                    return new Character_Text(info.name, config); // çº¯æ–‡æœ¬è§’è‰²
 
                 case Character.CharacterType.Sprite:
                 case Character.CharacterType.SpriteSheet:
-                    return new Character_Sprite(info.name, config, info.prefab, info.rootCharacterFolder); // ¾«Áé½ÇÉ«
+                    return new Character_Sprite(info.name, config, info.prefab, info.rootCharacterFolder); // ç²¾çµè§’è‰²
+
+                //case Character.CharacterType.Live2D:
+                //    return new Character_Live2D(info.name, config, info.prefab, info.rootCharacterFolder); // Live2Dè§’è‰²
+
+                //case Character.CharacterType.Model3D:
+                //    return new Character_Model3D(info.name, config, info.prefab, info.rootCharacterFolder); // 3Dæ¨¡å‹è§’è‰²
 
                 default:
-                    return null; // Î´ÖªÀàĞÍ
+                    return null; // æœªçŸ¥ç±»å‹
             }
         }
 
-        // ¶ÔËùÓĞ½ÇÉ«½øĞĞÅÅĞò
+        // å¯¹æ‰€æœ‰è§’è‰²è¿›è¡Œæ’åº
         public void SortCharacters()
         {
-            // »ñÈ¡»î¶¯ÖĞµÄ¿É¼û½ÇÉ«
+            // è·å–æ´»åŠ¨ä¸­çš„å¯è§è§’è‰²
             List<Character> activeCharacters = characters.Values
                 .Where(c => c.root.gameObject.activeInHierarchy && c.isVisible)
                 .ToList();
 
-            // »ñÈ¡·Ç»î¶¯½ÇÉ«
+            // è·å–éæ´»åŠ¨è§’è‰²
             List<Character> inactiveCharacters = characters.Values
                 .Except(activeCharacters)
                 .ToList();
 
-            // °´ÓÅÏÈ¼¶ÅÅĞò»î¶¯½ÇÉ«
+            // æŒ‰ä¼˜å…ˆçº§æ’åºæ´»åŠ¨è§’è‰²
             activeCharacters.Sort((a, b) => a.priority.CompareTo(b.priority));
+            activeCharacters.Concat(inactiveCharacters);
 
-            // ºÏ²¢ÁĞ±í£¨»î¶¯½ÇÉ«ÔÚÇ°£©
-            List<Character> allCharacters = activeCharacters.Concat(inactiveCharacters).ToList();
-
-            // Ó¦ÓÃÅÅĞò
-            SortCharacters(allCharacters);
+            SortCharacters(activeCharacters);
         }
 
-        // °´Ö¸¶¨Ãû³ÆË³ĞòÅÅĞò½ÇÉ«
+        // æŒ‰æŒ‡å®šåç§°é¡ºåºæ’åºè§’è‰²
         public void SortCharacters(string[] characterNames)
         {
-            // °´Ãû³ÆË³Ğò»ñÈ¡½ÇÉ«
-            List<Character> sortedCharacters = characterNames
+            List<Character> sortedCharacters = new List<Character>();
+
+            sortedCharacters = characterNames
                 .Select(name => GetCharacter(name))
                 .Where(character => character != null)
                 .ToList();
 
-            // »ñÈ¡Ê£Óà½ÇÉ«²¢°´ÓÅÏÈ¼¶ÅÅĞò
+            // è·å–å‰©ä½™è§’è‰²å¹¶æŒ‰ä¼˜å…ˆçº§æ’åº
             List<Character> remainingCharacters = characters.Values
                 .Except(sortedCharacters)
                 .OrderBy(character => character.priority)
                 .ToList();
 
-            // ·´×ªÅÅĞò½ÇÉ«ÁĞ±í£¨Ê¹µÚÒ»¸ö³ÉÎª×î¸ßÓÅÏÈ¼¶£©
+            // åè½¬æ’åºè§’è‰²åˆ—è¡¨ï¼ˆä½¿ç¬¬ä¸€ä¸ªæˆä¸ºæœ€é«˜ä¼˜å…ˆçº§ï¼‰
             sortedCharacters.Reverse();
 
-            // ¼ÆËãÆğÊ¼ÓÅÏÈ¼¶
+            // è®¡ç®—èµ·å§‹ä¼˜å…ˆçº§
             int startingPriority = remainingCharacters.Count > 0 ?
                 remainingCharacters.Max(c => c.priority) : 0;
 
-            // ÎªÅÅĞò½ÇÉ«ÉèÖÃĞÂÓÅÏÈ¼¶
+            // ä¸ºæ’åºè§’è‰²è®¾ç½®æ–°ä¼˜å…ˆçº§
             for (int i = 0; i < sortedCharacters.Count; i++)
             {
                 Character character = sortedCharacters[i];
                 character.SetPriority(startingPriority + i + 1, autoSortCharactersOnUI: false);
             }
 
-            // ºÏ²¢ËùÓĞ½ÇÉ«£¨Ê£Óà½ÇÉ« + ÅÅĞò½ÇÉ«£©
+            // åˆå¹¶æ‰€æœ‰è§’è‰²ï¼ˆå‰©ä½™è§’è‰² + æ’åºè§’è‰²ï¼‰
             List<Character> allCharacters = remainingCharacters.Concat(sortedCharacters).ToList();
 
-            // Ó¦ÓÃÅÅĞò
+            // åº”ç”¨æ’åº
             SortCharacters(allCharacters);
         }
 
-        // Ó¦ÓÃÅÅĞòµ½UI²ã¼¶
+        // åº”ç”¨æ’åºåˆ°UIå±‚çº§
         private void SortCharacters(List<Character> charactersSortingOrder)
         {
             int i = 0;
             foreach (Character character in charactersSortingOrder)
             {
-                Debug.Log($"{character.name} ÓÅÏÈ¼¶Îª {character.priority}");
-                character.root.SetSiblingIndex(i++); // ÉèÖÃUI²ã¼¶Ë³Ğò
-                character.OnSort(i); // Í¨Öª½ÇÉ«ÅÅĞòÊÂ¼ş
+                Debug.Log($"{character.name} ä¼˜å…ˆçº§ä¸º {character.priority}");
+                character.root.SetSiblingIndex(i++); // è®¾ç½®UIå±‚çº§é¡ºåº
+                character.OnSort(i); // é€šçŸ¥è§’è‰²æ’åºäº‹ä»¶
             }
         }
 
-        // Í³¼ÆÖ¸¶¨ÀàĞÍµÄ½ÇÉ«ÊıÁ¿
+        // ç»Ÿè®¡æŒ‡å®šç±»å‹çš„è§’è‰²æ•°é‡
         public int GetCharacterCountFromCharacterType(Character.CharacterType charType)
         {
             int count = 0;
@@ -220,14 +223,14 @@ namespace CHARACTERS
             return count;
         }
 
-        // ½ÇÉ«ĞÅÏ¢ÄÚ²¿Àà
+        // è§’è‰²ä¿¡æ¯å†…éƒ¨ç±»
         private class CHARACTER_INFO
         {
-            public string name = ""; // ½ÇÉ«Êµ¼ÊÃû³Æ
-            public string castingName = ""; // ½ÇÉ«ÅäÖÃÃû³Æ£¨±ğÃû£©
-            public string rootCharacterFolder = ""; // ½ÇÉ«×ÊÔ´¸ùÂ·¾¶
-            public CharacterConfigData config = null; // ½ÇÉ«ÅäÖÃÊı¾İ
-            public GameObject prefab = null; // ½ÇÉ«Ô¤ÖÆÌå
+            public string name = ""; // è§’è‰²å®é™…åç§°
+            public string castingName = ""; // è§’è‰²é…ç½®åç§°ï¼ˆåˆ«åï¼‰
+            public string rootCharacterFolder = ""; // è§’è‰²èµ„æºæ ¹è·¯å¾„
+            public CharacterConfigData config = null; // è§’è‰²é…ç½®æ•°æ®
+            public GameObject prefab = null; // è§’è‰²é¢„åˆ¶ä½“
         }
     }
 }

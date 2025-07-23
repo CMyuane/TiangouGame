@@ -1,6 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using UnityEngine;
 
 namespace DIALOGUE
@@ -64,7 +62,7 @@ namespace DIALOGUE
             Regex commandRegex = new Regex(commandRegexPattern);
             MatchCollection matches = commandRegex.Matches(rawLine);
             int commandStart = -1;
-            foreach(Match match in matches)
+            foreach (Match match in matches)
             {
                 if (match.Index < dialogueStart || match.Index > dialogueEnd)
                 {
@@ -73,7 +71,7 @@ namespace DIALOGUE
                 }
             }
 
-            if(commandStart != -1 && (dialogueStart == -1 && dialogueEnd == -1))
+            if (commandStart != -1 && (dialogueStart == -1 && dialogueEnd == -1))
             {
                 return ("", "", rawLine.Trim());
             }

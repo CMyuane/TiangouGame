@@ -15,21 +15,23 @@ namespace TESTING
     {
         new public static void Extend(CommandDatabase database)
         {
-            // 这里添加你想要的命令
+            //Add Action with no parameters
             database.AddCommand("print", new Action(PrintDefaultMessage));
-            database.AddCommand("print_lp", new Action<string>(PrintUserMessage));
+            database.AddCommand("print_1p", new Action<string>(PrintUsermessage));
             database.AddCommand("print_mp", new Action<string[]>(PrintLines));
-            //lambda
-            database.AddCommand("lambda", new Action(() => { Debug.Log("Printing a default message to console from lambda command."); }));
-            database.AddCommand("lambada_lp", new Action<string>((arg) => { Debug.Log($"Log User Message: '{arg}'"); }));
-            database.AddCommand("lambada_mp", new Action<string[]>((arg) => { Debug.Log(string.Join(", ", arg)); }));
 
+            //Add lambda with no parameters
+            database.AddCommand("lambda", new Action(() => { Debug.Log("Printing a default message to console from lambda command."); }));
+            database.AddCommand("lambda_1p", new Action<string>((arg) => { Debug.Log($"Log User Lambda Message: '{arg}'"); }));
+            database.AddCommand("lambda_mp", new Action<string[]>((args) => { Debug.Log(string.Join(", ", args)); }));
+
+            //Add coroutine with no parameters
             database.AddCommand("process", new Func<IEnumerator>(SimpleProcess));
-            database.AddCommand("process_lp", new Func<string, IEnumerator>(LineProcess));
+            database.AddCommand("process_1p", new Func<string, IEnumerator>(LineProcess));
             database.AddCommand("process_mp", new Func<string[], IEnumerator>(MultiLineProcess));
 
+            //Special Example
             database.AddCommand("moveCharDemo", new Func<string, IEnumerator>(MoveCharacter));
-
         }
 
         private static void PrintDefaultMessage()
@@ -37,9 +39,9 @@ namespace TESTING
             Debug.Log("Printing a default message to console.");
         }
 
-        private static void PrintUserMessage(string message)
+        private static void PrintUsermessage(string message)
         {
-            Debug.Log($"User Massage: '{message}'");
+            Debug.Log($"User Message: '{message}'");
         }
 
         private static void PrintLines(string[] lines)

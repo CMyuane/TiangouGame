@@ -1,32 +1,57 @@
-CreateCharacter(白河杏 1 -启用 false -i false), CreateCharacter(黛莉 1 -启用 true -i true), CreateCharacter("守卫1 as 守卫" -e false)
+﻿
 
-黛莉.SetPosition(1), 白河杏.SetPosition(1)
+playsfx(thunder_strong_01 -p 0.85 -v 0.3 -loop true)
+narrator "暴雨将至"
 
-wait(3)
+stopsfx(thunder_strong_01)
+
+wait(1000)
+
+
+
+SetLayerMedia(background Nebula), SetLayerMedia(background 1 SpaceshipInterior)
+
+CreateCharacter(黛莉 -启用 true -i true)
+
+黛莉 "这里是太空。"
+
+SetLayerMedia(background "Fantasy Landscape" -aud true -spd 0.7 -blend hurricane -i true)
+
+黛莉 "先等一等"
+
+ClearLayerMedia(background -blend hypno)
+
+黛莉 "掉出飞船咯？"
+
+
+
+SetLayerMedia(cinematic -m "~/Graphics/Gallery/雷军")
+
+ClearLayerMedia(cinematic -i true)
+
+黛莉 "清除CG面板"
+
+
+
+
+
+
+CreateCharacter(白河杏 1 -启用 false -i false), CreateCharacter(黛莉 -启用 true -i true), CreateCharacter("守卫1 as 守卫" -e false)
+
+黛莉.SetPosition(1), 白河杏.SetPosition(0)
+
+wait(1)
 
 白河杏.show(), 白河杏.setColor(red)
 
 
 wait(3)
 
-movecharacter(黛莉 -x 0 -y 5 -spd 1 -sm)
+[wait]movecharacter(黛莉 -x 0 -y 5 -spd 1)
 
 黛莉.SetSprite(D_0 1 -l 0 -spd 0.75), 黛莉.SetSprite(D_02惊讶 -l 1 -spd 0.75)
 
 wait(2)
-
-
-CreateCharacter(Emily)
-
-Emily "HI"
-
-Emily.SetSprite(Happy)
-
-
-
-wait(10)
-
-
 
 
 
@@ -34,11 +59,11 @@ wait(10)
 
 [wait]UnHighlight(白河杏 黛莉), wait(1), [wait]Highlight(白河杏 黛莉), wait(1)
 
-守卫1.Show(-i true), wait(0.5)
+
 
 [wait]Highlight(白河杏 -o true), wait(1), [wait]UnHighlight(白河杏 -o true), wait(1)
 
-wait(10)
+wait(1)
 
 [wait]白河杏.UnHighlight(), [wait]黛莉.UnHighlight()
 [wait]白河杏.Highlight(), [wait]黛莉.Highlight()

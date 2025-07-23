@@ -1,8 +1,8 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-//ÕâÊÇÒ»¸ö½ÇÉ«ÎÄ±¾Àà£¬¼Ì³Ğ×Ô½ÇÉ«Àà¡£Ëü±íÊ¾ÓÎÏ·ÖĞµÄÎÄ±¾½ÇÉ«£¬²¢ÔÚ´´½¨Ê±Êä³öµ÷ÊÔĞÅÏ¢¡£
+//è¿™æ˜¯ä¸€ä¸ªè§’è‰²æ–‡æœ¬ç±»ï¼Œç»§æ‰¿è‡ªè§’è‰²ç±»ã€‚å®ƒè¡¨ç¤ºæ¸¸æˆä¸­çš„æ–‡æœ¬è§’è‰²ï¼Œå¹¶åœ¨åˆ›å»ºæ—¶è¾“å‡ºè°ƒè¯•ä¿¡æ¯ã€‚
 namespace CHARACTERS
 {
     public class Character_Text : Character
@@ -12,4 +12,4 @@ namespace CHARACTERS
             Debug.Log($"Creating Text character: '{name}'");
         }
     }
-}
+} 

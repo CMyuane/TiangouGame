@@ -1,25 +1,24 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class FileTesting : MonoBehaviour
+public class TestFiles : MonoBehaviour
 {
-    [SerializeField] private TextAsset fileName;
+    [SerializeField] private TextAsset file;
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        StartCoroutine(Run());
+        //     StartCoroutine(Run());
+        // }
+
+        // IEnumerator Run()
+        // {
+        //     List<string> lines = FileManager.ReadTextAsset(fileName, false);
+
+        //     foreach (string line in lines)
+        //         Debug.Log(line);
+
+        //     yield return null;
     }
 
-    IEnumerator Run()
-    {
-        List<string> lines = FileManager.ReadTextAsset(fileName, false);
-
-        foreach (string line in lines)
-            Debug.Log(line);
-
-        yield return null;
-    }
     // Update is called once per frame
 }

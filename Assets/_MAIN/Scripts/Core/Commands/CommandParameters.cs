@@ -1,8 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Globalization;
-using UnityEngine;
+锘縰sing System.Collections.Generic;
 
 namespace COMMANDS
 {
@@ -12,7 +8,6 @@ namespace COMMANDS
 
         private Dictionary<string, string> parameters = new Dictionary<string, string>();
         private List<string> unlabeledParameters = new List<string>();
-
 
         public CommandParameters(string[] parameterArray, int startingIndex = 0)
         {
@@ -34,8 +29,6 @@ namespace COMMANDS
                 }
                 else
                     unlabeledParameters.Add(parameterArray[i]);
-
-
             }
         }
 
@@ -52,9 +45,8 @@ namespace COMMANDS
                         return true;
                     }
                 }
-
             }
-            //如果没有找到匹配的参数名，则搜索未标记的参数
+            //濡傛灉娌℃湁鎵惧埌鍖归厤鐨勫弬鏁板悕锛屽垯鎼滅储鏈爣璁扮殑鍙傛暟
             foreach (string parameterName in unlabeledParameters)
             {
                 if (TryCastParameter(parameterName, out value))
@@ -62,11 +54,9 @@ namespace COMMANDS
                     unlabeledParameters.Remove(parameterName);
                     return true;
                 }
-
             }
             value = defaultValue;
             return false;
-
         }
 
         //internal void TryGetValue(string[] strings, out bool immediate, bool defultValue)
@@ -108,17 +98,14 @@ namespace COMMANDS
             //        return true;
             //    }
             //}
-
             else if (typeof(T) == typeof(string))
             {
                 value = (T)(object)parameterValue;
                 return true;
-
             }
 
             value = default(T);
             return false;
         }
-
     }
 }

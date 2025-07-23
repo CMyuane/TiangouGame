@@ -1,264 +1,274 @@
+ï»¿using CHARACTERS;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using CHARACTERS;
 using System.Linq;
-using UnityEditor;
+using UnityEngine;
 
 namespace COMMANDS
 {
     public class CMD_DatabaseExtension_Characters : CMD_DatabaseExtension
     {
-        // ²ÎÊı±ğÃû¶¨Òå£¨Ó¢ÎÄ/ÖĞÎÄ£©
-        private static string[] PARAM_ENABLE => new string[] { "-e", "-enabled", "-ÆôÓÃ" };        // ÊÇ·ñÆôÓÃ½ÇÉ«
-        private static string[] PARAM_IMMEDIATE => new string[] { "-i", "-immediate", "-Á¢¼´" };   // ÊÇ·ñÁ¢¼´Ö´ĞĞ
-        private static string[] PARAM_SPEED => new string[] { "-spd", "-speed", "-ËÙ¶È" };         // ¶¯»­ËÙ¶È
-        private static string[] PARAM_DURATION => new string[] { "-dat", "-duration", "-Ê±¼ä" };   // ³ÖĞøÊ±¼ä£¨ÔİÎ´ÊµÏÖ£©
-        private static string[] PARAM_SMOOTH => new string[] { "-sm", "-smooth", "-Æ½»¬" };        // ÊÇ·ñÆ½»¬¹ı¶É
-        private static string[] PARAM_XPOS => new string[] { "-x", "-xpos", "-ºá" };              // XÖáÎ»ÖÃ
-        private static string[] PARAM_YPOS => new string[] { "-y", "-ypos", "-×İ" };              // YÖáÎ»ÖÃ
+        // å‚æ•°åˆ«åå®šä¹‰ï¼ˆè‹±æ–‡/ä¸­æ–‡ï¼‰
+        private static string[] PARAM_ENABLE => new string[] { "-e", "-enabled", "-å¯ç”¨" };        // æ˜¯å¦å¯ç”¨è§’è‰²
 
-        // À©Õ¹ÃüÁîÊı¾İ¿â
-        new public static void Extend(CommandDatabase database)
+        private static string[] PARAM_IMMEDIATE => new string[] { "-i", "-immediate", "-ç«‹å³" };   // æ˜¯å¦ç«‹å³æ‰§è¡Œ
+        private static string[] PARAM_SPEED => new string[] { "-spd", "-speed", "-é€Ÿåº¦" };         // åŠ¨ç”»é€Ÿåº¦
+        private static string[] PARAM_DURATION => new string[] { "-dat", "-duration", "-æ—¶é—´" };   // æŒç»­æ—¶é—´ï¼ˆæš‚æœªå®ç°ï¼‰
+        private static string[] PARAM_SMOOTH => new string[] { "-sm", "-smooth", "-å¹³æ»‘" };        // æ˜¯å¦å¹³æ»‘è¿‡æ¸¡
+        private static string[] PARAM_XPOS => new string[] { "-x", "-xpos", "-æ¨ª" };              // Xè½´ä½ç½®
+        private static string[] PARAM_YPOS => new string[] { "-y", "-ypos", "-çºµ" };              // Yè½´ä½ç½®
+
+        // æ‰©å±•å‘½ä»¤æ•°æ®åº“
+        public new static void Extend(CommandDatabase database)
         {
-            // Ìí¼ÓÈ«¾Ö½ÇÉ«ÃüÁî
-            database.AddCommand("createcharacter", new Action<string[]>(CreateCharacter));       // ´´½¨½ÇÉ«
-            database.AddCommand("movecharacter", new Func<string[], IEnumerator>(MoveCharacter)); // ÒÆ¶¯½ÇÉ«
-            database.AddCommand("show", new Func<string[], IEnumerator>(ShowAll));                // ÏÔÊ¾ËùÓĞÖ¸¶¨½ÇÉ«
-            database.AddCommand("hide", new Func<string[], IEnumerator>(HideAll));                // Òş²ØËùÓĞÖ¸¶¨½ÇÉ«
-            database.AddCommand("sort", new Action<string[]>(Sort));                             // ½ÇÉ«ÅÅĞò
-            database.AddCommand("highlight", new Func<string[], IEnumerator>(HighlightAll));      // ¸ßÁÁÖ¸¶¨½ÇÉ«
-            database.AddCommand("unhighlight", new Func<string[], IEnumerator>(UnhighlightAll));  // È¡Ïû¸ßÁÁÖ¸¶¨½ÇÉ«
+            // æ·»åŠ å…¨å±€è§’è‰²å‘½ä»¤
+            database.AddCommand("createcharacter", new Action<string[]>(CreateCharacter));       // åˆ›å»ºè§’è‰²
+            database.AddCommand("movecharacter", new Func<string[], IEnumerator>(MoveCharacter)); // ç§»åŠ¨è§’è‰²
+            database.AddCommand("show", new Func<string[], IEnumerator>(ShowAll));                // æ˜¾ç¤ºæ‰€æœ‰æŒ‡å®šè§’è‰²
+            database.AddCommand("hide", new Func<string[], IEnumerator>(HideAll));                // éšè—æ‰€æœ‰æŒ‡å®šè§’è‰²
+            database.AddCommand("sort", new Action<string[]>(Sort));                             // è§’è‰²æ’åº
+            database.AddCommand("highlight", new Func<string[], IEnumerator>(HighlightAll));      // é«˜äº®æŒ‡å®šè§’è‰²
+            database.AddCommand("unhighlight", new Func<string[], IEnumerator>(UnhighlightAll));  // å–æ¶ˆé«˜äº®æŒ‡å®šè§’è‰²
 
-            // ´´½¨»ù´¡½ÇÉ«ÃüÁî×ÓÊı¾İ¿â
+            // åˆ›å»ºåŸºç¡€è§’è‰²å‘½ä»¤å­æ•°æ®åº“
             CommandDatabase baseCommands = CommandManager.instance.CreateSubDatabase(CommandManager.DATABASE_CHARACTERS_BASE);
-            baseCommands.AddCommand("move", new Func<string[], IEnumerator>(MoveCharacter));      // ÒÆ¶¯½ÇÉ«
-            baseCommands.AddCommand("show", new Func<string[], IEnumerator>(Show));               // ÏÔÊ¾µ¥¸ö½ÇÉ«
-            baseCommands.AddCommand("hide", new Func<string[], IEnumerator>(Hide));               // Òş²Øµ¥¸ö½ÇÉ«
-            baseCommands.AddCommand("setpriority", new Action<string[]>(SetPriority));            // ÉèÖÃäÖÈ¾ÓÅÏÈ¼¶
-            baseCommands.AddCommand("setposition", new Action<string[]>(SetPosition));            // ÉèÖÃ½ÇÉ«Î»ÖÃ
-            baseCommands.AddCommand("setColor", new Func<string[], IEnumerator>(SetColor));       // ÉèÖÃ½ÇÉ«ÑÕÉ«
-            baseCommands.AddCommand("highlight", new Func<string[], IEnumerator>(Highlight));     // ¸ßÁÁµ¥¸ö½ÇÉ«
-            baseCommands.AddCommand("unhighlight", new Func<string[], IEnumerator>(Unhighlight)); // È¡Ïû¸ßÁÁµ¥¸ö½ÇÉ«
+            baseCommands.AddCommand("move", new Func<string[], IEnumerator>(MoveCharacter));      // ç§»åŠ¨è§’è‰²
+            baseCommands.AddCommand("show", new Func<string[], IEnumerator>(Show));               // æ˜¾ç¤ºå•ä¸ªè§’è‰²
+            baseCommands.AddCommand("hide", new Func<string[], IEnumerator>(Hide));               // éšè—å•ä¸ªè§’è‰²
+            baseCommands.AddCommand("setpriority", new Action<string[]>(SetPriority));            // è®¾ç½®æ¸²æŸ“ä¼˜å…ˆçº§
+            baseCommands.AddCommand("setposition", new Action<string[]>(SetPosition));            // è®¾ç½®è§’è‰²ä½ç½®
+            baseCommands.AddCommand("setColor", new Func<string[], IEnumerator>(SetColor));       // è®¾ç½®è§’è‰²é¢œè‰²
+            baseCommands.AddCommand("highlight", new Func<string[], IEnumerator>(Highlight));     // é«˜äº®å•ä¸ªè§’è‰²
+            baseCommands.AddCommand("unhighlight", new Func<string[], IEnumerator>(Unhighlight)); // å–æ¶ˆé«˜äº®å•ä¸ªè§’è‰²
 
-            // ´´½¨¾«Áé½ÇÉ«ÃüÁî×ÓÊı¾İ¿â
+            // åˆ›å»ºç²¾çµè§’è‰²å‘½ä»¤å­æ•°æ®åº“
             CommandDatabase spriteCommands = CommandManager.instance.CreateSubDatabase(CommandManager.DATABASE_CHARACTERS_SPRITE);
-            spriteCommands.AddCommand("setsprite", new Func<string[], IEnumerator>(SetSprite));   // ÉèÖÃ¾«ÁéÍ¼Æ¬
+            spriteCommands.AddCommand("setsprite", new Func<string[], IEnumerator>(SetSprite));   // è®¾ç½®ç²¾çµå›¾ç‰‡
         }
 
-        #region È«¾ÖÃüÁî
-        // ´´½¨½ÇÉ«ÃüÁî
+        #region å…¨å±€å‘½ä»¤
+
+        // åˆ›å»ºè§’è‰²å‘½ä»¤
         private static void CreateCharacter(string[] data)
         {
-            string characterName = data[0];  // µÚÒ»¸ö²ÎÊıÎª½ÇÉ«Ãû
-            bool enable = false;             // ÊÇ·ñÆôÓÃ½ÇÉ«
-            bool immediate = false;          // ÊÇ·ñÁ¢¼´ÏÔÊ¾
+            string characterName = data[0];  // ç¬¬ä¸€ä¸ªå‚æ•°ä¸ºè§’è‰²å
+            bool enable = false;             // æ˜¯å¦å¯ç”¨è§’è‰²
+            bool immediate = false;          // æ˜¯å¦ç«‹å³æ˜¾ç¤º
 
-            // ½âÎö²ÎÊı
+            // è§£æå‚æ•°
             var parameters = ConvertDataToParameters(data);
             parameters.TryGetValue(PARAM_ENABLE, out enable, defaultValue: false);
             parameters.TryGetValue(PARAM_IMMEDIATE, out immediate, defaultValue: false);
 
-            // ´´½¨½ÇÉ«
+            // åˆ›å»ºè§’è‰²
             Character character = CharacterManager.instance.CreateCharacter(characterName);
 
-            // Èç¹ûÆôÓÃ½ÇÉ«£¬ÔòÏÔÊ¾
-            if (enable)
-            {
-                if (immediate)
-                    character.isVisible = true;  // Á¢¼´ÏÔÊ¾
-                else
-                    character.Show();           // ¶¯»­ÏÔÊ¾
-            }
+            // å¦‚æœå¯ç”¨è§’è‰²ï¼Œåˆ™æ˜¾ç¤º
+            if (!enable)
+                return;  // å¦‚æœä¸å¯ç”¨åˆ™ç›´æ¥è¿”å›
+
+            if (immediate)
+                character.isVisible = true;  // ç«‹å³æ˜¾ç¤º
+            else
+                character.Show();           // åŠ¨ç”»æ˜¾ç¤º
         }
 
-        // ½ÇÉ«ÅÅĞòÃüÁî
+        // è§’è‰²æ’åºå‘½ä»¤
         private static void Sort(string[] data)
         {
-            CharacterManager.instance.SortCharacters(data);  // µ÷ÓÃ½ÇÉ«¹ÜÀíÆ÷ÅÅĞò
+            CharacterManager.instance.SortCharacters(data);  // è°ƒç”¨è§’è‰²ç®¡ç†å™¨æ’åº
         }
 
-        // ÒÆ¶¯½ÇÉ«ÃüÁî£¨Ğ­³Ì£©
+        // ç§»åŠ¨è§’è‰²å‘½ä»¤ï¼ˆåç¨‹ï¼‰
         private static IEnumerator MoveCharacter(string[] data)
         {
-            string characterName = data[0];  // µÚÒ»¸ö²ÎÊıÎª½ÇÉ«Ãû
+            string characterName = data[0];  // ç¬¬ä¸€ä¸ªå‚æ•°ä¸ºè§’è‰²å
             Character character = CharacterManager.instance.GetCharacter(characterName);
 
-            if (character == null) yield break;  // ½ÇÉ«²»´æÔÚÔòÍË³ö
+            if (character == null)
+                yield break;  // è§’è‰²ä¸å­˜åœ¨åˆ™é€€å‡º
 
-            // ³õÊ¼»¯ÒÆ¶¯²ÎÊı
+            // åˆå§‹åŒ–ç§»åŠ¨å‚æ•°
             float x = 0, y = 0;
             float speed = 1;
             bool smooth = false;
             bool immediate = false;
 
-            // ½âÎö²ÎÊı
+            // è§£æå‚æ•°
             var parameters = ConvertDataToParameters(data);
-            parameters.TryGetValue(PARAM_XPOS, out x);                     // »ñÈ¡X×ø±ê
-            parameters.TryGetValue(PARAM_YPOS, out y);                     // »ñÈ¡Y×ø±ê
-            parameters.TryGetValue(PARAM_SPEED, out speed, defaultValue: 1); // ÒÆ¶¯ËÙ¶È
-            parameters.TryGetValue(PARAM_SMOOTH, out smooth, defaultValue: false); // ÊÇ·ñÆ½»¬ÒÆ¶¯
-            parameters.TryGetValue(PARAM_IMMEDIATE, out immediate, defaultValue: false); // ÊÇ·ñÁ¢¼´ÒÆ¶¯
+            parameters.TryGetValue(PARAM_XPOS, out x);                     // è·å–Xåæ ‡
+            parameters.TryGetValue(PARAM_YPOS, out y);                     // è·å–Yåæ ‡
+            parameters.TryGetValue(PARAM_SPEED, out speed, defaultValue: 1); // ç§»åŠ¨é€Ÿåº¦
+            parameters.TryGetValue(PARAM_SMOOTH, out smooth, defaultValue: false); // æ˜¯å¦å¹³æ»‘ç§»åŠ¨
+            parameters.TryGetValue(PARAM_IMMEDIATE, out immediate, defaultValue: false); // æ˜¯å¦ç«‹å³ç§»åŠ¨
 
-            Vector2 position = new Vector2(x, y);  // Ä¿±êÎ»ÖÃ
+            Vector2 position = new Vector2(x, y);  // ç›®æ ‡ä½ç½®
 
-            // Ö´ĞĞÒÆ¶¯
+            // æ‰§è¡Œç§»åŠ¨
             if (immediate)
-                character.SetPosition(position);  // Á¢¼´ÉèÖÃÎ»ÖÃ
+                character.SetPosition(position);  // ç«‹å³è®¾ç½®ä½ç½®
             else
             {
-                // Ìí¼ÓÖÕÖ¹»Øµ÷£¨Ç¿ÖÆÍê³ÉÒÆ¶¯£©
-                CommandManager.instance.AddTerminationActionToCurrentProcess(() => {
+                // æ·»åŠ ç»ˆæ­¢å›è°ƒï¼ˆå¼ºåˆ¶å®Œæˆç§»åŠ¨ï¼‰
+                CommandManager.instance.AddTerminationActionToCurrentProcess(() =>
+                {
                     character?.SetPosition(position);
                 });
 
-                // Ö´ĞĞÒÆ¶¯¶¯»­
+                // æ‰§è¡Œç§»åŠ¨åŠ¨ç”»
                 yield return character.MoveToPosition(position, speed, smooth);
             }
         }
 
-        // ÏÔÊ¾¶à¸ö½ÇÉ«ÃüÁî£¨Ğ­³Ì£©
+        // æ˜¾ç¤ºå¤šä¸ªè§’è‰²å‘½ä»¤ï¼ˆåç¨‹ï¼‰
         private static IEnumerator ShowAll(string[] data)
         {
-            List<Character> characters = new List<Character>();  // ÒªÏÔÊ¾µÄ½ÇÉ«ÁĞ±í
-            bool immediate = false;   // ÊÇ·ñÁ¢¼´ÏÔÊ¾
-            float speed = 1;          // ÏÔÊ¾ËÙ¶È
+            List<Character> characters = new List<Character>();  // è¦æ˜¾ç¤ºçš„è§’è‰²åˆ—è¡¨
+            bool immediate = false;   // æ˜¯å¦ç«‹å³æ˜¾ç¤º
+            float speed = 1;          // æ˜¾ç¤ºé€Ÿåº¦
 
-            // »ñÈ¡ËùÓĞÖ¸¶¨½ÇÉ«
-            foreach (string name in data)
+            // è·å–æ‰€æœ‰æŒ‡å®šè§’è‰²
+            foreach (string s in data)
             {
-                Character character = CharacterManager.instance.GetCharacter(name, createIfDoesNotExist: false);
-                if (character != null) characters.Add(character);
+                Character character = CharacterManager.instance.GetCharacter(s, createIfDoesNotExist: false);
+                if (character != null)
+                    characters.Add(character);
             }
 
             if (characters.Count == 0)
             {
-                Debug.LogWarning("Ã»ÓĞ¿ÉÏÔÊ¾µÄ½ÇÉ«");
+                Debug.LogWarning("æ²¡æœ‰å¯æ˜¾ç¤ºçš„è§’è‰²");
                 yield break;
             }
 
-            // ½âÎö²ÎÊı
+            // è§£æå‚æ•°
             var parameters = ConvertDataToParameters(data);
             parameters.TryGetValue(PARAM_IMMEDIATE, out immediate, defaultValue: false);
             parameters.TryGetValue(PARAM_SPEED, out speed, defaultValue: 1f);
 
-            // ÏÔÊ¾ËùÓĞ½ÇÉ«
+            // æ˜¾ç¤ºæ‰€æœ‰è§’è‰²
             foreach (Character character in characters)
             {
                 if (immediate)
-                    character.isVisible = true;  // Á¢¼´ÏÔÊ¾
+                    character.isVisible = true;  // ç«‹å³æ˜¾ç¤º
                 else
-                    character.Show(speed);       // ¶¯»­ÏÔÊ¾
+                    character.Show(speed);       // åŠ¨ç”»æ˜¾ç¤º
             }
 
-            // µÈ´ıËùÓĞ¶¯»­Íê³É
+            // ç­‰å¾…æ‰€æœ‰åŠ¨ç”»å®Œæˆ
             if (!immediate)
             {
-                // Ìí¼ÓÖÕÖ¹»Øµ÷£¨Ç¿ÖÆÍê³ÉÏÔÊ¾£©
+                // æ·»åŠ ç»ˆæ­¢å›è°ƒï¼ˆå¼ºåˆ¶å®Œæˆæ˜¾ç¤ºï¼‰
                 CommandManager.instance.AddTerminationActionToCurrentProcess(() =>
                 {
                     foreach (Character character in characters)
                         character.isVisible = true;
                 });
 
-                // µÈ´ıËùÓĞ½ÇÉ«Íê³ÉÏÔÊ¾¶¯»­
+                // ç­‰å¾…æ‰€æœ‰è§’è‰²å®Œæˆæ˜¾ç¤ºåŠ¨ç”»
                 while (characters.Any(c => c.isRevealing))
                     yield return null;
             }
         }
 
-        // Òş²Ø¶à¸ö½ÇÉ«ÃüÁî£¨Ğ­³Ì£©
+        // éšè—å¤šä¸ªè§’è‰²å‘½ä»¤ï¼ˆåç¨‹ï¼‰
         private static IEnumerator HideAll(string[] data)
         {
-            List<Character> characters = new List<Character>();  // ÒªÒş²ØµÄ½ÇÉ«ÁĞ±í
-            bool immediate = false;   // ÊÇ·ñÁ¢¼´Òş²Ø
-            float speed = 1f;         // Òş²ØËÙ¶È
+            List<Character> characters = new List<Character>();  // è¦éšè—çš„è§’è‰²åˆ—è¡¨
+            bool immediate = false;   // æ˜¯å¦ç«‹å³éšè—
+            float speed = 1f;         // éšè—é€Ÿåº¦
 
-            // »ñÈ¡ËùÓĞÖ¸¶¨½ÇÉ«
-            foreach (string name in data)
+            // è·å–æ‰€æœ‰æŒ‡å®šè§’è‰²
+            foreach (string s in data)
             {
-                Character character = CharacterManager.instance.GetCharacter(name, createIfDoesNotExist: false);
-                if (character != null) characters.Add(character);
+                Character character = CharacterManager.instance.GetCharacter(s, createIfDoesNotExist: false);
+                if (character != null)
+                    characters.Add(character);
             }
 
             if (characters.Count == 0)
             {
-                Debug.LogWarning("Ã»ÓĞ¿ÉÒş²ØµÄ½ÇÉ«");
+                Debug.LogWarning("æ²¡æœ‰å¯éšè—çš„è§’è‰²");
                 yield break;
             }
 
-            // ½âÎö²ÎÊı
+            // è§£æå‚æ•°
             var parameters = ConvertDataToParameters(data);
             parameters.TryGetValue(PARAM_IMMEDIATE, out immediate, defaultValue: false);
             parameters.TryGetValue(PARAM_SPEED, out speed, defaultValue: 1f);
 
-            // Òş²ØËùÓĞ½ÇÉ«
+            // éšè—æ‰€æœ‰è§’è‰²
             foreach (Character character in characters)
             {
                 if (immediate)
-                    character.isVisible = false;  // Á¢¼´Òş²Ø
+                    character.isVisible = false;  // ç«‹å³éšè—
                 else
-                    character.Hide(speed);        // ¶¯»­Òş²Ø
+                    character.Hide(speed);        // åŠ¨ç”»éšè—
             }
 
-            // µÈ´ıËùÓĞ¶¯»­Íê³É
+            // ç­‰å¾…æ‰€æœ‰åŠ¨ç”»å®Œæˆ
             if (!immediate)
             {
-                // Ìí¼ÓÖÕÖ¹»Øµ÷£¨Ç¿ÖÆÍê³ÉÒş²Ø£©
+                // æ·»åŠ ç»ˆæ­¢å›è°ƒï¼ˆå¼ºåˆ¶å®Œæˆéšè—ï¼‰
                 CommandManager.instance.AddTerminationActionToCurrentProcess(() =>
                 {
                     foreach (Character character in characters)
                         character.isVisible = false;
                 });
 
-                // µÈ´ıËùÓĞ½ÇÉ«Íê³ÉÒş²Ø¶¯»­
+                // ç­‰å¾…æ‰€æœ‰è§’è‰²å®Œæˆéšè—åŠ¨ç”»
                 while (characters.Any(c => c.isHiding))
                     yield return null;
             }
         }
 
-        // ¸ßÁÁ¶à¸ö½ÇÉ«ÃüÁî£¨Ğ­³Ì£©
+        // é«˜äº®å¤šä¸ªè§’è‰²å‘½ä»¤ï¼ˆåç¨‹ï¼‰
         public static IEnumerator HighlightAll(string[] data)
         {
-            List<Character> characters = new List<Character>();  // Òª¸ßÁÁµÄ½ÇÉ«
-            bool immediate = false;  // ÊÇ·ñÁ¢¼´Ö´ĞĞ
-            bool handleUnspecifiedCharacters = true;  // ÊÇ·ñ´¦ÀíÎ´Ö¸¶¨½ÇÉ«
-            List<Character> unspecifiedCharacters = new List<Character>();  // Î´Ö¸¶¨½ÇÉ«ÁĞ±í
+            List<Character> characters = new List<Character>();  // è¦é«˜äº®çš„è§’è‰²
+            bool immediate = false;  // æ˜¯å¦ç«‹å³æ‰§è¡Œ
+            bool handleUnspecifiedCharacters = true;  // æ˜¯å¦å¤„ç†æœªæŒ‡å®šè§’è‰²
+            List<Character> unspecifiedCharacters = new List<Character>();  // æœªæŒ‡å®šè§’è‰²åˆ—è¡¨
 
-            // Ìí¼ÓÒª¸ßÁÁµÄ½ÇÉ«
+            // æ·»åŠ è¦é«˜äº®çš„è§’è‰²
             for (int i = 0; i < data.Length; i++)
             {
                 Character character = CharacterManager.instance.GetCharacter(data[i], createIfDoesNotExist: false);
-                if (character != null) characters.Add(character);
+                if (character != null)
+                    characters.Add(character);
             }
 
-            if (characters.Count == 0) yield break;
+            if (characters.Count == 0)
+                yield break;
 
-            // ½âÎö²ÎÊı
+            // è§£æå‚æ•°
             var parameters = ConvertDataToParameters(data, startingIndex: 1);
+
             parameters.TryGetValue(new string[] { "-i", "-immediate" }, out immediate, defaultValue: false);
             parameters.TryGetValue(new string[] { "-o", "-only" }, out handleUnspecifiedCharacters, defaultValue: true);
 
-            // ¸ßÁÁÖ¸¶¨½ÇÉ«
+            // é«˜äº®æŒ‡å®šè§’è‰²
             foreach (Character character in characters)
                 character.Highlight(immediate: immediate);
 
-            // ´¦ÀíÎ´Ö¸¶¨½ÇÉ«£¨È¡Ïû¸ßÁÁ£©
+            // å¤„ç†æœªæŒ‡å®šè§’è‰²ï¼ˆå–æ¶ˆé«˜äº®ï¼‰
             if (handleUnspecifiedCharacters)
             {
                 foreach (Character character in CharacterManager.instance.allCharacters)
                 {
-                    if (characters.Contains(character)) continue;
+                    if (characters.Contains(character))
+                        continue;
+
                     unspecifiedCharacters.Add(character);
                     character.UnHighlight(immediate: immediate);
                 }
             }
 
-            // µÈ´ı¶¯»­Íê³É
+            // ç­‰å¾…åŠ¨ç”»å®Œæˆ
             if (!immediate)
             {
-                // Ìí¼ÓÖÕÖ¹»Øµ÷£¨Ç¿ÖÆÍê³É¸ßÁÁ£©
+                // æ·»åŠ ç»ˆæ­¢å›è°ƒï¼ˆå¼ºåˆ¶å®Œæˆé«˜äº®ï¼‰
                 CommandManager.instance.AddTerminationActionToCurrentProcess(() =>
                 {
                     foreach (var character in characters)
@@ -270,54 +280,59 @@ namespace COMMANDS
                         character.UnHighlight(immediate: true);
                 });
 
-                // µÈ´ıËùÓĞ¸ßÁÁ/È¡Ïû¸ßÁÁ¶¯»­Íê³É
+                // ç­‰å¾…æ‰€æœ‰é«˜äº®/å–æ¶ˆé«˜äº®åŠ¨ç”»å®Œæˆ
                 while (characters.Any(c => c.isHighlighting) ||
                       (handleUnspecifiedCharacters && unspecifiedCharacters.Any(uc => uc.isUnHighlighting)))
                     yield return null;
             }
         }
 
-        // È¡Ïû¸ßÁÁ¶à¸ö½ÇÉ«ÃüÁî£¨Ğ­³Ì£©
+        // å–æ¶ˆé«˜äº®å¤šä¸ªè§’è‰²å‘½ä»¤ï¼ˆåç¨‹ï¼‰
         public static IEnumerator UnhighlightAll(string[] data)
         {
-            List<Character> characters = new List<Character>();  // ÒªÈ¡Ïû¸ßÁÁµÄ½ÇÉ«
-            bool immediate = false;  // ÊÇ·ñÁ¢¼´Ö´ĞĞ
-            bool handleUnspecifiedCharacters = true;  // ÊÇ·ñ´¦ÀíÎ´Ö¸¶¨½ÇÉ«
-            List<Character> unspecifiedCharacters = new List<Character>();  // Î´Ö¸¶¨½ÇÉ«ÁĞ±í
+            List<Character> characters = new List<Character>();  // è¦å–æ¶ˆé«˜äº®çš„è§’è‰²
+            bool immediate = false;  // æ˜¯å¦ç«‹å³æ‰§è¡Œ
+            bool handleUnspecifiedCharacters = true;  // æ˜¯å¦å¤„ç†æœªæŒ‡å®šè§’è‰²
+            List<Character> unspecifiedCharacters = new List<Character>();  // æœªæŒ‡å®šè§’è‰²åˆ—è¡¨
 
-            // Ìí¼ÓÒªÈ¡Ïû¸ßÁÁµÄ½ÇÉ«
+            // æ·»åŠ è¦å–æ¶ˆé«˜äº®çš„è§’è‰²
             for (int i = 0; i < data.Length; i++)
             {
                 Character character = CharacterManager.instance.GetCharacter(data[i], createIfDoesNotExist: false);
-                if (character != null) characters.Add(character);
+                if (character != null)
+                    characters.Add(character);
             }
 
-            if (characters.Count == 0) yield break;
+            if (characters.Count == 0)
+                yield break;
 
-            // ½âÎö²ÎÊı
+            // è§£æå‚æ•°
             var parameters = ConvertDataToParameters(data, startingIndex: 1);
+
             parameters.TryGetValue(new string[] { "-i", "-immediate" }, out immediate, defaultValue: false);
             parameters.TryGetValue(new string[] { "-o", "-only" }, out handleUnspecifiedCharacters, defaultValue: true);
 
-            // È¡Ïû¸ßÁÁÖ¸¶¨½ÇÉ«
+            // å–æ¶ˆé«˜äº®æŒ‡å®šè§’è‰²
             foreach (Character character in characters)
                 character.UnHighlight(immediate: immediate);
 
-            // ´¦ÀíÎ´Ö¸¶¨½ÇÉ«£¨»Ö¸´¸ßÁÁ£©
+            // å¤„ç†æœªæŒ‡å®šè§’è‰²ï¼ˆæ¢å¤é«˜äº®ï¼‰
             if (handleUnspecifiedCharacters)
             {
                 foreach (Character character in CharacterManager.instance.allCharacters)
                 {
-                    if (characters.Contains(character)) continue;
+                    if (characters.Contains(character))
+                        continue;
+
                     unspecifiedCharacters.Add(character);
                     character.Highlight(immediate: immediate);
                 }
             }
 
-            // µÈ´ı¶¯»­Íê³É
+            // ç­‰å¾…åŠ¨ç”»å®Œæˆ
             if (!immediate)
             {
-                // Ìí¼ÓÖÕÖ¹»Øµ÷£¨Ç¿ÖÆÍê³ÉÈ¡Ïû¸ßÁÁ£©
+                // æ·»åŠ ç»ˆæ­¢å›è°ƒï¼ˆå¼ºåˆ¶å®Œæˆå–æ¶ˆé«˜äº®ï¼‰
                 CommandManager.instance.AddTerminationActionToCurrentProcess(() =>
                 {
                     foreach (var character in characters)
@@ -329,43 +344,49 @@ namespace COMMANDS
                         character.Highlight(immediate: true);
                 });
 
-                // µÈ´ıËùÓĞÈ¡Ïû¸ßÁÁ/¸ßÁÁ¶¯»­Íê³É
+                // ç­‰å¾…æ‰€æœ‰å–æ¶ˆé«˜äº®/é«˜äº®åŠ¨ç”»å®Œæˆ
                 while (characters.Any(c => c.isUnHighlighting) ||
                       (handleUnspecifiedCharacters && unspecifiedCharacters.Any(uc => uc.isHighlighting)))
                     yield return null;
             }
         }
-        #endregion
 
-        #region »ù´¡½ÇÉ«ÃüÁî
-        // ÏÔÊ¾µ¥¸ö½ÇÉ«ÃüÁî£¨Ğ­³Ì£©
+        #endregion å…¨å±€å‘½ä»¤
+
+        #region åŸºç¡€è§’è‰²å‘½ä»¤
+
+        // æ˜¾ç¤ºå•ä¸ªè§’è‰²å‘½ä»¤ï¼ˆåç¨‹ï¼‰
         private static IEnumerator Show(string[] data)
         {
-            Character character = CharacterManager.instance.GetCharacter(data[0]);  // »ñÈ¡½ÇÉ«
-            if (character == null) yield break;
+            Character character = CharacterManager.instance.GetCharacter(data[0]);
+
+            if (character == null)
+                yield break;
 
             bool immediate = false;
             var parameters = ConvertDataToParameters(data);
+
             parameters.TryGetValue(new string[] { "-i", "-immediate" }, out immediate, defaultValue: false);
 
             if (immediate)
-                character.isVisible = true;  // Á¢¼´ÏÔÊ¾
+                character.isVisible = true;  // ç«‹å³æ˜¾ç¤º
             else
             {
-                // Ìí¼ÓÖÕÖ¹»Øµ÷£¨Ç¿ÖÆÏÔÊ¾£©
-                CommandManager.instance.AddTerminationActionToCurrentProcess(() => {
+                // æ·»åŠ ç»ˆæ­¢å›è°ƒï¼ˆå¼ºåˆ¶æ˜¾ç¤ºï¼‰
+                CommandManager.instance.AddTerminationActionToCurrentProcess(() =>
+                {
                     if (character != null) character.isVisible = true;
                 });
 
-                // Ö´ĞĞÏÔÊ¾¶¯»­
+                // æ‰§è¡Œæ˜¾ç¤ºåŠ¨ç”»
                 yield return character.Show();
             }
         }
 
-        // Òş²Øµ¥¸ö½ÇÉ«ÃüÁî£¨Ğ­³Ì£©
+        // éšè—å•ä¸ªè§’è‰²å‘½ä»¤ï¼ˆåç¨‹ï¼‰
         private static IEnumerator Hide(string[] data)
         {
-            Character character = CharacterManager.instance.GetCharacter(data[0]);  // »ñÈ¡½ÇÉ«
+            Character character = CharacterManager.instance.GetCharacter(data[0]);  // è·å–è§’è‰²
             if (character == null) yield break;
 
             bool immediate = false;
@@ -373,20 +394,21 @@ namespace COMMANDS
             parameters.TryGetValue(new string[] { "-i", "-immediate" }, out immediate, defaultValue: false);
 
             if (immediate)
-                character.isVisible = false;  // Á¢¼´Òş²Ø
+                character.isVisible = false;  // ç«‹å³éšè—
             else
             {
-                // Ìí¼ÓÖÕÖ¹»Øµ÷£¨Ç¿ÖÆÒş²Ø£©
-                CommandManager.instance.AddTerminationActionToCurrentProcess(() => {
+                // æ·»åŠ ç»ˆæ­¢å›è°ƒï¼ˆå¼ºåˆ¶éšè—ï¼‰
+                CommandManager.instance.AddTerminationActionToCurrentProcess(() =>
+                {
                     if (character != null) character.isVisible = false;
                 });
 
-                // Ö´ĞĞÒş²Ø¶¯»­
+                // æ‰§è¡Œéšè—åŠ¨ç”»
                 yield return character.Hide();
             }
         }
 
-        // ÉèÖÃ½ÇÉ«Î»ÖÃÃüÁî
+        // è®¾ç½®è§’è‰²ä½ç½®å‘½ä»¤
         public static void SetPosition(string[] data)
         {
             Character character = CharacterManager.instance.GetCharacter(data[0], createIfDoesNotExist: false);
@@ -395,68 +417,69 @@ namespace COMMANDS
             float x = 0, y = 0;
             var parameters = ConvertDataToParameters(data, 1);
 
-            // »ñÈ¡×ø±ê²ÎÊı
+            // è·å–åæ ‡å‚æ•°
             parameters.TryGetValue(PARAM_XPOS, out x, defaultValue: 0);
             parameters.TryGetValue(PARAM_YPOS, out y, defaultValue: 0);
 
-            // ÉèÖÃÎ»ÖÃ
+            // è®¾ç½®ä½ç½®
             character.SetPosition(new Vector2(x, y));
         }
 
-        // ÉèÖÃäÖÈ¾ÓÅÏÈ¼¶ÃüÁî
+        // è®¾ç½®æ¸²æŸ“ä¼˜å…ˆçº§å‘½ä»¤
         public static void SetPriority(string[] data)
         {
             Character character = CharacterManager.instance.GetCharacter(data[0], createIfDoesNotExist: false);
             if (character == null || data.Length < 2) return;
 
             int priority;
-            // ½âÎöÓÅÏÈ¼¶ÊıÖµ
+            // è§£æä¼˜å…ˆçº§æ•°å€¼
             if (!int.TryParse(data[1], out priority)) priority = 0;
 
-            // ÉèÖÃÓÅÏÈ¼¶
+            // è®¾ç½®ä¼˜å…ˆçº§
             character.SetPriority(priority);
         }
 
-        // ÉèÖÃ½ÇÉ«ÑÕÉ«ÃüÁî£¨Ğ­³Ì£©
+        // è®¾ç½®è§’è‰²é¢œè‰²å‘½ä»¤ï¼ˆåç¨‹ï¼‰
         public static IEnumerator SetColor(string[] data)
         {
             Character character = CharacterManager.instance.GetCharacter(data[0], createIfDoesNotExist: false);
             if (character == null || data.Length < 2) yield break;
 
-            string colorName;  // ÑÕÉ«Ãû³Æ
-            float speed;      // ¹ı¶ÉËÙ¶È
-            bool immediate;   // ÊÇ·ñÁ¢¼´Ö´ĞĞ
+            string colorName;  // é¢œè‰²åç§°
+            float speed;      // è¿‡æ¸¡é€Ÿåº¦
+            bool immediate;   // æ˜¯å¦ç«‹å³æ‰§è¡Œ
 
-            // ½âÎö²ÎÊı
+            // è§£æå‚æ•°
             var parameters = ConvertDataToParameters(data, startingIndex: 1);
-            parameters.TryGetValue(new string[] { "-c", "-color" }, out colorName);  // ÑÕÉ«Ãû
-            bool specifiedSpeed = parameters.TryGetValue(new string[] { "-spd", "-speed" }, out speed, defaultValue: 1f);  // ËÙ¶È
+            parameters.TryGetValue(new string[] { "-c", "-color" }, out colorName);  // é¢œè‰²å
+            bool specifiedSpeed = parameters.TryGetValue(new string[] { "-spd", "-speed" }, out speed, defaultValue: 1f);  // é€Ÿåº¦
 
-            // È·¶¨ÊÇ·ñÁ¢¼´Ö´ĞĞ£¨Î´Ö¸¶¨ËÙ¶ÈÔòÁ¢¼´Ö´ĞĞ£©
+            // ç¡®å®šæ˜¯å¦ç«‹å³æ‰§è¡Œï¼ˆæœªæŒ‡å®šé€Ÿåº¦åˆ™ç«‹å³æ‰§è¡Œï¼‰
             if (!specifiedSpeed)
                 parameters.TryGetValue(new string[] { "-i", "-immediate" }, out immediate, defaultValue: true);
             else
                 immediate = false;
 
-            // Í¨¹ıÃû³Æ»ñÈ¡ÑÕÉ«
+            // é€šè¿‡åç§°è·å–é¢œè‰²
             Color color = Color.white.GetColorFromName(colorName);
 
             if (immediate)
-                character.SetColor(color);  // Á¢¼´ÉèÖÃÑÕÉ«
+                character.SetColor(color);  // ç«‹å³è®¾ç½®é¢œè‰²
             else
             {
-                // Ìí¼ÓÖÕÖ¹»Øµ÷£¨Ç¿ÖÆÉèÖÃÑÕÉ«£©
-                CommandManager.instance.AddTerminationActionToCurrentProcess(() => {
+                // æ·»åŠ ç»ˆæ­¢å›è°ƒï¼ˆå¼ºåˆ¶è®¾ç½®é¢œè‰²ï¼‰
+                CommandManager.instance.AddTerminationActionToCurrentProcess(() =>
+                {
                     character?.SetColor(color);
                 });
 
-                // Ö´ĞĞÑÕÉ«¹ı¶É¶¯»­
+                // æ‰§è¡Œé¢œè‰²è¿‡æ¸¡åŠ¨ç”»
                 character.TransitionColor(color, speed);
             }
             yield break;
         }
 
-        // ¸ßÁÁµ¥¸ö½ÇÉ«ÃüÁî£¨Ğ­³Ì£©
+        // é«˜äº®å•ä¸ªè§’è‰²å‘½ä»¤ï¼ˆåç¨‹ï¼‰
         public static IEnumerator Highlight(string[] data)
         {
             Character character = CharacterManager.instance.GetCharacter(data[0], createIfDoesNotExist: false);
@@ -467,20 +490,21 @@ namespace COMMANDS
             parameters.TryGetValue(new string[] { "-i", "-immediate" }, out immediate, defaultValue: false);
 
             if (immediate)
-                character.Highlight(immediate: true);  // Á¢¼´¸ßÁÁ
+                character.Highlight(immediate: true);  // ç«‹å³é«˜äº®
             else
             {
-                // Ìí¼ÓÖÕÖ¹»Øµ÷£¨Ç¿ÖÆ¸ßÁÁ£©
-                CommandManager.instance.AddTerminationActionToCurrentProcess(() => {
+                // æ·»åŠ ç»ˆæ­¢å›è°ƒï¼ˆå¼ºåˆ¶é«˜äº®ï¼‰
+                CommandManager.instance.AddTerminationActionToCurrentProcess(() =>
+                {
                     character?.Highlight(immediate: true);
                 });
 
-                // Ö´ĞĞ¸ßÁÁ¶¯»­
+                // æ‰§è¡Œé«˜äº®åŠ¨ç”»
                 yield return character.Highlight();
             }
         }
 
-        // È¡Ïû¸ßÁÁµ¥¸ö½ÇÉ«ÃüÁî£¨Ğ­³Ì£©
+        // å–æ¶ˆé«˜äº®å•ä¸ªè§’è‰²å‘½ä»¤ï¼ˆåç¨‹ï¼‰
         public static IEnumerator Unhighlight(string[] data)
         {
             Character character = CharacterManager.instance.GetCharacter(data[0], createIfDoesNotExist: false);
@@ -491,63 +515,68 @@ namespace COMMANDS
             parameters.TryGetValue(new string[] { "-i", "-immediate" }, out immediate, defaultValue: false);
 
             if (immediate)
-                character.UnHighlight(immediate: true);  // Á¢¼´È¡Ïû¸ßÁÁ
+                character.UnHighlight(immediate: true);  // ç«‹å³å–æ¶ˆé«˜äº®
             else
             {
-                // Ìí¼ÓÖÕÖ¹»Øµ÷£¨Ç¿ÖÆÈ¡Ïû¸ßÁÁ£©
-                CommandManager.instance.AddTerminationActionToCurrentProcess(() => {
+                // æ·»åŠ ç»ˆæ­¢å›è°ƒï¼ˆå¼ºåˆ¶å–æ¶ˆé«˜äº®ï¼‰
+                CommandManager.instance.AddTerminationActionToCurrentProcess(() =>
+                {
                     character?.UnHighlight(immediate: true);
                 });
 
-                // Ö´ĞĞÈ¡Ïû¸ßÁÁ¶¯»­
+                // æ‰§è¡Œå–æ¶ˆé«˜äº®åŠ¨ç”»
                 yield return character.UnHighlight();
             }
         }
-        #endregion
 
-        #region ¾«Áé½ÇÉ«ÃüÁî
-        // ÉèÖÃ¾«ÁéÍ¼Æ¬ÃüÁî£¨Ğ­³Ì£©
+        #endregion åŸºç¡€è§’è‰²å‘½ä»¤
+
+        #region ç²¾çµè§’è‰²å‘½ä»¤
+
+        // è®¾ç½®ç²¾çµå›¾ç‰‡å‘½ä»¤ï¼ˆåç¨‹ï¼‰
         public static IEnumerator SetSprite(string[] data)
         {
-            // »ñÈ¡¾«Áé½ÇÉ«
+            // è·å–ç²¾çµè§’è‰²
             Character_Sprite character = CharacterManager.instance.GetCharacter(data[0], createIfDoesNotExist: false) as Character_Sprite;
             if (character == null || data.Length < 2) yield break;
 
-            int layer = 0;         // ¾«Áé²ã
-            string spriteName;      // ¾«ÁéÃû³Æ
-            bool immediate = false; // ÊÇ·ñÁ¢¼´ÇĞ»»
-            float speed;            // ÇĞ»»ËÙ¶È
+            int layer = 0;         // ç²¾çµå±‚
+            string spriteName;      // ç²¾çµåç§°
+            bool immediate = false; // æ˜¯å¦ç«‹å³åˆ‡æ¢
+            float speed;            // åˆ‡æ¢é€Ÿåº¦
 
-            // ½âÎö²ÎÊı
+            // è§£æå‚æ•°
             var parameters = ConvertDataToParameters(data, startingIndex: 1);
-            parameters.TryGetValue(new string[] { "-s", "-sprite" }, out spriteName);  // ¾«ÁéÃû
-            parameters.TryGetValue(new string[] { "-l", "-layer" }, out layer, defaultValue: 0);  // ²ã¼¶
+            parameters.TryGetValue(new string[] { "-s", "-sprite" }, out spriteName);  // ç²¾çµå
+            parameters.TryGetValue(new string[] { "-l", "-layer" }, out layer, defaultValue: 0);  // å±‚çº§
 
-            // »ñÈ¡ËÙ¶È²ÎÊı²¢È·¶¨ÊÇ·ñÁ¢¼´Ö´ĞĞ
+            // è·å–é€Ÿåº¦å‚æ•°å¹¶ç¡®å®šæ˜¯å¦ç«‹å³æ‰§è¡Œ
             bool specifiedSpeed = parameters.TryGetValue(PARAM_SPEED, out speed, defaultValue: 0.1f);
             if (!specifiedSpeed)
                 parameters.TryGetValue(PARAM_IMMEDIATE, out immediate, defaultValue: true);
 
-            // »ñÈ¡¾«Áé¶ÔÏó
+            // è·å–ç²¾çµå¯¹è±¡
             Sprite sprite = character.GetSprite(spriteName);
             if (sprite == null) yield break;
 
-            // ÉèÖÃ¾«Áé
+            // è®¾ç½®ç²¾çµ
             if (immediate)
             {
-                character.SetSprite(sprite, layer);  // Á¢¼´ÉèÖÃ
+                character.SetSprite(sprite, layer);  // ç«‹å³è®¾ç½®
             }
             else
             {
-                // Ìí¼ÓÖÕÖ¹»Øµ÷£¨Ç¿ÖÆÉèÖÃ¾«Áé£©
-                CommandManager.instance.AddTerminationActionToCurrentProcess(() => {
+                // æ·»åŠ ç»ˆæ­¢å›è°ƒï¼ˆå¼ºåˆ¶è®¾ç½®ç²¾çµï¼‰
+                CommandManager.instance.AddTerminationActionToCurrentProcess(() =>
+                {
                     character?.SetSprite(sprite, layer);
                 });
 
-                // Ö´ĞĞ¾«Áé¹ı¶É¶¯»­
+                // æ‰§è¡Œç²¾çµè¿‡æ¸¡åŠ¨ç”»
                 yield return character.TransitionSprite(sprite, layer, speed);
             }
         }
-        #endregion
+
+        #endregion ç²¾çµè§’è‰²å‘½ä»¤
     }
 }

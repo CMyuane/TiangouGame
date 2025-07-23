@@ -1,7 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System;
 using UnityEngine.Events;
 
 namespace COMMANDS
@@ -16,15 +13,14 @@ namespace COMMANDS
 
         public UnityEvent onTerminateAction;
 
-        public CommandProcess(Guid id, string processName, Delegate command, CoroutineWrapper runningProcess, string[] args, UnityEvent onTerminateAction = null)
+        public CommandProcess(Guid iD, string processName, Delegate command, CoroutineWrapper runningProcess, string[] args, UnityEvent onTerminateAction = null)
         {
-            ID = id;
+            ID = iD;
             this.processName = processName;
             this.command = command;
             this.runningProcess = runningProcess;
             this.args = args;
             this.onTerminateAction = onTerminateAction;
         }
-
     }
 }

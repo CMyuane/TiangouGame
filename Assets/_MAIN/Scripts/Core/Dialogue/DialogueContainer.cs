@@ -1,22 +1,23 @@
+﻿using TMPro;
 using UnityEngine;
-using TMPro;
-using System.Collections;
 
-    /// <summary>
-    /// �Ի������࣬�����Ի������� UI Ԫ�ء�
-    /// </summary>
+/// <summary>
+/// 对话容器类，包含对话框和相关 UI 元素。
+/// </summary>
 namespace DIALOGUE
 {
-    //���౾�������л�������Щ������ʹ����������ڼ��������ʾ������
+    //在类本身中序列化所有这些变量，使其参数可以在检查器中显示并操作
     [System.Serializable]
     public class DialogueContainer
     {
-        //������Ϸ���� ����root�����ضԻ���
+        //公共游戏对象 禁用root会隐藏对话框
         public GameObject root;
-        public NameContainer nameContainer;     //�����ı���������������ʾ˵��������
-        public TextMeshProUGUI dialogueText;    //�Ի��ı����Ի���������ʾ�Ի�����
+
+        public NameContainer nameContainer;     //名字文本（名字容器）显示说话者名字
+        public TextMeshProUGUI dialogueText;    //对话文本（对话容器）显示对话内容
 
         public void SetDialogueColor(Color color) => dialogueText.color = color;
+
         public void SetDialogueFont(TMP_FontAsset font) => dialogueText.font = font;
     }
 }

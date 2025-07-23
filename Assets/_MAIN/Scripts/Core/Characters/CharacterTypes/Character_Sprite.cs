@@ -1,123 +1,124 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-// ½ÇÉ«¾«ÁéÀà£º¼Ì³Ğ×ÔCharacter»ùÀà£¬´¦Àí¾«Áé½ÇÉ«µÄäÖÈ¾ºÍ¶¯»­
+// è§’è‰²ç²¾çµç±»ï¼šç»§æ‰¿è‡ªCharacteråŸºç±»ï¼Œå¤„ç†ç²¾çµè§’è‰²çš„æ¸²æŸ“å’ŒåŠ¨ç”»
 namespace CHARACTERS
 {
     public class Character_Sprite : Character
     {
-        // ³£Á¿¶¨Òå
-        private const string SPRITE_RENDERER_PARENT_NAME = "Renderers"; // ¾«ÁéäÖÈ¾Æ÷¸¸¶ÔÏóÃû³Æ
-        private const string SPRITESHEET_DEFAULT_SHEETNAME = "Default"; // Ä¬ÈÏ¾«Áé±íÃû³Æ
-        private const char SPRITESHEET_TEX_SPRITE_DELIMITTER = '-'; // ¾«Áé±íÎÆÀíÓë¾«ÁéÃû³Æ·Ö¸ô·û
+        // å¸¸é‡å®šä¹‰
+        private const string SPRITE_RENDERER_PARENT_NAME = "Renderers"; // ç²¾çµæ¸²æŸ“å™¨çˆ¶å¯¹è±¡åç§°
 
-        // ÒıÓÃ×é¼ş
-        private CanvasGroup rootCG => root.GetComponent<CanvasGroup>(); // ¸ù¶ÔÏóµÄCanvasGroup×é¼ş
+        private const string SPRITESHEET_DEFAULT_SHEETNAME = "Default"; // é»˜è®¤ç²¾çµè¡¨åç§°
+        private const char SPRITESHEET_TEX_SPRITE_DELIMITTER = '-'; // ç²¾çµè¡¨çº¹ç†ä¸ç²¾çµåç§°åˆ†éš”ç¬¦
 
-        // ¾«Áé²ã¹ÜÀí
-        public List<CharacterSpriteLayer> layers = new List<CharacterSpriteLayer>(); // ¾«Áé²ãÁĞ±í
+        // å¼•ç”¨ç»„ä»¶
+        private CanvasGroup rootCG => root.GetComponent<CanvasGroup>(); // æ ¹å¯¹è±¡çš„CanvasGroupç»„ä»¶
 
-        // ×ÊÔ´Â·¾¶
-        private string artAssetsDirectory = ""; // ÒÕÊõ×ÊÔ´Ä¿Â¼Â·¾¶
+        // ç²¾çµå±‚ç®¡ç†
+        public List<CharacterSpriteLayer> layers = new List<CharacterSpriteLayer>(); // ç²¾çµå±‚åˆ—è¡¨
 
-        // ½ÇÉ«¿É¼ûĞÔÊôĞÔ
+        // èµ„æºè·¯å¾„
+        private string artAssetsDirectory = ""; // è‰ºæœ¯èµ„æºç›®å½•è·¯å¾„
+
+        // è§’è‰²å¯è§æ€§å±æ€§
         public override bool isVisible
         {
-            get { return isRevealing || rootCG.alpha > 0; } // ÅĞ¶ÏÊÇ·ñ¿É¼û
-            set { rootCG.alpha = value ? 1 : 0; } // ÉèÖÃÍ¸Ã÷¶È
+            get { return isRevealing || rootCG.alpha > 0; } // åˆ¤æ–­æ˜¯å¦å¯è§
+            set { rootCG.alpha = value ? 1 : 0; } // è®¾ç½®é€æ˜åº¦
         }
 
-        // ¹¹Ôìº¯Êı
+        // æ„é€ å‡½æ•°
         public Character_Sprite(string name, CharacterConfigData config, GameObject prefab, string rootAssetsFolder)
-            : base(name, config, prefab) // µ÷ÓÃ»ùÀà¹¹Ôìº¯Êı
+            : base(name, config, prefab) // è°ƒç”¨åŸºç±»æ„é€ å‡½æ•°
         {
-            // ³õÊ¼»¯½ÇÉ«Í¸Ã÷¶È£¨¸ù¾İÊÇ·ñÆôÓÃ£©
+            // åˆå§‹åŒ–è§’è‰²é€æ˜åº¦ï¼ˆæ ¹æ®æ˜¯å¦å¯ç”¨ï¼‰
             rootCG.alpha = ENABLE_ON_START ? 1 : 0;
 
-            // ÉèÖÃÒÕÊõ×ÊÔ´Ä¿Â¼Â·¾¶
+            // è®¾ç½®è‰ºæœ¯èµ„æºç›®å½•è·¯å¾„
             artAssetsDirectory = rootAssetsFolder + "/Images";
 
-            // »ñÈ¡²¢³õÊ¼»¯¾«Áé²ã
+            // è·å–å¹¶åˆå§‹åŒ–ç²¾çµå±‚
             GetLayers();
         }
 
-        // »ñÈ¡ËùÓĞ¾«Áé²ã
+        // è·å–æ‰€æœ‰ç²¾çµå±‚
         private void GetLayers()
         {
-            // ²éÕÒäÖÈ¾Æ÷¸ù¶ÔÏó
+            // æŸ¥æ‰¾æ¸²æŸ“å™¨æ ¹å¯¹è±¡
             Transform rendererRoot = animator.transform.Find(SPRITE_RENDERER_PARENT_NAME);
             if (rendererRoot == null) return;
 
-            // ±éÀúËùÓĞ×Ó¶ÔÏó
+            // éå†æ‰€æœ‰å­å¯¹è±¡
             for (int i = 0; i < rendererRoot.transform.childCount; i++)
             {
                 Transform child = rendererRoot.transform.GetChild(i);
 
-                // »ñÈ¡Í¼Ïñ×é¼ş
+                // è·å–å›¾åƒç»„ä»¶
                 Image rendererImage = child.GetComponentInChildren<Image>();
 
                 if (rendererImage != null)
                 {
-                    // ´´½¨¾«Áé²ã²¢Ìí¼Óµ½ÁĞ±í
+                    // åˆ›å»ºç²¾çµå±‚å¹¶æ·»åŠ åˆ°åˆ—è¡¨
                     CharacterSpriteLayer layer = new CharacterSpriteLayer(rendererImage, i);
                     layers.Add(layer);
 
-                    // ÖØÃüÃû×Ó¶ÔÏóÒÔ±ãµ÷ÊÔ
+                    // é‡å‘½åå­å¯¹è±¡ä»¥ä¾¿è°ƒè¯•
                     child.name = $"Layer: {i}";
                 }
             }
         }
 
-        // ÉèÖÃÖ¸¶¨²ãµÄ¾«Áé
+        // è®¾ç½®æŒ‡å®šå±‚çš„ç²¾çµ
         public void SetSprite(Sprite sprite, int layer = 0)
         {
             layers[layer].SetSprite(sprite);
         }
 
-        // »ñÈ¡¾«Áé×ÊÔ´
+        // è·å–ç²¾çµèµ„æº
         public Sprite GetSprite(string spriteName)
         {
-            // ´¦Àí¾«Áé±íÀàĞÍ½ÇÉ«
+            // å¤„ç†ç²¾çµè¡¨ç±»å‹è§’è‰²
             if (config.characterType == CharacterType.SpriteSheet)
             {
-                // ·Ö¸îÎÆÀíÃûºÍ¾«ÁéÃû
+                // åˆ†å‰²çº¹ç†åå’Œç²¾çµå
                 string[] data = spriteName.Split(SPRITESHEET_TEX_SPRITE_DELIMITTER);
                 Sprite[] spriteArray = new Sprite[0];
 
                 if (data.Length == 2)
                 {
-                    // ÌáÈ¡ÎÆÀíÃû³ÆºÍ¾«ÁéÃû³Æ
+                    // æå–çº¹ç†åç§°å’Œç²¾çµåç§°
                     string textureName = data[0];
                     spriteName = data[1];
 
-                    // ¼ÓÔØ¾«Áé±í
+                    // åŠ è½½ç²¾çµè¡¨
                     spriteArray = Resources.LoadAll<Sprite>($"{artAssetsDirectory}/{textureName}");
                 }
                 else
                 {
-                    // Ê¹ÓÃÄ¬ÈÏ¾«Áé±í
+                    // ä½¿ç”¨é»˜è®¤ç²¾çµè¡¨
                     spriteArray = Resources.LoadAll<Sprite>($"{artAssetsDirectory}/{SPRITESHEET_DEFAULT_SHEETNAME}");
                 }
 
-                // ¼ì²éÊÇ·ñ¼ÓÔØ³É¹¦
+                // æ£€æŸ¥æ˜¯å¦åŠ è½½æˆåŠŸ
                 if (spriteArray.Length == 0)
-                    Debug.LogWarning($"½ÇÉ« '{name}' Ã»ÓĞÄ¬ÈÏµÄ¾«Áé±í£¬ÎŞ·¨»ñÈ¡¾«Áé '{SPRITESHEET_DEFAULT_SHEETNAME}'");
+                    Debug.LogWarning($"è§’è‰² '{name}' æ²¡æœ‰é»˜è®¤çš„ç²¾çµè¡¨ï¼Œæ— æ³•è·å–ç²¾çµ '{SPRITESHEET_DEFAULT_SHEETNAME}'");
 
-                // ²éÕÒÆ¥ÅäÃû³ÆµÄ¾«Áé
+                // æŸ¥æ‰¾åŒ¹é…åç§°çš„ç²¾çµ
                 return Array.Find(spriteArray, sprite => sprite.name == spriteName);
             }
-            else // ÆÕÍ¨¾«ÁéÀàĞÍ
+            else // æ™®é€šç²¾çµç±»å‹
             {
-                // Ö±½Ó¼ÓÔØµ¥¸ö¾«Áé
+                // ç›´æ¥åŠ è½½å•ä¸ªç²¾çµ
                 return Resources.Load<Sprite>($"{artAssetsDirectory}/{spriteName}");
             }
         }
 
-        // ¾«Áé¹ı¶É¶¯»­
+        // ç²¾çµè¿‡æ¸¡åŠ¨ç”»
         public Coroutine TransitionSprite(Sprite sprite, int layer = 0, float speed = 1)
         {
             CharacterSpriteLayer spriteLayer = layers[layer];
@@ -125,14 +126,14 @@ namespace CHARACTERS
             return spriteLayer.TransitionSprite(sprite, speed);
         }
 
-        // ÏÔÊ¾/Òş²Ø½ÇÉ«µÄĞ­³Ì
+        // æ˜¾ç¤º/éšè—è§’è‰²çš„åç¨‹
         public override IEnumerator ShowingOrHiding(bool show, float speedMultiplier = 1f)
         {
-            // ÉèÖÃÄ¿±êÍ¸Ã÷¶È
+            // è®¾ç½®ç›®æ ‡é€æ˜åº¦
             float targetAlpha = show ? 1f : 0;
             CanvasGroup self = rootCG;
 
-            // ½¥±äµ÷ÕûÍ¸Ã÷¶È
+            // æ¸å˜è°ƒæ•´é€æ˜åº¦
             while (self.alpha != targetAlpha)
             {
                 self.alpha = Mathf.MoveTowards(self.alpha, targetAlpha,
@@ -140,98 +141,99 @@ namespace CHARACTERS
                 yield return null;
             }
 
-            // ÖØÖÃĞ­³ÌÒıÓÃ
+            // é‡ç½®åç¨‹å¼•ç”¨
             co_revealing = null;
             co_hiding = null;
         }
 
-        // ÉèÖÃ½ÇÉ«ÑÕÉ«
+        // è®¾ç½®è§’è‰²é¢œè‰²
         public override void SetColor(Color color)
         {
-            base.SetColor(color); // µ÷ÓÃ»ùÀà·½·¨
+            base.SetColor(color); // è°ƒç”¨åŸºç±»æ–¹æ³•
 
-            // Ó¦ÓÃµ½ËùÓĞ¾«Áé²ã
+            // åº”ç”¨åˆ°æ‰€æœ‰ç²¾çµå±‚
             foreach (CharacterSpriteLayer layer in layers)
             {
-                layer.StopChangingColor(); // Í£Ö¹ÕıÔÚ½øĞĞµÄÑÕÉ«±ä»¯
-                layer.SetColor(displayColor); // ÉèÖÃĞÂÑÕÉ«
+                layer.StopChangingColor(); // åœæ­¢æ­£åœ¨è¿›è¡Œçš„é¢œè‰²å˜åŒ–
+                layer.SetColor(displayColor); // è®¾ç½®æ–°é¢œè‰²
             }
         }
 
-        // ÑÕÉ«±ä»¯¶¯»­
+        // é¢œè‰²å˜åŒ–åŠ¨ç”»
         public override IEnumerator ChangingColor(float speed)
         {
-            // ÎªËùÓĞ²ãÆô¶¯ÑÕÉ«¹ı¶É
+            // ä¸ºæ‰€æœ‰å±‚å¯åŠ¨é¢œè‰²è¿‡æ¸¡
             foreach (CharacterSpriteLayer layer in layers)
                 layer.TransitionColor(displayColor, speed);
 
             yield return null;
 
-            // µÈ´ıËùÓĞ²ãÍê³ÉÑÕÉ«±ä»¯
+            // ç­‰å¾…æ‰€æœ‰å±‚å®Œæˆé¢œè‰²å˜åŒ–
             while (layers.Any(l => l.isChangingColor))
                 yield return null;
 
-            // ÖØÖÃĞ­³ÌÒıÓÃ
+            // é‡ç½®åç¨‹å¼•ç”¨
             co_changingColor = null;
         }
 
-        // ¸ßÁÁ½ÇÉ«¶¯»­
+        // é«˜äº®è§’è‰²åŠ¨ç”»
         public override IEnumerator Highlighting(float speedMultiplier, bool immediate = false)
         {
-            // Ó¦ÓÃµ½ËùÓĞ¾«Áé²ã
+            Color targetColor = displayColor;
+            // åº”ç”¨åˆ°æ‰€æœ‰ç²¾çµå±‚
             foreach (CharacterSpriteLayer layer in layers)
             {
                 if (immediate)
-                    layer.SetColor(displayColor); // Á¢¼´ÉèÖÃÑÕÉ«
+                    layer.SetColor(displayColor); // ç«‹å³è®¾ç½®é¢œè‰²
                 else
-                    layer.TransitionColor(displayColor, speedMultiplier); // ½¥±äÉèÖÃÑÕÉ«
+                    layer.TransitionColor(targetColor, speedMultiplier); // æ¸å˜è®¾ç½®é¢œè‰²
             }
 
             yield return null;
 
-            // µÈ´ıËùÓĞ²ãÍê³ÉÑÕÉ«±ä»¯
+            // ç­‰å¾…æ‰€æœ‰å±‚å®Œæˆé¢œè‰²å˜åŒ–
             while (layers.Any(l => l.isChangingColor))
                 yield return null;
 
-            // ÖØÖÃĞ­³ÌÒıÓÃ
+            // é‡ç½®åç¨‹å¼•ç”¨
             co_highlighting = null;
         }
 
-        // ¸Ä±ä½ÇÉ«³¯Ïò
+        // æ”¹å˜è§’è‰²æœå‘
         public override IEnumerator FaceDirection(bool faceLeft, float speedMultiplier, bool immediate)
         {
-            // ÎªËùÓĞ²ãÉèÖÃ³¯Ïò
+            // ä¸ºæ‰€æœ‰å±‚è®¾ç½®æœå‘
             foreach (CharacterSpriteLayer layer in layers)
             {
                 if (faceLeft)
-                    layer.FaceLeft(speedMultiplier, immediate); // ³¯×ó
+                    layer.FaceLeft(speedMultiplier, immediate); // æœå·¦
                 else
-                    layer.FaceRight(speedMultiplier, immediate); // ³¯ÓÒ
+                    layer.FaceRight(speedMultiplier, immediate); // æœå³
             }
 
             yield return null;
 
-            // µÈ´ıËùÓĞ²ãÍê³É·­×ª
+            // ç­‰å¾…æ‰€æœ‰å±‚å®Œæˆç¿»è½¬
             while (layers.Any(l => l.isFlipping))
                 yield return null;
 
-            // ÖØÖÃĞ­³ÌÒıÓÃ
+            // é‡ç½®åç¨‹å¼•ç”¨
             co_flipping = null;
         }
 
-        // ´¦Àí½ÇÉ«±íÇéÖ¸Áî
+        // å¤„ç†è§’è‰²è¡¨æƒ…æŒ‡ä»¤
         public override void OnReceiveCastingExpression(int layer, string expression)
         {
-            // »ñÈ¡¶ÔÓ¦±íÇéµÄ¾«Áé
+            // è·å–å¯¹åº”è¡¨æƒ…çš„ç²¾çµ
             Sprite sprite = GetSprite(expression);
 
             if (sprite == null)
             {
-                Debug.LogWarning($"±íÇé '{expression}' ÎŞ·¨´Ó½ÇÉ« '{name}'ÖĞÕÒµ½");
+                Debug.LogWarning($"è¡¨æƒ… '{expression}' æ— æ³•ä»è§’è‰² '{name}'ä¸­æ‰¾åˆ°");
                 return;
             }
 
-            // ÔÚÖ¸¶¨²ã¹ı¶Éµ½ĞÂ¾«Áé
+            // åœ¨æŒ‡å®šå±‚è¿‡æ¸¡åˆ°æ–°ç²¾çµ
             TransitionSprite(sprite, layer);
         }
     }

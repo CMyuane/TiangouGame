@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace DIALOGUE
 {
-    public class DL_COMAND_DATA
+    public class DL_COMMAND_DATA
     {
         public List<Command> commands;
         private const char COMMANDSPLITTER_ID = ',';
@@ -20,14 +20,14 @@ namespace DIALOGUE
             public bool waitForCompletion;
         }
 
-        public DL_COMAND_DATA(string rawCommands)
+        public DL_COMMAND_DATA(string rawCommands)
         {
             commands = RipCommands(rawCommands);
         }
 
         private List<Command> RipCommands(string rawCommands)
         {
-            string[] data = rawCommands.Split(COMMANDSPLITTER_ID, StringSplitOptions.RemoveEmptyEntries);
+            string[] data = rawCommands.Split(COMMANDSPLITTER_ID, System.StringSplitOptions.RemoveEmptyEntries);
             List<Command> result = new List<Command>();
 
             foreach (string cmd in data)
@@ -47,8 +47,10 @@ namespace DIALOGUE
                 command.arguments = GetArgs(cmd.Substring(index + 1, cmd.Length - index - 2));
                 result.Add(command);
             }
+
             return result;
         }
+
         private string[] GetArgs(string args)
         {
             List<string> argList = new List<string>();

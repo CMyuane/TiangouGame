@@ -19,7 +19,7 @@ namespace DIALOGUE
         public bool isCastingName => castName != string.Empty;
         public bool isCastingPosition = false;
 
-        public bool isCastingExpression => CastExpressions.Count > 0;
+        public bool isCastingExpressions => CastExpressions.Count > 0;
 
         public bool makeCharacterEnter = false;
 
@@ -27,8 +27,8 @@ namespace DIALOGUE
         private const string POSITIONCAST_ID = " at ";
         private const string EXPRESSIONCAST_ID = " [";
         private const char AXISDELIMITER = ':';
-        private const char EXPERSSIONLAYER_JOINER = ',';
-        private const char EXPERSSIONLAYER_DELIMITER = ':';
+        private const char EXPRESSIONLAYER_JOINER = ',';
+        private const char EXPRESSIONLAYER_DELIMITER = ':';
 
         private const string ENTER_KEYWORD = "enter ";
 
@@ -39,8 +39,10 @@ namespace DIALOGUE
                 rawSpeaker = rawSpeaker.Substring(ENTER_KEYWORD.Length);
                 makeCharacterEnter = true; 
             }
+
             return rawSpeaker;
         }
+
         public DL_SPEAKER_DATA(string rawSpeaker)
         {
             rawSpeaker = ProcessKeywords(rawSpeaker);
@@ -96,18 +98,19 @@ namespace DIALOGUE
                     endIndex = i < matches.Count - 1 ? matches[i + 1].Index : rawSpeaker.Length;
                     string castExp = rawSpeaker.Substring(startIndex, endIndex - (startIndex + 1));
 
-                    CastExpressions = castExp.Split(EXPERSSIONLAYER_JOINER)
+                    CastExpressions = castExp.Split(EXPRESSIONLAYER_JOINER)
                         .Select(x =>
                         {
-                            var parts = x.Trim().Split(EXPERSSIONLAYER_DELIMITER);
+                        var parts = x.Trim().Split(EXPRESSIONLAYER_DELIMITER);
 
-                            if(parts.Length == 2)
+                        if (parts.Length == 2)
                                 return (int.Parse(parts[0]), parts[1]);
                             else
                                 return (0, parts[0]);
                         }).ToList();
                 }
             }
+
         }
     }
 }

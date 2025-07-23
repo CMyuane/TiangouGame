@@ -1,4 +1,4 @@
-using CHARACTERS;
+﻿using CHARACTERS;
 using COMMANDS;
 using System.Collections;
 using System.Collections.Generic;
@@ -13,8 +13,10 @@ namespace DIALOGUE
     {
         // 获取对话系统的单例实例
         private DialogueSystem dialogueSystem => DialogueSystem.instance;
+
         // 当前运行的对话协程
         private Coroutine process = null;
+
         // 是否正在运行对话
         public bool isRunning => process != null;
 
@@ -74,7 +76,7 @@ namespace DIALOGUE
         /// </summary>
         /// <param name="conversation">对话内容列表</param>
         /// <returns>协程枚举器</returns>
-        IEnumerator RuningConversation(List<string> conversation)
+        private IEnumerator RuningConversation(List<string> conversation)
         {
             for (int i = 0; i < conversation.Count; i++)
             {
@@ -100,7 +102,6 @@ namespace DIALOGUE
 
                     CommandManager.instance.StopAllProcesses(); // 停止所有命令处理
                 }
-
             }
         }
 
@@ -109,7 +110,7 @@ namespace DIALOGUE
         /// </summary>
         /// <param name="line">对话行对象</param>
         /// <returns>协程枚举器</returns>
-        IEnumerator Line_RunDialogue(DIALOGUE_LINE line)
+        private IEnumerator Line_RunDialogue(DIALOGUE_LINE line)
         {
             //说话人姓名展示与否
             if (line.hasSpeaker)
@@ -122,13 +123,11 @@ namespace DIALOGUE
 
             //等待用户输入
             // yield return WaitForUserInput();
-
         }
 
         private void HandleSpeakerLogic(DL_SPEAKER_DATA speakerData)
         {
-
-            bool characterMustBeCreated = (speakerData.makeCharacterEnter || speakerData.isCastingPosition || speakerData.isCastingExpression);
+            bool characterMustBeCreated = (speakerData.makeCharacterEnter || speakerData.isCastingPosition || speakerData.isCastingExpressions);
 
             Character character = CharacterManager.instance.GetCharacter(speakerData.name, createIfDoesNotExist: characterMustBeCreated);
             // 如果说话者不存在，则创建角色
@@ -142,7 +141,7 @@ namespace DIALOGUE
             if (speakerData.isCastingPosition)
                 character.MoveToPosition(speakerData.castPosition);
 
-            if (speakerData.isCastingExpression)
+            if (speakerData.isCastingExpressions)
             {
                 foreach (var ce in speakerData.CastExpressions)
                     character.OnReceiveCastingExpression(ce.Layer, ce.expression);
@@ -154,13 +153,13 @@ namespace DIALOGUE
         /// </summary>
         /// <param name="line">对话行对象</param>
         /// <returns>协程枚举器</returns>
-        IEnumerator Line_RunCommands(DIALOGUE_LINE line)
+        private IEnumerator Line_RunCommands(DIALOGUE_LINE line)
         {
             // 打印命令内容（可扩展为实际命令处理逻辑）
             // Debug.Log(line.commandsData);
-            List<DL_COMAND_DATA.Command> commands = line.commandsData.commands;
+            List<DL_COMMAND_DATA.Command> commands = line.commandsData.commands;
 
-            foreach (DL_COMAND_DATA.Command command in commands)
+            foreach (DL_COMMAND_DATA.Command command in commands)
             {
                 if (command.waitForCompletion || command.name == "wait")
                 {
@@ -181,7 +180,7 @@ namespace DIALOGUE
             yield return null;
         }
 
-        IEnumerator BuildLineSegments(DL_DIALOGUE_DATA line)
+        private IEnumerator BuildLineSegments(DL_DIALOGUE_DATA line)
         {
             // 逐段构建对话内容
             for (int i = 0; i < line.segments.Count; i++)
@@ -194,7 +193,7 @@ namespace DIALOGUE
             }
         }
 
-        IEnumerator WaitForDialogueSegmentSignalToBeTriggered(DL_DIALOGUE_DATA.DIALOGUE_SEGMENT segment)
+        private IEnumerator WaitForDialogueSegmentSignalToBeTriggered(DL_DIALOGUE_DATA.DIALOGUE_SEGMENT segment)
         {
             switch (segment.startSignal)
             {
@@ -202,10 +201,12 @@ namespace DIALOGUE
                 case DL_DIALOGUE_DATA.DIALOGUE_SEGMENT.StartSignal.A:
                     yield return WaitForUserInput();
                     break;
+
                 case DL_DIALOGUE_DATA.DIALOGUE_SEGMENT.StartSignal.WC:
                 case DL_DIALOGUE_DATA.DIALOGUE_SEGMENT.StartSignal.WA:
                     yield return new WaitForSeconds(segment.signalDelay);
                     break;
+
                 default:
                     break;
             }
@@ -216,12 +217,12 @@ namespace DIALOGUE
         /// </summary>
         /// <param name="dialogue">对话内容字符串</param>
         /// <returns>协程枚举器</returns>
-        IEnumerator BuildDialogue(string dialogue, bool append = false)
+        private IEnumerator BuildDialogue(string dialogue, bool append = false)
         {
             if (!append)
                 architect.Build(dialogue);// 清空文本构建器
             else
-                architect.Append(dialogue);// 追加文本构建器    
+                architect.Append(dialogue);// 追加文本构建器
                                            // 使用文本构建器构建对话内容
                                            // architect.Build(dialogue);
                                            // 等待对话内容构建完成
@@ -245,11 +246,14 @@ namespace DIALOGUE
         /// 等待用户输入的协程。
         /// </summary>
         /// <returns>协程枚举器</returns>
-        IEnumerator WaitForUserInput()
+        private IEnumerator WaitForUserInput()
         {
+            dialogueSystem.prompt.Show();
             // 等待用户输入提示
             while (!userPrompt)
                 yield return null;
+
+            dialogueSystem.prompt.Hide();
 
             userPrompt = false;
         }
